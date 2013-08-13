@@ -1,7 +1,7 @@
 CC = g++
 CPPFLAGS = -Wall -g -std=c++11
 BIN = ../bin/main
-OBJ = game/game.o game/board.o
+OBJ = game/game.o game/board.o game/players.o
 DEPENDFILE = .depend
 
 all: $(BIN)

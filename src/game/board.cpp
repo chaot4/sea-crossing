@@ -138,7 +138,7 @@ void Board::reset()
 	}
 }
 
-bool Board::placeGem(NodeLabel& label, PlayerID player_id)
+bool Board::placeGem(NodeLabel const& label, PlayerID player_id)
 {
 	Node& node(nodes[node_map[label]]);
 
@@ -158,7 +158,7 @@ bool Board::placeGem(NodeLabel& label, PlayerID player_id)
 	return true;
 }
 
-bool Board::placeMarker(FaceLabel& label, PlayerID player_id)
+bool Board::placeMarker(FaceLabel const& label, PlayerID player_id)
 {
 	Face& face(faces[face_map[label]]);
 
@@ -170,7 +170,7 @@ bool Board::placeMarker(FaceLabel& label, PlayerID player_id)
 	return true;
 }
 
-bool Board::removeGem(NodeLabel& label)
+bool Board::removeGem(NodeLabel const& label)
 {
 	Node& node(nodes[node_map[label]]);
 
@@ -192,7 +192,7 @@ bool Board::removeGem(NodeLabel& label)
 	return true;
 }
 
-bool Board::removeMarker(FaceLabel& label)
+bool Board::removeMarker(FaceLabel const& label)
 {
 	Face& face(faces[face_map[label]]);
 
@@ -202,6 +202,16 @@ bool Board::removeMarker(FaceLabel& label)
 		return false;
 
 	return true;
+}
+
+bool Board::isNodeLabel(NodeLabel const& label)
+{
+	return node_map.count(label);
+}
+
+bool Board::isFaceLabel(FaceLabel const& label)
+{
+	return face_map.count(label);
 }
 
 bool Board::checkVictoryCondition(PlayerID player_id)
@@ -266,10 +276,10 @@ bool Board::existsPathBetween(vector<FaceID> const& start_faces,
 			if(adj_face.owner == player_id + 1 && !visited[adj_face.id]){
 				stack.push_back(adj_face.id);
 				visited[adj_face.id] = true;
-			}
 
-			if(isEndFace(adj_face.id, end_faces))
-				return true;
+				if(isEndFace(adj_face.id, end_faces))
+					return true;
+			}
 		}
 	}
 

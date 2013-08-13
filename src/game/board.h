@@ -1,5 +1,5 @@
-#ifndef board_h
-#define board_h
+#ifndef game_board_h
+#define game_board_h
 
 #include "defs.h"
 
@@ -27,10 +27,13 @@ class Board{
 
 		void reset();
 
-		bool placeGem(NodeLabel& label, PlayerID player_id);
-		bool placeMarker(FaceLabel& label, PlayerID player_id);
-		bool removeGem(NodeLabel& label);
-		bool removeMarker(FaceLabel& label);
+		bool placeGem(NodeLabel const& label, PlayerID player_id);
+		bool placeMarker(FaceLabel const& label, PlayerID player_id);
+		bool removeGem(NodeLabel const& label);
+		bool removeMarker(FaceLabel const& label);
+
+		bool isNodeLabel(NodeLabel const& label);
+		bool isFaceLabel(FaceLabel const& label);
 		bool checkVictoryCondition(PlayerID player_id);
 };
 
