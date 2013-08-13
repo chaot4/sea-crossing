@@ -206,16 +206,16 @@ bool Board::removeMarker(FaceLabel& label)
 
 bool Board::checkVictoryCondition(PlayerID player_id)
 {
-	vector<NodeID> start_faces;
-	vector<NodeID> end_faces;
+	vector<FaceID> start_faces;
+	vector<FaceID> end_faces;
 
 	if(player_id){
-		start_faces = {33, 34, 35, 36, 37};
-		end_faces = {25, 26, 27, 28, 29};
-	}
-	else{
 		start_faces = {25, 37, 38, 39, 40};
 		end_faces = {29, 30, 31, 32, 33};
+	}
+	else{
+		start_faces = {33, 34, 35, 36, 37};
+		end_faces = {25, 26, 27, 28, 29};
 	}
 
 	return existsPathBetween(start_faces, end_faces, player_id);
