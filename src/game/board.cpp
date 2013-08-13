@@ -173,7 +173,7 @@ bool Board::placeMarker(FaceLabel& label, PlayerID player_id)
 	return true;
 }
 
-bool Board::unplaceGem(NodeLabel& label)
+bool Board::removeGem(NodeLabel& label)
 {
 	Node& node(nodes[node_map[label]]);
 
@@ -195,7 +195,7 @@ bool Board::unplaceGem(NodeLabel& label)
 	return true;
 }
 
-bool Board::unplaceMarker(FaceLabel& label)
+bool Board::removeMarker(FaceLabel& label)
 {
 	Face& face(faces[face_map[label]]);
 

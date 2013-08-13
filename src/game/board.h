@@ -25,8 +25,8 @@ class Board{
 
 		bool placeGem(NodeLabel& label, PlayerID player_id);
 		bool placeMarker(FaceLabel& label, PlayerID player_id);
-		bool unplaceGem(NodeLabel& label);
-		bool unplaceMarker(FaceLabel& label);
+		bool removeGem(NodeLabel& label);
+		bool removeMarker(FaceLabel& label);
 		bool checkVictoryCondition(PlayerID player_id);
 };
 
