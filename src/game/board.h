@@ -16,7 +16,11 @@ class Board{
 		std::map<NodeLabel, NodeID> node_map;
 		std::map<FaceLabel, FaceID> face_map;
 
-		void init_maps();
+		void initMaps();
+
+		bool existsPathBetween(std::vector<FaceID> const& start_faces,
+				std::vector<FaceID> const& end_faces, PlayerID player_id);
+		bool isEndFace(FaceID id, std::vector<FaceID> const& end_faces);
 
 	public:
 		Board();
