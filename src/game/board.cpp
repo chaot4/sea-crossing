@@ -138,7 +138,8 @@ void Board::reset()
 	}
 }
 
-bool Board::placeGem(NodeLabel const& label, PlayerID player_id)
+bool Board::placeGem(NodeLabel const& label, PlayerID player_id,
+		vector<FaceLabel>& new_markers)
 {
 	Node& node(nodes[node_map[label]]);
 
@@ -149,6 +150,17 @@ bool Board::placeGem(NodeLabel const& label, PlayerID player_id)
 		for(unsigned int i=0; i<node.adj_faces.size(); i++){
 			Face& face(faces[node.adj_faces[i]]);
 			face.num_adj_nodes_player[player_id]++;
+		}
+
+		/* Check if new markers have to be placed. */
+		for(unsigned int i=0; i<node.adj_faces.size(); i++){
+			Face& face(faces[node.adj_faces[i]]);
+
+			if(face.num_adj_nodes_player[player_id]*2 >= face.adj_nodes.size()
+					&& face.owner == 0){
+				placeMarker(face.label, player_id);
+				new_markers.push_back(face.label);
+			}
 		}
 	}
 	else{
@@ -170,7 +182,7 @@ bool Board::placeMarker(FaceLabel const& label, PlayerID player_id)
 	return true;
 }
 
-bool Board::removeGem(NodeLabel const& label)
+bool Board::removeGem(NodeLabel const& label, vector<FaceLabel>& removed_markers)
 {
 	Node& node(nodes[node_map[label]]);
 
@@ -183,6 +195,17 @@ bool Board::removeGem(NodeLabel const& label)
 			Face& face(faces[node.adj_faces[i]]);
 			face.num_adj_nodes_player[old_owner_id]--;
 			assert(face.num_adj_nodes_player[old_owner_id] >= 0);
+		}
+
+		/* Check if markers have to be removed. */
+		for(unsigned int i=0; i<node.adj_faces.size(); i++){
+			Face& face(faces[node.adj_faces[i]]);
+
+			if(face.num_adj_nodes_player[old_owner_id]*2 < face.adj_nodes.size()
+					&& face.owner == old_owner_id+1){
+				removeMarker(face.label);
+				removed_markers.push_back(face.label);
+			}
 		}
 	}
 	else{
@@ -212,6 +235,16 @@ bool Board::isNodeLabel(NodeLabel const& label)
 bool Board::isFaceLabel(FaceLabel const& label)
 {
 	return face_map.count(label);
+}
+
+bool Board::nodeHasOwner(NodeLabel const& label)
+{
+	return nodes[node_map[label]].owner;
+}
+
+bool Board::faceHasOwner(FaceLabel const& label)
+{
+	return faces[face_map[label]].owner;
 }
 
 bool Board::checkVictoryCondition(PlayerID player_id)

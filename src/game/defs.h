@@ -34,7 +34,7 @@ struct Face{
 	std::vector<FaceID> adj_faces;
 
 	int owner;
-	std::vector<int> num_adj_nodes_player;
+	std::vector<unsigned int> num_adj_nodes_player;
 
 	Face(FaceID id, FaceLabel const& label, std::vector<NodeID> adj_nodes,
 		std::vector<FaceID> adj_faces, int owner = 0, int num_adj_nodes_player1 = 0,
