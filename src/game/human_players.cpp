@@ -1,11 +1,6 @@
-#include "players.h"
+#include "human_players.h"
 
 using namespace std;
-
-string Player::getName() const
-{
-	return name;
-}
 
 void ConsolePlayer::getNextMove(NodeLabel& node_label)
 {

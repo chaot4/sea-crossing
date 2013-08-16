@@ -1,7 +1,7 @@
 CC = g++
 CPPFLAGS = -Wall -g -std=c++11
 BIN = ../bin/main
-OBJ = game/game.o game/board.o game/players.o
+OBJ = game/game.o game/board.o game/player.o game/human_players.o
 DEPENDFILE = .depend
 
 all: $(BIN)
@@ -13,7 +13,7 @@ $(BIN): $(OBJ) main.o
 
 .PHONY: dep
 dep:
-	$(CC) -MM $(CPPFLAGS) main.cpp */*.cpp */*.h > $(DEPENDFILE)
+	$(CC) -MM $(CPPFLAGS) main.cpp game/*.cpp game/*.h > $(DEPENDFILE)
 
 .PHONY: clean
 clean:

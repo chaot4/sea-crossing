@@ -2,12 +2,15 @@
 
 using namespace std;
 
-/* DebugGame */
+
+/* DEBUG GAME */
+
 
 //DebugGame::DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
 //	:player{player1, player2}, board(){}
-DebugGame::DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
-	:board(){
+DebugGame::DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2, Board& board)
+	:board(board)
+{
 	player.push_back(player1);
 	player.push_back(player2);
 }
@@ -194,11 +197,15 @@ void DebugGame::command_forward()
 	}
 }
 
-/* Console Game */
+
+/* CONSOLE GAME */
+
 
 //ConsoleGame::ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
 //	:player{player1, player2}{}
-ConsoleGame::ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2){
+ConsoleGame::ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2, Board& board)
+	:board(board)
+{
 	player.push_back(player1);
 	player.push_back(player2);
 }
@@ -259,5 +266,80 @@ void ConsoleGame::placeGem(PlayerID player_id, NodeLabel label)
 		cout << "A new marker of " << player[player_id].getName()
 			<< " has been placed on " << new_markers[i] << "."
 			<< endl;
+	}
+}
+
+
+/* GUI GAME */
+
+
+//SimpleGUIGame::SimpleGUIGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
+//	:player{player1, player2}{}
+template <typename MessageReceiver>
+SimpleGUIGame<MessageReceiver>::SimpleGUIGame(Player* player1, Player* player2, Board& board,
+		MessageReceiver* receiver)
+	:board(board), receiver(receiver)
+{
+	player.push_back(player1);
+	player.push_back(player2);
+}
+
+template <typename MessageReceiver>
+void SimpleGUIGame<MessageReceiver>::start()
+{
+	bool current_player(0);
+	bool valid_move(false);
+
+	cout << "==- START SIMPLE GUI GAME -==" << endl;
+
+	while(!board.checkVictoryCondition(current_player)){
+
+		cout << endl;
+
+		if(valid_move){
+			current_player = !current_player;
+		}
+
+		valid_move = makeMove(current_player);
+	}
+
+	cout << player[current_player]->getName() << " wins!" << endl;
+	cout << endl << "==- END SIMPLE GUI GAME -==" << endl;
+}
+
+template <typename MessageReceiver>
+bool SimpleGUIGame<MessageReceiver>::makeMove(PlayerID player_id)
+{
+	NodeLabel label;
+
+	player[player_id]->getNextMove(label);
+
+	if(board.isNodeLabel(label)){
+		if(!board.nodeHasOwner(label)){
+			placeGem(player_id, label);
+		}
+		else{
+			cout << "ERROR: This node is already taken." << endl;
+			return false;
+		}
+	}
+	else{
+		cout << "ERROR: The passed string is not a node label." << endl;
+		return false;
+	}
+
+	return true;
+}
+
+template <typename MessageReceiver>
+void SimpleGUIGame<MessageReceiver>::placeGem(PlayerID player_id, NodeLabel label)
+{
+	vector<FaceLabel> new_markers;
+
+	board.placeGem(label, player_id, new_markers);
+	receiver->pushCreateGemMessage(label, player_id);
+
+	for(unsigned int i=0; i<new_markers.size(); i++){
+		receiver->pushCreateMarkerMessage(new_markers[i], player_id);
 	}
 }

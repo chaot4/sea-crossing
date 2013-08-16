@@ -1,22 +1,11 @@
-#ifndef game_players_h
-#define game_players_h
+#ifndef game_human_players_h
+#define game_human_players_h
 
 #include "defs.h"
+#include "player.h"
 
 #include <string>
 #include <iostream>
-
-class Player{
-	protected:
-		std::string name;
-	public:
-		Player(std::string const& name):name(name){}
-		Player(Player const& player):name(player.getName()){}
-
-		virtual void getNextMove(NodeLabel& node_label) = 0;
-		std::string getName() const;
-};
-
 
 class ConsolePlayer : public Player{
 	public:

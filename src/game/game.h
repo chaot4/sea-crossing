@@ -4,7 +4,8 @@
 #include "../defs.h"
 #include "defs.h"
 #include "board.h"
-#include "players.h"
+#include "player.h"
+#include "human_players.h"
 
 #include <string>
 #include <vector>
@@ -21,7 +22,7 @@ class DebugGame{
 		};
 
 		std::vector<ConsolePlayer> player;
-		Board board;
+		Board& board;
 
 		std::vector<Move> moves;
 		std::vector<Move> reverted_moves;
@@ -37,20 +38,35 @@ class DebugGame{
 		void removeMarker(Move const& move);
 
 	public:
-		DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2);
+		DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2, Board& board);
 		void start();
 };
 
 class ConsoleGame{
 	private:
 		std::vector<ConsolePlayer> player;
-		Board board;
+		Board& board;
 
 		bool makeMove(PlayerID player_id);
 		void placeGem(PlayerID player_id, NodeLabel label);
 
 	public:
-		ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2);
+		ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2, Board& board);
+		void start();
+};
+
+template <typename MessageReceiver>
+class SimpleGUIGame{
+	private:
+		std::vector<Player*> player;
+		Board& board;
+		MessageReceiver* receiver;
+
+		bool makeMove(PlayerID player_id);
+		void placeGem(PlayerID player_id, NodeLabel label);
+
+	public:
+		SimpleGUIGame(Player* player1, Player* player2, Board& board, MessageReceiver* receiver);
 		void start();
 };
 

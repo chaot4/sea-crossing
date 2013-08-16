@@ -3,6 +3,8 @@
 int main(){
 	ConsolePlayer player1("Spongebob");
 	ConsolePlayer player2("Patrick");
-	ConsoleGame g(player1, player2);
+	Board board;
+
+	ConsoleGame g(player1, player2, board);
 	g.start();
 }
