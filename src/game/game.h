@@ -41,4 +41,17 @@ class DebugGame{
 		void start();
 };
 
+class ConsoleGame{
+	private:
+		std::vector<ConsolePlayer> player;
+		Board board;
+
+		bool makeMove(PlayerID player_id);
+		void placeGem(PlayerID player_id, NodeLabel label);
+
+	public:
+		ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2);
+		void start();
+};
+
 #endif

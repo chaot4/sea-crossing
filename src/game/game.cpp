@@ -2,6 +2,8 @@
 
 using namespace std;
 
+/* DebugGame */
+
 DebugGame::DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
 	:player{player1, player2}, board(){}
 
@@ -184,5 +186,69 @@ void DebugGame::command_forward()
 	}
 	else{
 		cout << "ERROR: There exists no move that can be redone." << endl;
+	}
+}
+
+/* Console Game */
+
+ConsoleGame::ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
+	:player{player1, player2}{}
+
+void ConsoleGame::start()
+{
+	bool current_player(0);
+	bool valid_move(false);
+
+	cout << "==- START CONSOLE GAME -==" << endl;
+
+	while(!board.checkVictoryCondition(current_player)){
+
+		cout << endl;
+
+		if(valid_move){
+			current_player = !current_player;
+		}
+
+		valid_move = makeMove(current_player);
+	}
+
+	cout << player[current_player].getName() << " wins!" << endl;
+	cout << endl << "==- END CONSOLE GAME -==" << endl;
+}
+
+bool ConsoleGame::makeMove(PlayerID player_id)
+{
+	NodeLabel label;
+
+	player[player_id].getNextMove(label);
+
+	if(board.isNodeLabel(label)){
+		if(!board.nodeHasOwner(label)){
+			placeGem(player_id, label);
+		}
+		else{
+			cout << "ERROR: This node is already taken." << endl;
+			return false;
+		}
+	}
+	else{
+		cout << "ERROR: The passed string is not a node label." << endl;
+		return false;
+	}
+
+	return true;
+}
+
+void ConsoleGame::placeGem(PlayerID player_id, NodeLabel label)
+{
+	vector<FaceLabel> new_markers;
+
+	cout << "Placed a gem on " << label << "." << endl;
+	board.placeGem(label, player_id, new_markers);
+
+	for(unsigned int i=0; i<new_markers.size(); i++){
+		cout << "A new marker of " << player[player_id].getName()
+			<< " has been placed on " << new_markers[i] << "."
+			<< endl;
 	}
 }
