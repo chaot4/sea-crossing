@@ -2,11 +2,13 @@
 
 using namespace std;
 
+DebugGame::DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
+	:player{player1, player2}, board(){}
+
 void DebugGame::start()
 {
 	string command("");
 	bool game_finished(false);
-	DebugGameData d(Board(), ConsolePlayer("Spongebob"), ConsolePlayer("Patrick"));
 
 	cout << "==- START DEBUG GAME -==" << endl << endl;
 	cout << "The possible commands are: player1 (p1), player2 (p2), marker_player1 (mp1),"
@@ -19,22 +21,22 @@ void DebugGame::start()
 		cin >> command;
 
 		if(command == "player1" || command == "p1"){
-			game_finished = command_player(d, 0);
+			game_finished = command_player(0);
 		}
 		else if(command == "player2" || command == "p2"){
-			game_finished = command_player(d, 1);
+			game_finished = command_player(1);
 		}
 		else if(command == "marker_player1" || command == "mp1"){
-			game_finished = command_marker_player(d, 0);
+			game_finished = command_marker_player(0);
 		}
 		else if(command == "marker_player2" || command == "mp2"){
-			game_finished = command_marker_player(d, 1);
+			game_finished = command_marker_player(1);
 		}
 		else if(command == "back" || command == "b"){
-			command_back(d);
+			command_back();
 		}
 		else if(command == "forward" || command == "f"){
-			command_forward(d);
+			command_forward();
 		}
 		else if(command == "exit" || command == "e"){
 			game_finished = true;
@@ -47,19 +49,19 @@ void DebugGame::start()
 	cout << endl << "==- END DEBUG GAME -==" << endl;
 }
 
-bool DebugGame::command_player(DebugGameData& d, PlayerID player_id)
+bool DebugGame::command_player(PlayerID player_id)
 {
 	NodeLabel label;
 
-	d.player[player_id].getNextMove(label);
+	player[player_id].getNextMove(label);
 
-	if(d.board.isNodeLabel(label))
-		if(!d.board.nodeHasOwner(label)){
-			placeGem(d, player_id, label);
+	if(board.isNodeLabel(label))
+		if(!board.nodeHasOwner(label)){
+			placeGem(player_id, label);
 			reverted_moves.clear();
 
-			if(d.board.checkVictoryCondition(player_id)){
-				cout << d.player[player_id].getName() << " wins!" << endl;
+			if(board.checkVictoryCondition(player_id)){
+				cout << player[player_id].getName() << " wins!" << endl;
 				return true;
 			}
 		}
@@ -72,34 +74,34 @@ bool DebugGame::command_player(DebugGameData& d, PlayerID player_id)
 	return false;
 }
 
-void DebugGame::placeGem(DebugGameData& d, PlayerID player_id, NodeLabel label)
+void DebugGame::placeGem(PlayerID player_id, NodeLabel label)
 {
 	vector<FaceLabel> new_markers;
 
 	cout << "Placed a gem on " << label << "." << endl;
-	d.board.placeGem(label, player_id, new_markers);
+	board.placeGem(label, player_id, new_markers);
 	moves.push_back(Move(label, player_id, true));
 
 	for(unsigned int i=0; i<new_markers.size(); i++){
-		cout << "A new marker of " << d.player[player_id].getName()
+		cout << "A new marker of " << player[player_id].getName()
 			<< " has been placed on " << new_markers[i] << "."
 			<< endl;
 	}
 }
 
-bool DebugGame::command_marker_player(DebugGameData& d, PlayerID player_id)
+bool DebugGame::command_marker_player(PlayerID player_id)
 {
 	FaceLabel label;
 
-	d.player[player_id].getMarkerMove(label);
+	player[player_id].getMarkerMove(label);
 
-	if(d.board.isFaceLabel(label)){
-		if(!d.board.faceHasOwner(label)){
-			placeMarker(d, player_id, label);
+	if(board.isFaceLabel(label)){
+		if(!board.faceHasOwner(label)){
+			placeMarker(player_id, label);
 			reverted_moves.clear();
 
-			if(d.board.checkVictoryCondition(player_id)){
-				cout << d.player[player_id].getName() << " wins!" << endl;
+			if(board.checkVictoryCondition(player_id)){
+				cout << player[player_id].getName() << " wins!" << endl;
 				return true;
 			}
 		}
@@ -114,23 +116,23 @@ bool DebugGame::command_marker_player(DebugGameData& d, PlayerID player_id)
 	return false;
 }
 
-void DebugGame::placeMarker(DebugGameData& d, PlayerID player_id, FaceLabel label)
+void DebugGame::placeMarker(PlayerID player_id, FaceLabel label)
 {
 	cout << "Placed a marker on " << label << "." << endl;
-	d.board.placeMarker(label, player_id);
+	board.placeMarker(label, player_id);
 	moves.push_back(Move(label, player_id, false));
 }
 
-void DebugGame::command_back(DebugGameData& d)
+void DebugGame::command_back()
 {
 	if(!moves.empty()){
 		Move const& last_move(moves.back());
 
 		if(last_move.is_gem){
-			removeGem(d, last_move);
+			removeGem(last_move);
 		}
 		else{
-			removeMarker(d, last_move);
+			removeMarker(last_move);
 		}
 
 		reverted_moves.push_back(last_move);
@@ -141,13 +143,13 @@ void DebugGame::command_back(DebugGameData& d)
 	}
 }
 
-void DebugGame::removeGem(DebugGameData& d, Move const& move)
+void DebugGame::removeGem(Move const& move)
 {
 	vector<FaceLabel> removed_markers;
 
-	cout << "Removed the gem of " << d.player[move.owner_id].getName()
+	cout << "Removed the gem of " << player[move.owner_id].getName()
 		<< " from " << move.label << "." << endl;
-	d.board.removeGem(move.label, removed_markers);
+	board.removeGem(move.label, removed_markers);
 
 	if(!removed_markers.empty()){
 		cout << "Also removed the following markers: ";
@@ -159,23 +161,23 @@ void DebugGame::removeGem(DebugGameData& d, Move const& move)
 	}
 }
 	
-void DebugGame::removeMarker(DebugGameData& d, Move const& move)
+void DebugGame::removeMarker(Move const& move)
 {
-	cout << "Removed the marker of " << d.player[move.owner_id].getName()
+	cout << "Removed the marker of " << player[move.owner_id].getName()
 		<< " from " << move.label << "." << endl;
-	d.board.removeMarker(move.label);
+	board.removeMarker(move.label);
 }
 
-void DebugGame::command_forward(DebugGameData& d)
+void DebugGame::command_forward()
 {
 	if(!reverted_moves.empty()){
 		Move const& last_undone_move(reverted_moves.back());
 
 		if(last_undone_move.is_gem){
-			placeGem(d, last_undone_move.owner_id, last_undone_move.label);
+			placeGem(last_undone_move.owner_id, last_undone_move.label);
 		}
 		else{
-			placeMarker(d, last_undone_move.owner_id, last_undone_move.label);
+			placeMarker(last_undone_move.owner_id, last_undone_move.label);
 		}
 
 		reverted_moves.pop_back();

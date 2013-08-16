@@ -11,15 +11,6 @@
 
 class DebugGame{
 	private:
-		struct DebugGameData{
-			Board board;
-			std::vector<ConsolePlayer> player;
-
-			DebugGameData(Board const& board, ConsolePlayer const& player1,
-					ConsolePlayer const& player2)
-				:board(board), player{player1, player2}{}
-		};
-
 		struct Move{
 			std::string label;
 			bool owner_id;
@@ -29,20 +20,24 @@ class DebugGame{
 				:label(label), owner_id(owner_id), is_gem(is_gem){}
 		};
 
+		std::vector<ConsolePlayer> player;
+		Board board;
+
 		std::vector<Move> moves;
 		std::vector<Move> reverted_moves;
 
-		bool command_player(DebugGameData& d, PlayerID player_id);
-		bool command_marker_player(DebugGameData& d, PlayerID player_id);
-		void command_back(DebugGameData& d);
-		void command_forward(DebugGameData& d);
+		bool command_player(PlayerID player_id);
+		bool command_marker_player(PlayerID player_id);
+		void command_back();
+		void command_forward();
 
-		void placeGem(DebugGameData& d, PlayerID player_id, NodeLabel label);
-		void placeMarker(DebugGameData& d, PlayerID player_id, FaceLabel label);
-		void removeGem(DebugGameData& d, Move const& move);
-		void removeMarker(DebugGameData& d, Move const& move);
+		void placeGem(PlayerID player_id, NodeLabel label);
+		void placeMarker(PlayerID player_id, FaceLabel label);
+		void removeGem(Move const& move);
+		void removeMarker(Move const& move);
 
 	public:
+		DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2);
 		void start();
 };
 
