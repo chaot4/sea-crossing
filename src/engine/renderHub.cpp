@@ -120,64 +120,19 @@ void RenderHub::setActiveScene(const int index)
 
 void RenderHub::run()
 {
-	/*	
-	/	Just for testing and debug purposes I am ignoring the event-queue concept I want to take up later
-	/	and manually add entities to the active scene
+	/*
+	/	Support for adding cameras and lights via message system will follow later on
 	*/
 
-	Mesh* geomPtr;
-	Material* materialPtr;
-	//resourceMngr.createBox(geomPtr);
-	resourceMngr.createMaterial("../resources/materials/demo_hangar.slmtl",materialPtr);
-	resourceMngr.createMaterial(materialPtr);
-	resourceMngr.createMesh("../resources/meshes/demo_hangar.fbx",geomPtr);
-
-
-	if(!(activeScene->createStaticSceneObject(0,glm::vec3(0.0,0.0,0.0),glm::quat(),geomPtr,materialPtr)))
-	{
-		std::cout<<"Failed to create scene object"
-				<<"\n";
-	}
-	//if(!(activeScene->createStaticSceneObject(1,glm::vec3(0.0,0.0,-2.0),glm::quat(),geomPtr,materialPtr)))
-	//{
-	//	std::cout<<"Failed to create scene object"
-	//			<<"\n";
-	//}
-	//if(!(activeScene->createStaticSceneObject(2,glm::vec3(-2.0,0.0,0.0),glm::quat(),geomPtr,materialPtr)))
-	//{
-	//	std::cout<<"Failed to create scene object"
-	//			<<"\n";
-	//}
-
-	//for(int i=2;i<10000;i++)
-	//{
-	//if(!(activeScene->createStaticSceneObject(i,glm::vec3(-i*2.0,-i*1.5,-i*2.0),glm::quat(),"../resources/materials/demoMaterial.slmtl",1)))
-	//{
-	//	std::cout<<"Failed to create scene object"
-	//			<<"\n";
-	//}
-	//}
-
-
 	if(!(activeScene->createSceneCamera(0,glm::vec3(2.5,-2.0,12.0),glm::quat(),16.0f/9.0f,60.0f)))
-	{
-		std::cout<<"Failed to create camera"
-				<<"\n";
-	}
+		std::cout<<"Failed to create camera"<<"\n";
+
 	if(!(activeScene->createSceneLight(0,glm::vec3(0.0,2.0,0.0),glm::vec4(1.0,1.0,1.0,1.0))))
-	{
-		std::cout<<"Failed to create light"
-				<<"\n";
-	}
+		std::cout<<"Failed to create light"<<"\n";
 
 	activeScene->setActiveCamera(0);
 	
 	activeScene->testing();
-
-	FramebufferObject testFBO(1200,675,true,false);
-	testFBO.createColorAttachment(GL_RGBA,GL_RGBA,GL_UNSIGNED_BYTE);
-	PostProcessor pP;
-	pP.init(&resourceMngr);
 
 	running = true;
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
@@ -187,16 +142,12 @@ void RenderHub::run()
 
 	while(running && glfwGetWindowParam(GLFW_OPENED))
 	{
-		//testFBO.bind();
+		while(messageRcvr.checkQueue()) processMessage( &(messageRcvr.popMessage()) );
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0,0,1200,675);
 		activeScene->render();
-
-		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//glViewport(0,0,1200,675);
-		//pP.applyFxaa(&testFBO);
 
 		glfwSwapBuffers();
 		glfwSleep(0.01);
@@ -261,5 +212,30 @@ void RenderHub::runVolumeTest()
 		activeScene->renderVolumetricObjects();
 
 		glfwSwapBuffers();
+	}
+}
+
+void RenderHub::processMessage(Message *msg)
+{
+	messageType msgType = (msg->type);
+	switch (msgType)
+	{
+	case CREATE:
+		Mesh* geomPtr;
+		Material* materialPtr;
+		resourceMngr.createMaterial((msg->material_path).c_str(),materialPtr);
+		resourceMngr.createMesh((msg->geometry_path).c_str(),geomPtr);
+
+		if(!(activeScene->createStaticSceneObject((msg->id),(msg->position),(msg->orientation),geomPtr,materialPtr)))
+			std::cout<<"Failed to create scene object"<<"\n";
+
+		break;
+	case DELETE:
+		break;
+	case EXIT:
+		running = false;
+		break;
+	default:
+		break;
 	}
 }

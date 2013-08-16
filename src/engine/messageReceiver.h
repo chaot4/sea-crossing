@@ -56,7 +56,9 @@ public:
 	void pushCreateGemMessage(int id, int player);
 	void pushDeleteMessage(int id);
 	void pushExitMessage();
-	Message popMessage(); 
+	Message popMessage();
+
+	bool checkQueue();
 
 private:
 	std::queue<Message> message_fifo;

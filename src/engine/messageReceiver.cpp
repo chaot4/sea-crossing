@@ -45,6 +45,12 @@ Message MessageReceiver::popMessage()
 {
 	Message msg = message_fifo.front();
 	message_counter--;
-	
+
 	return msg;
+}
+
+bool MessageReceiver::checkQueue()
+{
+	if(message_counter > 0) return true;
+	else false;
 }
