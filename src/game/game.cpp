@@ -4,8 +4,13 @@ using namespace std;
 
 /* DebugGame */
 
+//DebugGame::DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
+//	:player{player1, player2}, board(){}
 DebugGame::DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
-	:player{player1, player2}, board(){}
+	:board(){
+	player.push_back(player1);
+	player.push_back(player2);
+}
 
 void DebugGame::start()
 {
@@ -191,8 +196,12 @@ void DebugGame::command_forward()
 
 /* Console Game */
 
-ConsoleGame::ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
-	:player{player1, player2}{}
+//ConsoleGame::ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
+//	:player{player1, player2}{}
+ConsoleGame::ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2){
+	player.push_back(player1);
+	player.push_back(player2);
+}
 
 void ConsoleGame::start()
 {
