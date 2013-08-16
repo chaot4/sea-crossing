@@ -134,12 +134,45 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\engine\framebufferObject.cpp" />
+    <ClCompile Include="..\src\engine\GLSLProgram.cpp" />
+    <ClCompile Include="..\src\engine\material.cpp" />
+    <ClCompile Include="..\src\engine\mesh.cpp" />
+    <ClCompile Include="..\src\engine\messageReceiver.cpp" />
+    <ClCompile Include="..\src\engine\postProcessor.cpp" />
+    <ClCompile Include="..\src\engine\renderHub.cpp" />
+    <ClCompile Include="..\src\engine\resourceManager.cpp" />
+    <ClCompile Include="..\src\engine\scene.cpp" />
+    <ClCompile Include="..\src\engine\sceneCamera.cpp" />
+    <ClCompile Include="..\src\engine\sceneEntity.cpp" />
+    <ClCompile Include="..\src\engine\sceneLightSource.cpp" />
+    <ClCompile Include="..\src\engine\texture2D.cpp" />
+    <ClCompile Include="..\src\engine\texture3D.cpp" />
+    <ClCompile Include="..\src\engine\volumetricSceneObject.cpp" />
     <ClCompile Include="..\src\game\board.cpp" />
     <ClCompile Include="..\src\game\game.cpp" />
     <ClCompile Include="..\src\game\players.cpp" />
     <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\engine\framebufferObject.h" />
+    <ClInclude Include="..\src\engine\GLSLProgram.h" />
+    <ClInclude Include="..\src\engine\material.h" />
+    <ClInclude Include="..\src\engine\mesh.h" />
+    <ClInclude Include="..\src\engine\messageReceiver.h" />
+    <ClInclude Include="..\src\engine\postProcessor.h" />
+    <ClInclude Include="..\src\engine\renderHub.h" />
+    <ClInclude Include="..\src\engine\resourceManager.h" />
+    <ClInclude Include="..\src\engine\scene.h" />
+    <ClInclude Include="..\src\engine\sceneCamera.h" />
+    <ClInclude Include="..\src\engine\sceneEntity.h" />
+    <ClInclude Include="..\src\engine\sceneLightSource.h" />
+    <ClInclude Include="..\src\engine\staticSceneObject.h" />
+    <ClInclude Include="..\src\engine\texture.h" />
+    <ClInclude Include="..\src\engine\texture2D.h" />
+    <ClInclude Include="..\src\engine\texture3D.h" />
+    <ClInclude Include="..\src\engine\vertexStructs.h" />
+    <ClInclude Include="..\src\engine\volumetricSceneObject.h" />
     <ClInclude Include="..\src\game\board.h" />
     <ClInclude Include="..\src\game\defs.h" />
     <ClInclude Include="..\src\game\game.h" />
