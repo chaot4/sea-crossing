@@ -15,7 +15,7 @@
 #include "resourceManager.h"
 #include "messageReceiver.h"
 #include "framebufferObject.h"
-#include "GL/glfw.h"
+#include "GLFW/glfw3.h"
 
 //pragmas seem to be only necessary in windows
 #ifdef _WIN32
