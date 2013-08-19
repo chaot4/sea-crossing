@@ -490,27 +490,27 @@ bool Board::removeMarker(FaceLabel const& label)
 	return true;
 }
 
-bool Board::isNodeLabel(NodeLabel const& label)
+bool Board::isNodeLabel(NodeLabel const& label) const
 {
 	return node_map.count(label);
 }
 
-bool Board::isFaceLabel(FaceLabel const& label)
+bool Board::isFaceLabel(FaceLabel const& label) const
 {
 	return face_map.count(label);
 }
 
-bool Board::nodeHasOwner(NodeLabel const& label)
+bool Board::nodeHasOwner(NodeLabel const& label) const
 {
-	return nodes[node_map[label]].owner;
+	return nodes[node_map.at(label)].owner;
 }
 
-bool Board::faceHasOwner(FaceLabel const& label)
+bool Board::faceHasOwner(FaceLabel const& label) const
 {
-	return faces[face_map[label]].owner;
+	return faces[face_map.at(label)].owner;
 }
 
-bool Board::checkVictoryCondition(PlayerID player_id)
+bool Board::checkVictoryCondition(PlayerID player_id) const
 {
 	vector<FaceID> start_faces;
 	vector<FaceID> end_faces;
@@ -565,7 +565,7 @@ void Board::initMaps()
 }
 
 bool Board::existsPathBetween(vector<FaceID> const& start_faces,
-				vector<FaceID> const& end_faces, PlayerID player_id)
+				vector<FaceID> const& end_faces, PlayerID player_id) const
 {
 	vector<FaceID> stack;
 	vector<bool> visited(faces.size(), false);
@@ -602,7 +602,7 @@ bool Board::existsPathBetween(vector<FaceID> const& start_faces,
 	return false;
 }
 
-bool Board::isEndFace(FaceID id, vector<FaceID> const& end_faces)
+bool Board::isEndFace(FaceID id, vector<FaceID> const& end_faces) const
 {
 	for(unsigned int i=0; i<end_faces.size(); i++)
 		if(end_faces[i] == id)

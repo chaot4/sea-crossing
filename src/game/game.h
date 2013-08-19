@@ -6,6 +6,7 @@
 #include "board.h"
 #include "player.h"
 #include "human_players.h"
+#include "../ai/ai_players.h"
 
 #include <string>
 #include <vector>
@@ -21,7 +22,7 @@ class DebugGame{
 				:label(label), owner_id(owner_id), is_gem(is_gem){}
 		};
 
-		std::vector<ConsolePlayer> player;
+		ConsolePlayer** player;
 		Board& board;
 
 		std::vector<Move> moves;
@@ -38,27 +39,27 @@ class DebugGame{
 		void removeMarker(Move const& move);
 
 	public:
-		DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2, Board& board);
+		DebugGame(ConsolePlayer* player1, ConsolePlayer* player2, Board& board);
 		void start();
 };
 
 class ConsoleGame{
 	private:
-		std::vector<ConsolePlayer> player;
+		Player** player;
 		Board& board;
 
 		bool makeMove(PlayerID player_id);
 		void placeGem(PlayerID player_id, NodeLabel label);
 
 	public:
-		ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2, Board& board);
+		ConsoleGame(Player* player1, Player* player2, Board& board);
 		void start();
 };
 
 template <typename MessageReceiver>
 class SimpleGUIGame{
 	private:
-		std::vector<Player*> player;
+		Player** player;
 		Board& board;
 		MessageReceiver* receiver;
 
@@ -66,7 +67,8 @@ class SimpleGUIGame{
 		void placeGem(PlayerID player_id, NodeLabel label);
 
 	public:
-		SimpleGUIGame(Player* player1, Player* player2, Board& board, MessageReceiver* receiver);
+		SimpleGUIGame(Player* player1, Player* player2,
+				Board& board, MessageReceiver* receiver);
 		void start();
 };
 
