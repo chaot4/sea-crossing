@@ -7,8 +7,8 @@ void MessageReceiver::pushCreateMarkerMessage(int id, int player)
 	glm::vec3 scaling;
 	std::string geom_path = "../data/meshes/marker.fbx";
 	std::string mat_path = "../data/materials/default.slmtl";
-	if(player=0) mat_path = "../data/materials/bright_wood.slmtl";
-	if(player=1) mat_path = "../data/materials/dark_wood.slmtl";
+	if(player == 0) mat_path = "../data/materials/bright_wood.slmtl";
+	if(player == 1) mat_path = "../data/materials/dark_wood.slmtl";
 	Message newMsg(CREATE,id,euclid_pos,orientation,scaling,geom_path,mat_path);
 
 	message_fifo.push(newMsg);
@@ -22,8 +22,8 @@ void MessageReceiver::pushCreateGemMessage(int id, int player)
 	glm::vec3 scaling;
 	std::string geom_path = "../data/meshes/gem.fbx";
 	std::string mat_path = "../data/materials/default.slmtl";
-	if(player=0) mat_path = "../data/materials/bright_stone.slmtl";
-	if(player=1) mat_path = "../data/materials/dark_stone.slmtl";
+	if(player == 0) mat_path = "../data/materials/bright_stone.slmtl";
+	if(player == 1) mat_path = "../data/materials/dark_stone.slmtl";
 	Message newMsg(CREATE,id,euclid_pos,orientation,scaling,geom_path,mat_path);
 
 	message_fifo.push(newMsg);
@@ -52,5 +52,5 @@ Message MessageReceiver::popMessage()
 bool MessageReceiver::checkQueue()
 {
 	if(message_counter > 0) return true;
-	else false;
+	else return false;
 }

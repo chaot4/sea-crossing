@@ -516,13 +516,13 @@ bool ResourceManager::loadFbxGeometry(const char* const path, Mesh* geomPtr)
 	Vertex_pntcub *vertices = new Vertex_pntcub[vertexCount];
 	unsigned int *indices = new unsigned int[fbxPolyCount * 3];
 
-	float *uvs = NULL;
+//	float *uvs = NULL;
 	FbxStringList uvNames;
 	fbxMesh->GetUVSetNames(uvNames);
 	const char *uvName = NULL;
 	if(hasUV && uvNames.GetCount())
 	{
-		uvs = new float[vertexCount *2];
+//		uvs = new float[vertexCount *2];
 		uvName = uvNames[0];
 	}
 
@@ -924,16 +924,13 @@ bool ResourceManager::parseMaterial(const char* const materialPath, MaterialInfo
 const std::string ResourceManager::readShaderFile(const char* const path)
 {
 	std::ifstream inFile( path, std::ios::in );
-    if( !inFile ) {
-        return false;
-    }
 
 	std::ostringstream source;
-    while( inFile.good() ) {
-        int c = inFile.get();
-        if( ! inFile.eof() ) source << (char) c;
-    }
-    inFile.close();
+	while( inFile.good() ) {
+		int c = inFile.get();
+		if( ! inFile.eof() ) source << (char) c;
+	}
+	inFile.close();
 
 	return source.str();
 }

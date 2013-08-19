@@ -22,7 +22,7 @@ public:
 	~VolumetricSceneObject();
 
 	VolumetricSceneObject(const int inId, const glm::vec3& inPosition, const glm::quat& inOrientation, const glm::vec3& inScaling, Mesh* inGeom, Texture3D* inVolume, GLSLProgram* inPrgm)
-		: SceneEntity(inId, inPosition, inOrientation, inScaling), boundingBoxGeom(inGeom), volume(inVolume), shaderPrgm(inPrgm) {}
+		: SceneEntity(inId, inPosition, inOrientation, inScaling), shaderPrgm(inPrgm), volume(inVolume), boundingBoxGeom(inGeom){}
 
 	GLSLProgram* getShaderProgram() {return shaderPrgm;}
 	Texture3D* getVolumeTexture() {return volume;}
