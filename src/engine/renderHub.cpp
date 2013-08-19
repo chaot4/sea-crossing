@@ -117,7 +117,10 @@ void RenderHub::run()
 
 	while(running && !glfwWindowShouldClose(activeWindow))
 	{
-		while(messageRcvr.checkQueue()) processMessage( &(messageRcvr.popMessage()) );
+		while(messageRcvr.checkQueue()){
+			Message message(messageRcvr.popMessage());
+			processMessage(&message);
+		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

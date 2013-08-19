@@ -1,6 +1,7 @@
 #ifndef  messageReceiver_h
 #define messageReceiver_h
 
+#include <string>
 #include <queue>
 #include <atomic>
 

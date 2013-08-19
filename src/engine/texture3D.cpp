@@ -10,7 +10,6 @@ bool Texture3D::loadTextureFile(std::string inputPath, glm::ivec3 resolution)
 	//TODO: Add some checks
 
 	FILE *pFile;
-	FILE **testFile;
 
 	int size = resolution.x * resolution.y * resolution.z;
 
@@ -18,7 +17,6 @@ bool Texture3D::loadTextureFile(std::string inputPath, glm::ivec3 resolution)
 	filename.assign(inputPath);
 
 	pFile = fopen (inputPath.c_str(), "rb");
-	fopen_s(testFile,inputPath.c_str(), "rb");
 	if (pFile==NULL) return false;
 
 	GLfloat *volumeData = NULL;
