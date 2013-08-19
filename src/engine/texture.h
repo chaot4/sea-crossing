@@ -5,11 +5,6 @@
 #include "GLFW/glfw3.h"
 #include <iostream>
 
-//pragmas seem to be only necessary in windows
-#ifdef _WIN32
-	#pragma comment(lib,"glew32.lib")
-#endif
-
 class Texture
 {
 protected:

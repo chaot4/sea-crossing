@@ -15,57 +15,32 @@ bool RenderHub::init()
 	//	Initialize GLFW
 	if(!glfwInit())
 	{
+		std::cout<<"-----\n"
+				<<"The time is out of joint - O cursed spite,\n"
+				<<"That ever I was born to set it right!\n"
+				<<"-----\n"
+				<<"Error: Couldn't initialize glfw.";
+
 		return false;
 	}
 	std::cout<<"Initializing GLFW\n";
 
-	//#ifdef _WIN32
-	//	//	Get highest openGL Version (doesn't work on linux right now)
-	//	//	The glfwGetGLVersion function seems somewhat broken on windows too. When certain, seemingly random
-	//	//	conditions are met.
-	//
-	//	int maj, min, rev;
-	//    glfwGetGLVersion(&maj, &min, &rev);
-	//
-	//	//	Open a glfw window
-	//	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, maj);
-	//	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, min);
-	//	//glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	//	//glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	//#else
-	//	//	Better be save than sorry and choose a low GL version on linux
-	//	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 2);
-	//	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 0);
-	//#endif
 
-	int maj, min;
+	activeWindow = glfwCreateWindow(800,450,"Sea-Crossing",NULL,NULL);
 
-	#ifdef _WIN32
-		maj = 3;
-		min = 3;
-	#else
-		maj = 2;
-		min = 0;
-	#endif
-
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, maj);
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, min);
-	glfwOpenWindowHint(GLFW_FSAA_SAMPLES,4);
-
-	if(!glfwOpenWindow(400,400,8,8,8,8,32,0,GLFW_WINDOW))
+	if(!activeWindow)
 	{
 		std::cout<<"-----\n"
 				<<"The time is out of joint - O cursed spite,\n"
 				<<"That ever I was born to set it right!\n"
 				<<"-----\n"
 				<<"Error: Couldn't open glfw window";
+
+		glfwTerminate();
 		return false;
 	}
 
-	/*	This is actually not working like this... */
-	//const GLubyte *version = glGetString(GL_VERSION);
-	//std::cout<<"Supporting OpenGL Version: "<<version<<"\n";
-	std::cout<<"Using OpenGL Version: "<<maj<<"."<<min<<"\n\n";
+	glfwMakeContextCurrent(activeWindow);
 
 	/*	Initialize glew */
 	//glewExperimental = GL_TRUE;
@@ -140,7 +115,7 @@ void RenderHub::run()
 	glEnable(GL_CULL_FACE);
 	glEnable( GL_MULTISAMPLE );
 
-	while(running && glfwGetWindowParam(GLFW_OPENED))
+	while(running && !glfwWindowShouldClose(activeWindow))
 	{
 		while(messageRcvr.checkQueue()) processMessage( &(messageRcvr.popMessage()) );
 
@@ -149,8 +124,7 @@ void RenderHub::run()
 		glViewport(0,0,1200,675);
 		activeScene->render();
 
-		glfwSwapBuffers();
-		glfwSleep(0.01);
+		glfwSwapBuffers(activeWindow);
 	}
 }
 
@@ -204,14 +178,14 @@ void RenderHub::runVolumeTest()
 	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable(GL_CULL_FACE);
 
-	while(running && glfwGetWindowParam(GLFW_OPENED))
+	while(running && !glfwWindowShouldClose(activeWindow))
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0,0,1200,675);
 		activeScene->renderVolumetricObjects();
 
-		glfwSwapBuffers();
+		glfwSwapBuffers(activeWindow);
 	}
 }
 

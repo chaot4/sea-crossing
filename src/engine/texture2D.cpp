@@ -7,26 +7,27 @@ void Texture2D::bindTexture() const
 
 bool Texture2D::loadTextureFile(std::string inputPath)
 {
-	//TODO: Add some checks
-
-	glGenTextures(1, &handle);
-	glBindTexture(GL_TEXTURE_2D, handle);
-
-	/* Set texture identifier to correct value (namely the filename) */
-	filename.assign(inputPath);
-
-	if(!glfwLoadTexture2D(inputPath.c_str(),0))return false;
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-	glBindTexture(GL_TEXTURE_2D,0);
-
-	return true;
+	//	//TODO: Add some checks
+	//	
+	//	glGenTextures(1, &handle);
+	//	glBindTexture(GL_TEXTURE_2D, handle);
+	//	
+	//	/* Set texture identifier to correct value (namely the filename) */
+	//	filename.assign(inputPath);
+	//	
+	//	if(!glfwLoadTexture2D(inputPath.c_str(),0))return false;
+	//	
+	//	glGenerateMipmap(GL_TEXTURE_2D);
+	//	
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	//	
+	//	glBindTexture(GL_TEXTURE_2D,0);
+	//	
+	//	return true;
+	return false;
 }
 
 bool Texture2D::loadArrayF(int dimX, int dimY, float *data)

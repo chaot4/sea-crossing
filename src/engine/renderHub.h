@@ -17,12 +17,6 @@
 #include "framebufferObject.h"
 #include "GLFW/glfw3.h"
 
-//pragmas seem to be only necessary in windows
-#ifdef _WIN32
-	#pragma comment(lib,"GLFW.lib")
-	#pragma comment(lib,"opengl32.lib")
-#endif
-
 class RenderHub
 {
 public:
@@ -55,6 +49,7 @@ private:
 	std::vector<FramebufferObject> framebufferList;
 	std::list<Scene> sceneList;
 
+	GLFWwindow *activeWindow;
 	FramebufferObject *activeFramebuffer;
 	Scene *activeScene;
 

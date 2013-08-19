@@ -30,9 +30,6 @@
     <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\game\players.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\game\board.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
@@ -84,6 +81,12 @@
     <ClCompile Include="..\src\engine\messageReceiver.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\game\player.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game\human_players.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\game\board.h">
@@ -93,9 +96,6 @@
       <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\src\game\game.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\game\players.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\src\engine\volumetricSceneObject.h">
@@ -151,6 +151,12 @@
     </ClInclude>
     <ClInclude Include="..\src\engine\vertexStructs.h">
       <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\player.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\human_players.h">
+      <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
