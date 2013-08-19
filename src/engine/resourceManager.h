@@ -202,6 +202,26 @@ private:
 	 */
 	const std::string readShaderFile(const char* const path);
 
+	/**
+	 * \brief Read a the header of a ppm image file. Courtesy to the computer vision lecture I attended.
+	 * \param filename Location of the image file
+	 * \param headerEndPos Out parameter, marks the point where the header of the ppm file ends
+	 * \param imgDimX Out parameter, containing the dimension of the image in X direction in pixels
+	 * \param imgDimY Out parameter, containing the dimension of the image in Y direction in pixels
+	 * \return Returns true if the ppm header was succesfully read, false otherwise
+	 */
+	bool readPpmHeader(const char* filename, long& headerEndPos, int& imgDimX, int& imgDimY);
+
+	/**
+	 * \brief Read a the data of a ppm image file. Courtesy to the computer vision lecture I attended.
+	 * \param filename Location of the image file
+	 * \param imageData Pointer to the data buffer, that the image data will be written to
+	 * \param dataBegin Marks the location within the ppm file, where the data block begins
+	 * \param imgDimX Dimension of the image in X direction in pixels
+	 * \param imgDimY Dimension of the image in Y direction in pixels
+	 * \return Returns true if the ppm header was succesfully read, false otherwise
+	 */
+	bool readPpmData(const char* filename, char* imageData, long dataBegin, int imgDimX, int imgDimY);
 };
 
 #endif

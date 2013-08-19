@@ -12,6 +12,9 @@ RenderHub::~RenderHub(void)
 
 bool RenderHub::init()
 {
+	//std::cout<<"----------------------------\n"
+	//		<<"SPACE LION - Early Prototype\n"
+	//		<<"----------------------------\n";
 	//	Initialize GLFW
 	if(!glfwInit())
 	{
@@ -23,7 +26,7 @@ bool RenderHub::init()
 
 		return false;
 	}
-	std::cout<<"Initializing GLFW\n";
+	//std::cout<<"Initializing GLFW\n";
 
 
 	activeWindow = glfwCreateWindow(800,450,"Sea-Crossing",NULL,NULL);
@@ -58,6 +61,13 @@ bool RenderHub::init()
 	/	Apparently glweInit() causes a GL ERROR 1280, so let's just catch that...
 	*/
 	glGetError();
+
+	/*
+	/	This is actually not supposed to be done like this!
+	*/
+	addScene();
+	setActiveScene(0);
+	run();
 
 	return true;
 }
@@ -99,10 +109,10 @@ void RenderHub::run()
 	/	Support for adding cameras and lights via message system will follow later on
 	*/
 
-	if(!(activeScene->createSceneCamera(0,glm::vec3(2.5,-2.0,12.0),glm::quat(),16.0f/9.0f,60.0f)))
+	if(!(activeScene->createSceneCamera(0,glm::vec3(20.0,10.0,20.0),glm::quat(),16.0f/9.0f,60.0f)))
 		std::cout<<"Failed to create camera"<<"\n";
 
-	if(!(activeScene->createSceneLight(0,glm::vec3(0.0,2.0,0.0),glm::vec4(1.0,1.0,1.0,1.0))))
+	if(!(activeScene->createSceneLight(0,glm::vec3(-20.0,10.0,-20.0),glm::vec4(1.0,1.0,1.0,1.0))))
 		std::cout<<"Failed to create light"<<"\n";
 
 	activeScene->setActiveCamera(0);
@@ -117,18 +127,21 @@ void RenderHub::run()
 
 	while(running && !glfwWindowShouldClose(activeWindow))
 	{
-		while(messageRcvr.checkQueue()){
-			Message message(messageRcvr.popMessage());
-			processMessage(&message);
+		while(messageRcvr.checkQueue())
+		{
+			Message msg(messageRcvr.popMessage());
+			processMessage(&msg);
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glViewport(0,0,1200,675);
+		glViewport(0,0,800,450);
 		activeScene->render();
 
 		glfwSwapBuffers(activeWindow);
+		glfwPollEvents();
 	}
+	glfwDestroyWindow(activeWindow);
 }
 
 void RenderHub::runVolumeTest()
@@ -200,11 +213,19 @@ void RenderHub::processMessage(Message *msg)
 	case CREATE:
 		Mesh* geomPtr;
 		Material* materialPtr;
-		resourceMngr.createMaterial((msg->material_path).c_str(),materialPtr);
-		resourceMngr.createMesh((msg->geometry_path).c_str(),geomPtr);
+		if(!(resourceMngr.createMaterial((msg->material_path).c_str(),materialPtr)))
+		{
+			std::cout<<"Failed to create material."<<std::endl;
+			break;
+		}
+		if(!(resourceMngr.createMesh((msg->geometry_path).c_str(),geomPtr)))
+		{
+			std::cout<<"Failed to create mesh."<<std::endl;
+			break;
+		}
 
 		if(!(activeScene->createStaticSceneObject((msg->id),(msg->position),(msg->orientation),geomPtr,materialPtr)))
-			std::cout<<"Failed to create scene object"<<"\n";
+			std::cout<<"Failed to create scene object."<<std::endl;
 
 		break;
 	case DELETE:

@@ -1,0 +1,4 @@
+1
+td ../resources/textures/default.ppm
+ts ../resources/textures/default_s.ppm
+tn ../resources/textures/default_n.ppm

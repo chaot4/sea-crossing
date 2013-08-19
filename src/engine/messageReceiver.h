@@ -50,9 +50,10 @@ struct Message
 class MessageReceiver
 {
 public:
-	MessageReceiver() {}
+	MessageReceiver() : message_counter(0) {}
 	~MessageReceiver() {}
 
+	void pushLoadSceneMessages();
 	void pushCreateMarkerMessage(int id, int player);
 	void pushCreateGemMessage(int id, int player);
 	void pushDeleteMessage(int id);
