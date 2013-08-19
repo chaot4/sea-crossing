@@ -19,8 +19,8 @@ class Board{
 		void initMaps();
 
 		bool existsPathBetween(std::vector<FaceID> const& start_faces,
-				std::vector<FaceID> const& end_faces, PlayerID player_id);
-		bool isEndFace(FaceID id, std::vector<FaceID> const& end_faces);
+				std::vector<FaceID> const& end_faces, PlayerID player_id) const;
+		bool isEndFace(FaceID id, std::vector<FaceID> const& end_faces) const;
 
 	public:
 		Board();
@@ -33,11 +33,11 @@ class Board{
 		bool removeGem(NodeLabel const& label, std::vector<FaceLabel>& removed_markers);
 		bool removeMarker(FaceLabel const& label);
 
-		bool isNodeLabel(NodeLabel const& label);
-		bool isFaceLabel(FaceLabel const& label);
-		bool nodeHasOwner(NodeLabel const& label);
-		bool faceHasOwner(FaceLabel const& label);
-		bool checkVictoryCondition(PlayerID player_id);
+		bool isNodeLabel(NodeLabel const& label) const;
+		bool isFaceLabel(FaceLabel const& label) const;
+		bool nodeHasOwner(NodeLabel const& label) const;
+		bool faceHasOwner(FaceLabel const& label) const;
+		bool checkVictoryCondition(PlayerID player_id) const;
 };
 
 #endif

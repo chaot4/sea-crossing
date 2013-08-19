@@ -87,6 +87,9 @@
     <ClCompile Include="..\src\game\human_players.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ai\ai_players.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\game\board.h">
@@ -156,6 +159,9 @@
       <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\src\game\human_players.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ai\ai_players.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>

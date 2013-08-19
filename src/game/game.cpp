@@ -8,11 +8,11 @@ using namespace std;
 
 //DebugGame::DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
 //	:player{player1, player2}, board(){}
-DebugGame::DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2, Board& board)
-	:board(board)
+DebugGame::DebugGame(ConsolePlayer* player1, ConsolePlayer* player2, Board& board)
+	:player(new ConsolePlayer*[2]), board(board)
 {
-	player.push_back(player1);
-	player.push_back(player2);
+	player[0] = player1;
+	player[1] = player2;
 }
 
 void DebugGame::start()
@@ -63,7 +63,7 @@ bool DebugGame::command_player(PlayerID player_id)
 {
 	NodeLabel label;
 
-	player[player_id].getNextMove(label);
+	player[player_id]->getNextMove(label);
 
 	if(board.isNodeLabel(label))
 		if(!board.nodeHasOwner(label)){
@@ -71,7 +71,7 @@ bool DebugGame::command_player(PlayerID player_id)
 			reverted_moves.clear();
 
 			if(board.checkVictoryCondition(player_id)){
-				cout << player[player_id].getName() << " wins!" << endl;
+				cout << player[player_id]->getName() << " wins!" << endl;
 				return true;
 			}
 		}
@@ -93,7 +93,7 @@ void DebugGame::placeGem(PlayerID player_id, NodeLabel label)
 	moves.push_back(Move(label, player_id, true));
 
 	for(unsigned int i=0; i<new_markers.size(); i++){
-		cout << "A new marker of " << player[player_id].getName()
+		cout << "A new marker of " << player[player_id]->getName()
 			<< " has been placed on " << new_markers[i] << "."
 			<< endl;
 	}
@@ -103,7 +103,7 @@ bool DebugGame::command_marker_player(PlayerID player_id)
 {
 	FaceLabel label;
 
-	player[player_id].getMarkerMove(label);
+	player[player_id]->getMarkerMove(label);
 
 	if(board.isFaceLabel(label)){
 		if(!board.faceHasOwner(label)){
@@ -111,7 +111,7 @@ bool DebugGame::command_marker_player(PlayerID player_id)
 			reverted_moves.clear();
 
 			if(board.checkVictoryCondition(player_id)){
-				cout << player[player_id].getName() << " wins!" << endl;
+				cout << player[player_id]->getName() << " wins!" << endl;
 				return true;
 			}
 		}
@@ -157,7 +157,7 @@ void DebugGame::removeGem(Move const& move)
 {
 	vector<FaceLabel> removed_markers;
 
-	cout << "Removed the gem of " << player[move.owner_id].getName()
+	cout << "Removed the gem of " << player[move.owner_id]->getName()
 		<< " from " << move.label << "." << endl;
 	board.removeGem(move.label, removed_markers);
 
@@ -173,7 +173,7 @@ void DebugGame::removeGem(Move const& move)
 	
 void DebugGame::removeMarker(Move const& move)
 {
-	cout << "Removed the marker of " << player[move.owner_id].getName()
+	cout << "Removed the marker of " << player[move.owner_id]->getName()
 		<< " from " << move.label << "." << endl;
 	board.removeMarker(move.label);
 }
@@ -203,11 +203,11 @@ void DebugGame::command_forward()
 
 //ConsoleGame::ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
 //	:player{player1, player2}{}
-ConsoleGame::ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2, Board& board)
-	:board(board)
+ConsoleGame::ConsoleGame(Player* player1, Player* player2, Board& board)
+	:player(new Player*[2]), board(board)
 {
-	player.push_back(player1);
-	player.push_back(player2);
+	player[0] = player1;
+	player[1] = player2;
 }
 
 void ConsoleGame::start()
@@ -228,7 +228,7 @@ void ConsoleGame::start()
 		valid_move = makeMove(current_player);
 	}
 
-	cout << player[current_player].getName() << " wins!" << endl;
+	cout << player[current_player]->getName() << " wins!" << endl;
 	cout << endl << "==- END CONSOLE GAME -==" << endl;
 }
 
@@ -236,7 +236,7 @@ bool ConsoleGame::makeMove(PlayerID player_id)
 {
 	NodeLabel label;
 
-	player[player_id].getNextMove(label);
+	player[player_id]->getNextMove(label);
 
 	if(board.isNodeLabel(label)){
 		if(!board.nodeHasOwner(label)){
@@ -263,7 +263,7 @@ void ConsoleGame::placeGem(PlayerID player_id, NodeLabel label)
 	board.placeGem(label, player_id, new_markers);
 
 	for(unsigned int i=0; i<new_markers.size(); i++){
-		cout << "A new marker of " << player[player_id].getName()
+		cout << "A new marker of " << player[player_id]->getName()
 			<< " has been placed on " << new_markers[i] << "."
 			<< endl;
 	}
@@ -278,10 +278,10 @@ void ConsoleGame::placeGem(PlayerID player_id, NodeLabel label)
 template <typename MessageReceiver>
 SimpleGUIGame<MessageReceiver>::SimpleGUIGame(Player* player1, Player* player2, Board& board,
 		MessageReceiver* receiver)
-	:board(board), receiver(receiver)
+	:player(new Player*[2]), board(board), receiver(receiver)
 {
-	player.push_back(player1);
-	player.push_back(player2);
+	player[0] = player1;
+	player[1] = player2;
 }
 
 template <typename MessageReceiver>

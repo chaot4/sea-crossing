@@ -17,11 +17,11 @@ int main(){
 	std::thread renderThread(&RenderHub::init,&testRenderer);
 	testReceiver->pushLoadSceneMessages();
 	
-	ConsolePlayer player1("Spongebob");
-	ConsolePlayer player2("Patrick");
 	Board board;
+	ConsolePlayer player1("Spongebob");
+	RandomAIPlayer player2("Patrick", board);
 	
-	ConsoleGame g(player1, player2, board);
+	ConsoleGame g(&player1, &player2, board);
 	//g.start();
 	std::thread gameThread(&ConsoleGame::start,&g);
 
