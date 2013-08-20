@@ -88,7 +88,7 @@ void DebugGame::placeGem(PlayerID player_id, NodeLabel label)
 {
 	vector<FaceLabel> new_markers;
 
-	cout << "Placed a gem on " << label << "." << endl;
+	cout << player[player_id]->getName() << " placed a gem on " << label << "." << endl;
 	board.placeGem(label, player_id, new_markers);
 	moves.push_back(Move(label, player_id, true));
 
@@ -128,7 +128,7 @@ bool DebugGame::command_marker_player(PlayerID player_id)
 
 void DebugGame::placeMarker(PlayerID player_id, FaceLabel label)
 {
-	cout << "Placed a marker on " << label << "." << endl;
+	cout << player[player_id]->getName() << " placed a marker on " << label << "." << endl;
 	board.placeMarker(label, player_id);
 	moves.push_back(Move(label, player_id, false));
 }
@@ -259,7 +259,7 @@ void ConsoleGame::placeGem(PlayerID player_id, NodeLabel label)
 {
 	vector<FaceLabel> new_markers;
 
-	cout << "Placed a gem on " << label << "." << endl;
+	cout << player[player_id]->getName() << " placed a gem on " << label << "." << endl;
 	board.placeGem(label, player_id, new_markers);
 
 	for(unsigned int i=0; i<new_markers.size(); i++){

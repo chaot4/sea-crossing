@@ -1,8 +1,13 @@
 #ifndef ai_ai_players
 #define ai_ai_players
 
+#include "../game/defs.h"
 #include "../game/player.h"
 #include "../game/board.h"
+
+#include <string>
+#include <unordered_set>
+#include <cstdlib>
 
 class RandomAIPlayer : public Player
 {

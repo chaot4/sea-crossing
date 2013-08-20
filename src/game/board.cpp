@@ -2,7 +2,6 @@
 
 using namespace std;
 
-/* Public members. */
 
 Board::Board()/*:
 	nodes{
@@ -384,6 +383,10 @@ Board::Board()/*:
     faces.push_back(Face(40, "EW1", adj_nodes, adj_faces));
 
 	initMaps();
+
+	/* Init free nodes. */
+	for(unsigned int i=0; i<nodes.size(); i++)
+		free_nodes.insert(i);
 }
 
 void Board::reset()
@@ -391,6 +394,11 @@ void Board::reset()
 	/* Reset the nodes. */
 	for(unsigned int i=0; i<nodes.size(); i++)
 		nodes[i].owner = 0;
+
+	/* Reset the free nodes. No multiple same elements are allowed in
+	 * an unordered_set and thus it won't insert if the element is already contained. */
+	for(unsigned int i=0; i<nodes.size(); i++)
+		free_nodes.insert(i);
 
 	/* Reset the faces. */
 	for(unsigned int i=0; i<faces.size(); i++){
@@ -414,6 +422,9 @@ bool Board::placeGem(NodeLabel const& label, PlayerID player_id,
 			Face& face(faces[node.adj_faces[i]]);
 			face.num_adj_nodes_player[player_id]++;
 		}
+
+		/* Update free_nodes. */
+		free_nodes.erase(node.id);
 
 		/* Check if new markers have to be placed. */
 		for(unsigned int i=0; i<node.adj_faces.size(); i++){
@@ -459,6 +470,9 @@ bool Board::removeGem(NodeLabel const& label, vector<FaceLabel>& removed_markers
 			face.num_adj_nodes_player[old_owner_id]--;
 			assert(face.num_adj_nodes_player[old_owner_id] >= 0);
 		}
+
+		/* Update free_nodes. */
+		free_nodes.emplace(node.id);
 
 		/* Check if markers have to be removed. */
 		for(unsigned int i=0; i<node.adj_faces.size(); i++){
@@ -547,7 +561,20 @@ bool Board::checkVictoryCondition(PlayerID player_id) const
 	return existsPathBetween(start_faces, end_faces, player_id);
 }
 
-/* Private members. */
+Node const& Board::getNode(NodeID node_id) const
+{
+	return nodes[node_id];
+}
+
+Face const& Board::getFace(FaceID face_id) const
+{
+	return faces[face_id];
+}
+
+std::unordered_set<NodeID> const& Board::getFreeNodes() const
+{
+	return free_nodes;
+}
 
 void Board::initMaps()
 {
