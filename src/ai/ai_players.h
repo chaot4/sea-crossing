@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_set>
 #include <cstdlib>
+#include <time.h>
 
 class RandomAIPlayer : public Player
 {
