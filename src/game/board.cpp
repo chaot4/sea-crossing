@@ -28,7 +28,7 @@ Board::Board()/*:
 		Node(20, "bS-1", {4, 10, 11}),
 		Node(21, "bS", {3, 4, 10}),
 		Node(22, "bS1", {3, 9, 10}),
-		Node(23, "dW-1", {22, 23, 38}),
+		Node(23, "dW-1", {23, 38, 39}),
 		Node(24, "cW-1", {11, 12, 23}),
 		Node(25, "bW-1", {4, 11, 12}),
 		Node(26, "bE-1", {3, 8, 9}),
@@ -125,7 +125,7 @@ Board::Board()/*:
 	nodes.push_back(Node(1, "eSE", adj_faces));
 	adj_faces.clear(); adj_faces.push_back(22); adj_faces.push_back(36); adj_faces.push_back(37);
 	nodes.push_back(Node(2, "dS-3", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(21); adj_faces.push_back(32); adj_faces.push_back(36);
+	adj_faces.clear(); adj_faces.push_back(21); adj_faces.push_back(22); adj_faces.push_back(36);
 	nodes.push_back(Node(3, "dS-2", adj_faces));
 	adj_faces.clear(); adj_faces.push_back(21); adj_faces.push_back(35); adj_faces.push_back(36);
 	nodes.push_back(Node(4, "dS-1", adj_faces));
@@ -165,7 +165,7 @@ Board::Board()/*:
 	nodes.push_back(Node(21, "bS", adj_faces));
 	adj_faces.clear(); adj_faces.push_back(3); adj_faces.push_back(9); adj_faces.push_back(10);
 	nodes.push_back(Node(22, "bS1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(22); adj_faces.push_back(23); adj_faces.push_back(38);
+	adj_faces.clear(); adj_faces.push_back(23); adj_faces.push_back(38); adj_faces.push_back(39);
 	nodes.push_back(Node(23, "dW-1", adj_faces));
 	adj_faces.clear(); adj_faces.push_back(11); adj_faces.push_back(12); adj_faces.push_back(23);
 	nodes.push_back(Node(24, "cW-1", adj_faces));
