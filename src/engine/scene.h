@@ -44,6 +44,7 @@ public:
 	bool createSceneCamera(const int id, const glm::vec3 position, const glm::quat orientations, float aspect, float fov);
 
 	void setActiveCamera(const int);
+	SceneCamera* getActiveCamera();
 
 	void testing();
 

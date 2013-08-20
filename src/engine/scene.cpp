@@ -45,6 +45,11 @@ void Scene::setActiveCamera(const int inId)
 	}
 }
 
+SceneCamera* Scene::getActiveCamera()
+{
+	return activeCamera;
+}
+
 void Scene::testing()
 {
 	//	Ehhh, a few lines for testing

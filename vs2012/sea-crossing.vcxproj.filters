@@ -90,6 +90,9 @@
     <ClCompile Include="..\src\ai\ai_players.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\engine\controls.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\game\board.h">
@@ -163,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="..\src\ai\ai_players.h">
       <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\controls.h">
+      <Filter>Header Files\engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,6 +14,7 @@
 #include "postProcessor.h"
 #include "resourceManager.h"
 #include "messageReceiver.h"
+#include "controls.h"
 #include "framebufferObject.h"
 #include "GLFW/glfw3.h"
 
@@ -45,6 +46,7 @@ public:
 private:
 	ResourceManager resourceMngr;
 	MessageReceiver messageRcvr;
+	Controls controlHandler;
 
 	std::vector<FramebufferObject> framebufferList;
 	std::list<Scene> sceneList;

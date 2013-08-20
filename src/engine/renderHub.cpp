@@ -109,7 +109,7 @@ void RenderHub::run()
 	/	Support for adding cameras and lights via message system will follow later on
 	*/
 
-	if(!(activeScene->createSceneCamera(0,glm::vec3(20.0,10.0,20.0),glm::quat(),16.0f/9.0f,60.0f)))
+	if(!(activeScene->createSceneCamera(0,glm::vec3(0.0,0.0,20.0),glm::quat(),16.0f/9.0f,60.0f)))
 		std::cout<<"Failed to create camera"<<"\n";
 
 	if(!(activeScene->createSceneLight(0,glm::vec3(-20.0,10.0,-20.0),glm::vec4(1.0,1.0,1.0,1.0))))
@@ -117,7 +117,7 @@ void RenderHub::run()
 
 	activeScene->setActiveCamera(0);
 	
-	activeScene->testing();
+	//activeScene->testing();
 
 	running = true;
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
@@ -133,6 +133,9 @@ void RenderHub::run()
 			processMessage(&msg);
 		}
 
+		/*	For now, I avoid using glfw callback functions */
+		controlHandler.updateCamera(activeWindow,activeScene);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0,0,800,450);
@@ -141,7 +144,7 @@ void RenderHub::run()
 		glfwSwapBuffers(activeWindow);
 		glfwPollEvents();
 	}
-	glfwDestroyWindow(activeWindow);
+	//glfwDestroyWindow(activeWindow);
 }
 
 void RenderHub::runVolumeTest()
