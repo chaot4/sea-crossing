@@ -1,0 +1,2 @@
+* game: Implement the first-move-switching rule.
+* game: Fix 'Floating point exception (core dumped)' error.
