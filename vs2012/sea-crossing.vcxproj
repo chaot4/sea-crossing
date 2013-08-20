@@ -138,6 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\ai\ai_players.cpp" />
     <ClCompile Include="..\src\engine\framebufferObject.cpp" />
     <ClCompile Include="..\src\engine\GLSLProgram.cpp" />
     <ClCompile Include="..\src\engine\material.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\ai\ai_players.h" />
     <ClInclude Include="..\src\engine\framebufferObject.h" />
     <ClInclude Include="..\src\engine\GLSLProgram.h" />
     <ClInclude Include="..\src\engine\material.h" />

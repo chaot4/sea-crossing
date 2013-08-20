@@ -114,7 +114,6 @@ bool ResourceManager::createMesh(const std::string path, Mesh*& inOutGeomPtr)
 	std::string::const_iterator itr1;
 	for(itr1 = path.end(); *itr1 != '.'; --itr1);
 	file_type.assign(++itr1,itr0);
-	std::cout<<file_type<<std::endl;
 
 	if(file_type == "fbx")
 	{
@@ -248,12 +247,6 @@ bool ResourceManager::createShaderProgram(shaderType type, GLSLProgram*& inOutPr
 		shaderPrg.bindAttribLocation(3,"vColour");
 		shaderPrg.bindAttribLocation(4,"vUVCoord");
 		break; }
-	case FTV_POISSON : {
-		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
-		fragSource = readShaderFile("../resources/shaders/f_ftv_poisson.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
-		break; }
 	case FXAA : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_fxaa.glsl");
@@ -266,41 +259,9 @@ bool ResourceManager::createShaderProgram(shaderType type, GLSLProgram*& inOutPr
 		shaderPrg.bindAttribLocation(0,"vPosition");
 		shaderPrg.bindAttribLocation(1,"vUVCoord");
 		break; }
-	case STAMP : {
-		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
-		fragSource = readShaderFile("../resources/shaders/f_stamp.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
-		break; }
-	case FTV_INPAINTING : {
-		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
-		fragSource = readShaderFile("../resources/shaders/f_ftv_imageInpainting.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
-		break; }
-	case DISTANCEMAPPING : {
-		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
-		fragSource = readShaderFile("../resources/shaders/f_distanceMapping.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
-		break; }
-	case FTV_MASK : {
-		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
-		fragSource = readShaderFile("../resources/shaders/f_ftv_mask.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
-		shaderPrg.bindFragDataLocation(0,"inpaintingMask");
-		shaderPrg.bindFragDataLocation(1,"distanceMap");
-		break; }
 	case VOLUME_RAYCASTING : {
 		vertSource = readShaderFile("../resources/shaders/v_volRen.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_volRen.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(3,"vColour");
-		break; }
-	case FTV_VOLUME_RAYCASTING : {
-		vertSource = readShaderFile("../resources/shaders/v_ftv_volRen.glsl");
-		fragSource = readShaderFile("../resources/shaders/f_ftv_volRen.glsl");
 		shaderPrg.bindAttribLocation(0,"vPosition");
 		shaderPrg.bindAttribLocation(3,"vColour");
 		break; }
@@ -322,37 +283,11 @@ bool ResourceManager::createShaderProgram(shaderType type, GLSLProgram*& inOutPr
 		shaderPrg.bindAttribLocation(0,"vPosition");
 		shaderPrg.bindAttribLocation(1,"vUVCoord");
 		break; }
-	case COHERENCE : {
-		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
-		fragSource = readShaderFile("../resources/shaders/f_ftv_coherence.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
-		break; }
-	case FTV_IMPROVED_INPAINTING : {
-		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
-		fragSource = readShaderFile("../resources/shaders/f_ftv_improvedInpainting.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
-		break; }
 	case HESSE : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_hesse.glsl");
 		shaderPrg.bindAttribLocation(0,"vPosition");
 		shaderPrg.bindAttribLocation(1,"vUVCoord");
-		break; }
-	case FTV_GAUSSIAN : {
-		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
-		fragSource = readShaderFile("../resources/shaders/f_ftv_seperatedGaussian.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
-		break; }
-	case FTV_MASK_SHRINK : {
-		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
-		fragSource = readShaderFile("../resources/shaders/f_ftv_shrinkMask.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
-		shaderPrg.bindFragDataLocation(0,"inpaintingMask");
-		shaderPrg.bindFragDataLocation(1,"distanceMap");
 		break; }
 	default : {
 		return false;
@@ -390,9 +325,18 @@ bool ResourceManager::createTexture2D(const std::string path, Texture*& inOutTex
 		}
 	}
 
+	char* imageData;
+	long dataBegin;
+	int imgDimX;
+	int imgDimY;
+
+	if(!readPpmHeader(path.c_str(),dataBegin,imgDimX,imgDimY)) return false;
+	imageData = new char[3*imgDimX*imgDimY];
+	if(!readPpmData(path.c_str(),imageData,dataBegin,imgDimX,imgDimY)) return false;
+
 	textureList.push_back(Texture2D());
 	std::list<Texture2D>::iterator lastElement = --(textureList.end());
-	if(!(lastElement->loadTextureFile(path))) return false;
+	if(!(lastElement->loadArrayC(imgDimX,imgDimY,imageData))) return false;
 
 	inOutTexPtr = &(*lastElement);
 	return true;
@@ -510,7 +454,7 @@ bool ResourceManager::loadFbxGeometry(const char* const path, Mesh* geomPtr)
 	int vertexCount = fbxMesh->GetControlPointsCount();
 	/*	Triangles are assumed, meaning three vertices per polygon */
 	if(!allByControlPoint) vertexCount = fbxPolyCount * 3;
-	std::cout<<"Vertex count: "<<vertexCount<<"\n";
+	//std::cout<<"Vertex count: "<<vertexCount<<"\n";
 
 	/*	For reasons of simplicity I use the "full" vertex format in any case for now */
 	Vertex_pntcub *vertices = new Vertex_pntcub[vertexCount];
@@ -933,4 +877,161 @@ const std::string ResourceManager::readShaderFile(const char* const path)
 	inFile.close();
 
 	return source.str();
+}
+
+bool ResourceManager::readPpmHeader(const char* filename, long& headerEndPos, int& imgDimX, int& imgDimY)
+{
+	int currentComponent = 0;
+	bool firstline = false;
+	std::string::iterator itr1;
+	std::string::iterator itr2;
+	std::string buffer;
+	std::string compBuffer;
+	std::ifstream file (filename,std::ios::in | std::ios::binary);
+
+	/*
+	/	Check if the file could be opened.
+	*/
+	if(!( file.is_open() ))return false;
+
+	/*
+	/	Go to the beginning of the file and read the first line.
+	*/
+	file.seekg(0, file.beg);
+	std::getline(file,buffer,'\n');
+	itr1 = buffer.begin();
+	for(itr2 = buffer.begin(); itr2 != buffer.end(); itr2++)
+	{
+		/*
+		/	Check if the first line contains more than just ppm's magic number.
+		/	If it does, it should look like this:
+		/	"magic_number image_dimension_x image_dimension_y maximum_value"
+		/	Therefore we scan the string for a space character and start parsing it.
+		*/
+		if(*itr2 == ' ')
+		{
+			if(currentComponent == 0)
+			{
+				/*	The first component is the magic number. We don't need it.	*/
+				currentComponent++;
+				firstline = true;
+				itr1 = (itr2 + 1);
+			}
+			else if(currentComponent == 1)
+			{
+				/*	Get the image dimension in x.	*/
+				compBuffer.assign(itr1, itr2);
+				imgDimX = atoi(compBuffer.c_str());
+				currentComponent++;
+				itr1 = (itr2 + 1);
+			}
+			else if(currentComponent == 2)
+			{
+				/*	Get the image dimension in y.	*/
+				compBuffer.assign(itr1, itr2);
+				imgDimY = atoi(compBuffer.c_str());
+				currentComponent++;
+				itr1 = (itr2 + 1);
+			}
+		}
+	}
+
+	/*
+	/	If the information we were looking for was inside the first line, we are done here.
+	/	Note the position where we left off and exit with return true after closing the file.
+	*/
+	if(firstline)
+	{
+		headerEndPos = file.tellg();
+		file.close();
+		return true;
+	}
+
+	/*
+	/	If the information wasn't inside the first line we have to keep reading lines.
+	/	Skip all comment lines (first character = '#').
+	*/
+	std::getline(file,buffer,'\n');
+	while( buffer[0]=='#' || (buffer.size() < 1) )
+	{
+		std::getline(file,buffer,'\n');
+	}
+
+	/*
+	/	Now we should have a string containing the image dimensions and can extract them.
+	*/
+	itr1 = buffer.begin();
+	for(itr2 = buffer.begin(); itr2 != buffer.end(); itr2++)
+	{
+		/*	Get the image dimension in x.	*/
+		if(*itr2 == ' ')
+		{
+			compBuffer.assign(itr1, itr2);
+			imgDimX = atoi(compBuffer.c_str());
+			currentComponent++;
+			itr1 = (itr2 + 1);
+		}
+	}
+
+	/*
+	/	The last component of a line can't be parsed within the loop since it isn't followed by
+	/	a space character, but an end-of-line.
+	/
+	/	Get the image dimension in x.
+	*/
+	compBuffer.assign(itr1, itr2);
+	imgDimY = atoi(compBuffer.c_str());
+
+	/*
+	/	Read one more line. This should contain the maximum value of the image, but we don't need
+	/	that.
+	/	Note down the position after this line and exit with return true after closing the file.
+	*/
+	std::getline(file,buffer,'\n');
+	headerEndPos = file.tellg();
+	file.close();
+	return true;
+}
+
+bool ResourceManager::readPpmData(const char* filename, char* imageData, long dataBegin, int imgDimX, int imgDimY)
+{
+	std::ifstream file (filename,std::ios::in | std::ios::binary);
+
+	/*
+	/	Check if the file could be opened.
+	*/
+	if(!( file.is_open() ))return false;
+
+	/*
+	/	Determine the length from the beginning of the image data to the end of the file.
+	*/
+	file.seekg(0, file.end);
+	long length = file.tellg();
+	length = length - dataBegin;
+	char* buffer = new char[length];
+
+	file.seekg(dataBegin,std::ios::beg);
+	file.read(buffer,length);
+
+	/*
+	/	Rearrange the image information so that the data begins with the lower left corner.
+	*/
+	int k = 0;
+	for(int i=0; i < imgDimY; i++)
+	{
+		int dataLoc = (imgDimY-1-i)*imgDimX*3;
+		for(int j=0; j < imgDimX; j++)
+		{
+			imageData[k]=buffer[dataLoc+(j*3)];
+			k++;
+			imageData[k]=buffer[dataLoc+(j*3)+1];
+			k++;
+			imageData[k]=buffer[dataLoc+(j*3)+2];
+			k++;
+		}
+	}
+
+	file.close();
+	delete[] buffer;
+	return true;
 }
