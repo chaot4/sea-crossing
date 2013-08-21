@@ -1,11 +1,12 @@
 #include "renderHub.h"
 
+RenderHub* RenderHub::activeInstance;
 
-RenderHub::RenderHub(void)
+RenderHub::RenderHub()
 {
 }
 
-RenderHub::~RenderHub(void)
+RenderHub::~RenderHub()
 {
 }
 
@@ -28,6 +29,8 @@ bool RenderHub::init()
 	}
 	//std::cout<<"Initializing GLFW\n";
 
+	//glfwWindowHint(GLFW_VERSION_MAJOR,3);
+	//glfwWindowHint(GLFW_VERSION_MINOR,3);
 
 	activeWindow = glfwCreateWindow(800,450,"Sea-Crossing",NULL,NULL);
 
@@ -44,6 +47,13 @@ bool RenderHub::init()
 	}
 
 	glfwMakeContextCurrent(activeWindow);
+
+	/*
+	/	The callback function needs a reference to this object,
+	/	so just hand it over and quietly weep in the corner.
+	*/
+	setActiveInstance(this);
+	glfwSetWindowSizeCallback(activeWindow,windowSizeCallback);
 
 	/*	Initialize glew */
 	//glewExperimental = GL_TRUE;
@@ -138,7 +148,10 @@ void RenderHub::run()
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glViewport(0,0,800,450);
+		int width, height;
+		glfwGetFramebufferSize(activeWindow, &width, &height);
+		glViewport(0, 0, width, height);
+
 		activeScene->render();
 
 		glfwSwapBuffers(activeWindow);
@@ -239,4 +252,17 @@ void RenderHub::processMessage(Message *msg)
 	default:
 		break;
 	}
+}
+
+void RenderHub::windowSizeCallback(GLFWwindow* window, int width, int height)
+{
+	if(activeInstance != NULL)
+	{
+		activeInstance->activeScene->getActiveCamera()->setAspectRation((float)width/(float)height);
+	}
+}
+
+void RenderHub::setActiveInstance(RenderHub *instance)
+{
+	activeInstance = instance;
 }

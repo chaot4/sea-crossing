@@ -48,17 +48,20 @@ private:
 	MessageReceiver messageRcvr;
 	Controls controlHandler;
 
-	std::vector<FramebufferObject> framebufferList;
 	std::list<Scene> sceneList;
 
 	GLFWwindow *activeWindow;
-	FramebufferObject *activeFramebuffer;
 	Scene *activeScene;
 
 	bool running;
 
 	/*	Message handling */
 	void processMessage(Message *msg);
+
+	/*	Callback handling */
+	static RenderHub *activeInstance;
+	static void setActiveInstance(RenderHub *instance);
+	static void windowSizeCallback(GLFWwindow* window, int width, int height);
 };
 
 #endif

@@ -8,3 +8,4 @@
 * engine: Rewrite render method in Scene class.
 * engine: Implement full render pipeline
 			(shadowmap-pass,geometry-pass,tone-mapping,gamma,fxaa).
+* engine: Think about turning RenderHub into a singleton...
