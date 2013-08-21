@@ -4,6 +4,7 @@
 #include <string>
 #include <queue>
 #include <atomic>
+#include <map>
 
 #include <glm/glm.hpp>
 #include <glm/core/type_vec3.hpp>
@@ -36,6 +37,16 @@ struct Message
 	std::string material_path;
 };
 
+struct EntityInfo
+{
+	unsigned int id;
+	glm::vec3 coords;
+	glm::quat orientation;
+
+	EntityInfo(unsigned int id, glm::vec3 coords, glm::quat orientation)
+		:id(id), coords(coords), orientation(orientation){}
+};
+
 /**
 * \class MessageReceiver
 * 
@@ -50,12 +61,12 @@ struct Message
 class MessageReceiver
 {
 public:
-	MessageReceiver() : message_counter(0) {}
+	MessageReceiver();
 	~MessageReceiver() {}
 
 	void pushLoadSceneMessages();
-	void pushCreateMarkerMessage(int id, int player);
-	void pushCreateGemMessage(int id, int player);
+	void pushCreateMarkerMessage(std::string label, int player);
+	void pushCreateGemMessage(std::string label, int player);
 	void pushDeleteMessage(int id);
 	void pushExitMessage();
 	Message popMessage();
@@ -65,6 +76,8 @@ public:
 private:
 	std::queue<Message> message_fifo;
 	std::atomic<unsigned int> message_counter;
+
+	std::map<std::string, EntityInfo> entity_info_map;
 };
 
 #endif

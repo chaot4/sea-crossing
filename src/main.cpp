@@ -1,3 +1,4 @@
+#include "conf.h"
 #include "game/game.h"
 #include "engine/renderHub.h"
 
@@ -16,16 +17,18 @@ int main(){
 	//}
 	std::thread renderThread(&RenderHub::init,&testRenderer);
 	testReceiver->pushLoadSceneMessages();
-	
-	Board board;
-	RandomAIPlayer player1("Spongebob", board);
-	RandomAIPlayer player2("Patrick", board);
-	
-	ConsoleGame g(&player1, &player2, board);
-	//g.start();
-	std::thread gameThread(&ConsoleGame::start,&g);
 
-	gameThread.join();
+	testReceiver->pushCreateMarkerMessage("BSE", 0);
+	
+//	Board board;
+//	RandomAIPlayer player1("Spongebob", board);
+//	RandomAIPlayer player2("Patrick", board);
+//	
+//	ConsoleGame g(&player1, &player2, board);
+//	//g.start();
+//	std::thread gameThread(&ConsoleGame::start,&g);
+//
+//	gameThread.join();
 	renderThread.join();
 
 }

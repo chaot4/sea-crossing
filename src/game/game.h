@@ -1,7 +1,6 @@
 #ifndef game_game_h
 #define game_game_h
 
-#include "../defs.h"
 #include "defs.h"
 #include "board.h"
 #include "player.h"
