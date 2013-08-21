@@ -17,7 +17,6 @@ void Controls::updateCamera(GLFWwindow *window, Scene *scene)
 		glm::mat4 translation_helper = glm::rotate(glm::mat4(1.0), latest_y_rotation ,y_axis);
 		translation_helper = glm::rotate(translation_helper, latest_x_rotation ,x_axis);
 		
-		glm::vec3 current_position = scene_camera_ptr->getPosition();
 		glm::vec4 new_position_h = translation_helper * glm::vec4(0.0,0.0,20.0,1.0);
 		glm::vec3 new_position = glm::vec3(new_position_h);
 

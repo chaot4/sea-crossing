@@ -6,7 +6,7 @@
 class Controls
 {
 public:
-	Controls() : latest_cursor_position(0.0,0.0),latest_y_rotation(0.0),latest_x_rotation(0.0),x_axis(1.0,0.0,0.0),y_axis(0.0,1.0,0.0) {}
+	Controls() : x_axis(1.0,0.0,0.0), y_axis(0.0,1.0,0.0), latest_cursor_position(0.0,0.0),latest_y_rotation(0.0),latest_x_rotation(0.0) {}
 	~Controls() {}
 
 	void updateCamera(GLFWwindow *window, Scene *scene);

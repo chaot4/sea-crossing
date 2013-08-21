@@ -27,4 +27,5 @@ int main(){
 
 	gameThread.join();
 	renderThread.join();
+
 }
