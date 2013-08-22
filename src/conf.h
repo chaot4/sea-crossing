@@ -21,13 +21,18 @@ struct GraphicsConf{
 		:board_filename("Invor_please_insert_std_value"){}
 };
 
-struct Conf{
-	GameConf game_conf;
-	GraphicsConf graphics_conf;
+class Conf{
+	private:
+		std::string filename;
 
-	Conf():game_conf(), graphics_conf(){}
+		GameConf game_conf;
+		GraphicsConf graphics_conf;
+
+		bool parseLine(std::stringstream& ss);
+	public:
+		Conf(std::string const& filename);
+
+		bool readFromFile();
 };
-
-bool getConfFromFile(std::string const& filename, Conf& conf);
 
 #endif

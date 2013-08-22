@@ -8,8 +8,8 @@ using namespace std;
 
 int main(){
 
-	Conf conf;
-	getConfFromFile("config", conf);
+	Conf conf("config");
+	conf.readFromFile();
 
 	MessageReceiver *testReceiver;
 	RenderHub testRenderer(testReceiver);

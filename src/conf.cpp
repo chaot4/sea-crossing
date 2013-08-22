@@ -2,14 +2,16 @@
 
 using namespace std;
 
+/* ANONYMOUS NAMESPACE */
+
 namespace{
 
-void getParameters(stringstream& ss, vector<string>& options)
+void getParameters(stringstream& ss, vector<string>& parameters)
 {
-	string option;
+	string parameter;
 
-	while(ss >> option){
-		options.push_back(option);
+	while(ss >> parameter){
+		parameters.push_back(parameter);
 	}
 }
 
@@ -19,9 +21,9 @@ void errorInvalidParameter(string const& keyword, string const& parameter)
 		<< keyword << "'." << endl;
 }
 
-void errorWrongNumberOfOptions(string const& keyword)
+void errorWrongNumberOfParameters(string const& keyword)
 {
-	cerr << "ERROR: Wrong number of options passed to keyword '" << keyword
+	cerr << "ERROR: Wrong number of parameters passed to keyword '" << keyword
 		<< "'." << endl;
 }
 
@@ -30,32 +32,39 @@ void errorUnknownKeyword(string const& keyword)
 	cerr << "ERROR: Unknown keyword '" << keyword << "'." << endl;
 }
 
-bool parseLine(stringstream& ss, Conf& conf)
+}
+
+/* MEMBER FUNCTIONS */
+
+Conf::Conf(std::string const& filename)
+	:filename(filename), game_conf(), graphics_conf(){}
+
+bool Conf::parseLine(stringstream& ss)
 {
 	string keyword;
-	vector<string> options;
+	vector<string> parameters;
 
 	ss >> keyword;
-	getParameters(ss, options);
+	getParameters(ss, parameters);
 
 	/* Ignore empty lines and comments. */
 	if(keyword == "" || keyword[0] == '#'){}
 	/* use_switch_rule <true|false> */
 	else if(keyword == "use_switch_rule"){
-		if(options.size() == 1){
-			if(options[0] == "true"){
-				conf.game_conf.use_switch_rule = true;
+		if(parameters.size() == 1){
+			if(parameters[0] == "true"){
+				game_conf.use_switch_rule = true;
 			}
-			else if(options[0] == "false"){
-				conf.game_conf.use_switch_rule = false;
+			else if(parameters[0] == "false"){
+				game_conf.use_switch_rule = false;
 			}
 			else{
-				errorInvalidParameter(keyword, options[0]);
+				errorInvalidParameter(keyword, parameters[0]);
 				return false;
 			}
 		}
 		else{
-			errorWrongNumberOfOptions(keyword);
+			errorWrongNumberOfParameters(keyword);
 			return false;
 		}
 	}
@@ -67,9 +76,7 @@ bool parseLine(stringstream& ss, Conf& conf)
 	return true;
 }
 
-}
-
-bool getConfFromFile(std::string const& filename, Conf& conf)
+bool Conf::readFromFile()
 {
 	ifstream f(filename.c_str());
 	string line;
@@ -77,7 +84,7 @@ bool getConfFromFile(std::string const& filename, Conf& conf)
 	if(f.is_open()){
 		while(getline(f, line)){
 			stringstream ss(line);
-			if(!parseLine(ss, conf)){
+			if(!parseLine(ss)){
 				cerr << "The error arose while parsing the following line: "
 					<< "'" << line << "'." << endl;
 			}
