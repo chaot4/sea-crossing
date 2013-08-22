@@ -22,6 +22,13 @@ int main(){
 	//}
 	std::thread renderThread(&RenderHub::init,&testRenderer);
 	testReceiver->pushLoadSceneMessages();
+	testReceiver->pushCreateMarkerMessage("BSE",0);
+	testReceiver->pushCreateMarkerMessage("CN",0);
+	testReceiver->pushCreateMarkerMessage("DE-1",0);
+	testReceiver->pushCreateMarkerMessage("DW1",0);
+	testReceiver->pushCreateMarkerMessage("EN-1",0);
+	testReceiver->pushCreateMarkerMessage("EE1",0);
+	testReceiver->pushCreateMarkerMessage("EW",0);
 	
 	Board board;
 	ConsolePlayer player1("Spongebob");

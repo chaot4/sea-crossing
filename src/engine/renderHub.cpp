@@ -31,6 +31,7 @@ bool RenderHub::init()
 
 	//glfwWindowHint(GLFW_VERSION_MAJOR,3);
 	//glfwWindowHint(GLFW_VERSION_MINOR,3);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	activeWindow = glfwCreateWindow(800,450,"Sea-Crossing",NULL,NULL);
 
@@ -54,6 +55,8 @@ bool RenderHub::init()
 	*/
 	setActiveInstance(this);
 	glfwSetWindowSizeCallback(activeWindow,windowSizeCallback);
+	controlHandler.setActive(&controlHandler);
+	glfwSetScrollCallback(activeWindow, Controls::mouseScrollFeedback);
 
 	/*	Initialize glew */
 	//glewExperimental = GL_TRUE;
