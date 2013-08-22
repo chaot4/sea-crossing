@@ -5,6 +5,7 @@
 #include <queue>
 #include <atomic>
 #include <map>
+#include <iostream>
 
 #include <glm/glm.hpp>
 #include <glm/core/type_vec3.hpp>

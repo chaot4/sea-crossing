@@ -11,7 +11,7 @@ Scene::~Scene()
 
 bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, Mesh* geomPtr, Material* mtlPtr)
 {
-	scenegraph.push_back(StaticSceneObject(id,position,geomPtr,mtlPtr));
+	scenegraph.push_back(StaticSceneObject(id,position,orientation,geomPtr,mtlPtr));
 	return true;
 }
 

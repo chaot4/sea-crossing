@@ -9,7 +9,7 @@ MessageReceiver::MessageReceiver():message_counter(0)
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("BNE",
 		EntityInfo(2, glm::vec3(2.5, 0.125, 2.5), glm::quat(glm::rotate(glm::quat(), 45.0, glm::vec3(0, 1, 0))))));
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("BSE",
-		EntityInfo(3, glm::vec3(2.5, 0.125, -2.5), glm::quat(glm::rotate(glm::quat(), -45.0, glm::vec3(0, 1, 0))))));
+		EntityInfo(3, glm::vec3(2.5, 0.125, -2.5), glm::rotate(glm::quat(), -45.0, glm::vec3(0, 1, 0)))));
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("BSW",
 		EntityInfo(4, glm::vec3(-2.5, 0.125, -2.5), glm::quat(glm::rotate(glm::quat(), 45.0, glm::vec3(0, 1, 0))))));
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("CNW",
@@ -32,7 +32,7 @@ MessageReceiver::MessageReceiver():message_counter(0)
 
 void MessageReceiver::pushLoadSceneMessages()
 {
-	Message newMsg(CREATE,0,glm::vec3(0.0,0.0,0.0),glm::quat(),glm::vec3(1.0),
+	Message newMsg(CREATE,100,glm::vec3(0.0,0.0,0.0),glm::quat(),glm::vec3(1.0),
 		"../resources/meshes/board.fbx",
 		"../resources/materials/default.slmtl");
 
@@ -49,8 +49,9 @@ void MessageReceiver::pushCreateMarkerMessage(std::string label, int player)
 	glm::vec3 scaling(1, 1, 1);
 	std::string geom_path = "../resources/meshes/marker.fbx";
 	std::string mat_path = "../resources/materials/default.slmtl";
-	if(player == 0) mat_path = "../data/materials/bright_wood.slmtl";
-	if(player == 1) mat_path = "../data/materials/dark_wood.slmtl";
+	//if(player == 0) mat_path = "../data/materials/bright_wood.slmtl";
+	//if(player == 1) mat_path = "../data/materials/dark_wood.slmtl";
+	mat_path = "../resources/materials/default.slmtl";
 	Message newMsg(CREATE,id,euclid_pos,orientation,scaling,geom_path,mat_path);
 
 	message_fifo.push(newMsg);
@@ -66,8 +67,9 @@ void MessageReceiver::pushCreateGemMessage(std::string label, int player)
 	glm::vec3 scaling(1, 1, 1);
 	std::string geom_path = "../resources/meshes/gem.fbx";
 	std::string mat_path = "../resources/materials/default.slmtl";
-	if(player == 0) mat_path = "../data/materials/bright_stone.slmtl";
-	if(player == 1) mat_path = "../data/materials/dark_stone.slmtl";
+	//if(player == 0) mat_path = "../data/materials/bright_stone.slmtl";
+	//if(player == 1) mat_path = "../data/materials/dark_stone.slmtl";
+	mat_path = "../resources/materials/default.slmtl";
 	Message newMsg(CREATE,id,euclid_pos,orientation,scaling,geom_path,mat_path);
 
 	message_fifo.push(newMsg);
@@ -88,6 +90,7 @@ void MessageReceiver::pushExitMessage()
 Message MessageReceiver::popMessage()
 {
 	Message msg = message_fifo.front();
+	message_fifo.pop();
 	message_counter--;
 
 	return msg;
