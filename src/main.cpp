@@ -1,9 +1,15 @@
+#include "conf.h"
 #include "game/game.h"
 #include "engine/renderHub.h"
 
 #include <thread>
 
+using namespace std;
+
 int main(){
+
+	Conf conf;
+	getConfFromFile("config", conf);
 
 	MessageReceiver *testReceiver;
 	RenderHub testRenderer(testReceiver);
@@ -22,10 +28,8 @@ int main(){
 	RandomAIPlayer player2("Patrick", board);
 	
 	ConsoleGame g(&player1, &player2, board);
-	//g.start();
 	std::thread gameThread(&ConsoleGame::start,&g);
 
 	gameThread.join();
 	renderThread.join();
-
 }

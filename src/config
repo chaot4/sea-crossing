@@ -1,0 +1,3 @@
+# This activates the rule that the first move can be taken by the second player.
+# Possible values are: true, false
+use_switch_rule	true
