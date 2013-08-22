@@ -3,13 +3,17 @@
 #include "engine/renderHub.h"
 
 #include <thread>
+#include <vector>
 
 using namespace std;
 
 int main(){
 
 	Conf conf("config");
+	vector<string> vec;
+	vec.push_back("true");
 	conf.readFromFile();
+	conf.setValue("use_switch_rule", vec);
 
 	MessageReceiver *testReceiver;
 	RenderHub testRenderer(testReceiver);

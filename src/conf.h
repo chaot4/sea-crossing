@@ -29,10 +29,14 @@ class Conf{
 		GraphicsConf graphics_conf;
 
 		bool parseLine(std::stringstream& ss);
+		bool readFileToString(std::string& file);
+		bool writeStringToFile(std::string& file);
 	public:
 		Conf(std::string const& filename);
 
 		bool readFromFile();
+		bool setValue(std::string const& keyword,
+				std::vector<std::string> const& parameters);
 };
 
 #endif
