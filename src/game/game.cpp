@@ -8,8 +8,9 @@ using namespace std;
 
 //DebugGame::DebugGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
 //	:player{player1, player2}, board(){}
-DebugGame::DebugGame(ConsolePlayer* player1, ConsolePlayer* player2, Board& board)
-	:player(new ConsolePlayer*[2]), board(board)
+DebugGame::DebugGame(ConsolePlayer* player1, ConsolePlayer* player2, Board& board,
+		MessageReceiver* receiver)
+	:player(new ConsolePlayer*[2]), board(board), receiver(receiver)
 {
 	player[0] = player1;
 	player[1] = player2;
@@ -92,10 +93,18 @@ void DebugGame::placeGem(PlayerID player_id, NodeLabel label)
 	board.placeGem(label, player_id, new_markers);
 	moves.push_back(Move(label, player_id, true));
 
+	if(receiver){
+		receiver->pushCreateGemMessage(label, player_id);
+	}
+
 	for(unsigned int i=0; i<new_markers.size(); i++){
 		cout << "A new marker of " << player[player_id]->getName()
 			<< " has been placed on " << new_markers[i] << "."
 			<< endl;
+
+		if(receiver){
+			receiver->pushCreateMarkerMessage(new_markers[i], player_id);
+		}
 	}
 }
 
@@ -131,6 +140,10 @@ void DebugGame::placeMarker(PlayerID player_id, FaceLabel label)
 	cout << player[player_id]->getName() << " placed a marker on " << label << "." << endl;
 	board.placeMarker(label, player_id);
 	moves.push_back(Move(label, player_id, false));
+
+	if(receiver){
+		receiver->pushCreateMarkerMessage(label, player_id);
+	}
 }
 
 void DebugGame::command_back()
@@ -161,11 +174,14 @@ void DebugGame::removeGem(Move const& move)
 		<< " from " << move.label << "." << endl;
 	board.removeGem(move.label, removed_markers);
 
+	// TODO receiver
+
 	if(!removed_markers.empty()){
 		cout << "Also removed the following markers: ";
 
 		for(unsigned int i=0; i<removed_markers.size(); i++){
 			cout << removed_markers[i] << " ";
+			// TODO receiver
 		}
 		cout << endl;
 	}
@@ -176,6 +192,8 @@ void DebugGame::removeMarker(Move const& move)
 	cout << "Removed the marker of " << player[move.owner_id]->getName()
 		<< " from " << move.label << "." << endl;
 	board.removeMarker(move.label);
+
+	// TODO receiver
 }
 
 void DebugGame::command_forward()
@@ -266,5 +284,72 @@ void ConsoleGame::placeGem(PlayerID player_id, NodeLabel label)
 		cout << "A new marker of " << player[player_id]->getName()
 			<< " has been placed on " << new_markers[i] << "."
 			<< endl;
+	}
+}
+
+//SimpleGUIGame::SimpleGUIGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
+//	:player{player1, player2}{}
+SimpleGUIGame::SimpleGUIGame(Player* player1, Player* player2, Board& board,
+		MessageReceiver* receiver)
+	:player(new Player*[2]), board(board), receiver(receiver)
+{
+	player[0] = player1;
+	player[1] = player2;
+}
+
+void SimpleGUIGame::start()
+{
+	bool current_player(0);
+	bool valid_move(false);
+
+	std::cout << "==- START SIMPLE GUI GAME -==" << std::endl;
+
+	while(!board.checkVictoryCondition(current_player)){
+
+		std::cout << std::endl;
+
+		if(valid_move){
+			current_player = !current_player;
+		}
+
+		valid_move = makeMove(current_player);
+	}
+
+	std::cout << player[current_player]->getName() << " wins!" << std::endl;
+	std::cout << std::endl << "==- END SIMPLE GUI GAME -==" << std::endl;
+}
+
+bool SimpleGUIGame::makeMove(PlayerID player_id)
+{
+	NodeLabel label;
+
+	player[player_id]->getNextMove(label);
+
+	if(board.isNodeLabel(label)){
+		if(!board.nodeHasOwner(label)){
+			placeGem(player_id, label);
+		}
+		else{
+			std::cout << "ERROR: This node is already taken." << std::endl;
+			return false;
+		}
+	}
+	else{
+		std::cout << "ERROR: The passed string is not a node label." << std::endl;
+		return false;
+	}
+
+	return true;
+}
+
+void SimpleGUIGame::placeGem(PlayerID player_id, NodeLabel label)
+{
+	std::vector<FaceLabel> new_markers;
+
+	board.placeGem(label, player_id, new_markers);
+	receiver->pushCreateGemMessage(label, player_id);
+
+	for(unsigned int i=0; i<new_markers.size(); i++){
+		receiver->pushCreateMarkerMessage(new_markers[i], player_id);
 	}
 }
