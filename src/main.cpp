@@ -1,10 +1,15 @@
-//#include "conf.h"
+#include "conf.h"
 #include "game/game.h"
 #include "engine/renderHub.h"
 
 #include <thread>
 
+using namespace std;
+
 int main(){
+
+	Conf conf;
+	getConfFromFile("config", conf);
 
 	MessageReceiver *testReceiver;
 	RenderHub testRenderer(testReceiver);
@@ -19,13 +24,12 @@ int main(){
 	testReceiver->pushLoadSceneMessages();
 	
 	Board board;
-	RandomAIPlayer player1("Spongebob", board);
-	RandomAIPlayer player2("Patrick", board);
+	ConsolePlayer player1("Spongebob");
+	ConsolePlayer player2("Patrick");
 	
 	SimpleGUIGame<MessageReceiver> g(&player1, &player2, board, testReceiver);
 	std::thread gameThread(&SimpleGUIGame<MessageReceiver>::start,&g);
 
 	gameThread.join();
 	renderThread.join();
-
 }
