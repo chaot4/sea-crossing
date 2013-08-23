@@ -25,7 +25,7 @@ MessageReceiver::MessageReceiver():message_counter(0)
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("CS",
 		EntityInfo(10, glm::vec3(0, 0.125, 6.25), glm::rotate(glm::quat(), 0, glm::vec3(0, 1, 0)))));
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("CSW",
-		EntityInfo(11, glm::vec3(-5, 0.125, 5), glm::rotate(glm::quat(), 45, glm::vec3(0, 1, 0)))));
+		EntityInfo(11, glm::vec3(-5, 0.125, 5), glm::rotate(glm::quat(), -45, glm::vec3(0, 1, 0)))));
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("CW",
 		EntityInfo(12, glm::vec3(-6.25, 0.125, 0), glm::rotate(glm::quat(), 90, glm::vec3(0, 1, 0)))));
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("DNW",
