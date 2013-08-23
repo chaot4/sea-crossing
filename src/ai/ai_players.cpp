@@ -10,7 +10,6 @@ void RandomAIPlayer::getNextMove(NodeLabel& label)
 	unordered_set<NodeID> free_nodes(board.getFreeNodes());
 
 	/* Get a random node index. */
-	srand(time(NULL));
 	unsigned int random_node_index(rand() % free_nodes.size());
 
 	/* Set an iterator on the random_node_index+1-th free node. */
