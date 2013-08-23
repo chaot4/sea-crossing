@@ -15,7 +15,7 @@ public:
 	StaticSceneObject() {}
 	~StaticSceneObject() {}
 
-	StaticSceneObject(const int inId, const glm::vec3& inPosition, Mesh* inGeom, Material* inMtl) : SceneEntity(inId, inPosition), geometry(inGeom), mtl(inMtl) {}
+	StaticSceneObject(const int inId, const glm::vec3& inPosition, const glm::quat& inOrientation, Mesh* inGeom, Material* inMtl) : SceneEntity(inId, inPosition, inOrientation), geometry(inGeom), mtl(inMtl) {}
 
 	Mesh* getGeometry() {return geometry;}
 	Material* getMaterial() {return mtl;}

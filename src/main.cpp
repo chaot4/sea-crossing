@@ -31,8 +31,8 @@ int main(){
 	RandomAIPlayer player1("Spongebob", board);
 	RandomAIPlayer player2("Patrick", board);
 	
-	ConsoleGame g(&player1, &player2, board);
-	std::thread gameThread(&ConsoleGame::start,&g);
+	SimpleGUIGame g(&player1, &player2, board, testReceiver);
+	std::thread gameThread(&SimpleGUIGame::start,&g);
 
 	gameThread.join();
 	renderThread.join();
