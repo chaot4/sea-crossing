@@ -305,9 +305,6 @@ void SimpleGUIGame::start()
 	std::cout << "==- START SIMPLE GUI GAME -==" << std::endl;
 
 	while(!board.checkVictoryCondition(current_player)){
-
-		std::cout << std::endl;
-
 		if(valid_move){
 			current_player = !current_player;
 		}
@@ -315,7 +312,7 @@ void SimpleGUIGame::start()
 		valid_move = makeMove(current_player);
 	}
 
-	std::cout << player[current_player]->getName() << " wins!" << std::endl;
+	std::cout << player[current_player]->getName() << " wins!";
 	std::cout << std::endl << "==- END SIMPLE GUI GAME -==" << std::endl;
 }
 
