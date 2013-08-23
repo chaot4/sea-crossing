@@ -52,7 +52,6 @@ MessageReceiver::MessageReceiver():message_counter(0)
 		EntityInfo(23, glm::vec3(-8.75, 0.125, 2.5), glm::rotate(glm::quat(), 90, glm::vec3(0, 1, 0)))));
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("DW1",
 		EntityInfo(24, glm::vec3(-8.75, 0.125, -2.5), glm::rotate(glm::quat(), 90, glm::vec3(0, 1, 0)))));
-
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("ENW",
 		EntityInfo(25, glm::vec3(-10.0, 0.125, -10.0), glm::rotate(glm::quat(), 45, glm::vec3(0, 1, 0)))));
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("EN-1",
@@ -85,8 +84,144 @@ MessageReceiver::MessageReceiver():message_counter(0)
 		EntityInfo(39, glm::vec3(-11.25, 0.125, 0.0), glm::rotate(glm::quat(), 90, glm::vec3(0, 1, 0)))));
 	entity_info_map.insert(std::pair<std::string, EntityInfo>("EW1",
 		EntityInfo(40, glm::vec3(-11.25, 0.125, -5.0), glm::rotate(glm::quat(), 90, glm::vec3(0, 1, 0)))));
-	
-
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("eSW",
+		EntityInfo(41, glm::vec3(-12.5, 0.3, 12.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("eSE",
+		EntityInfo(42, glm::vec3(12.5, 0.3, 12.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dS-3",
+		EntityInfo(43, glm::vec3(-7.5, 0.3, 10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dS-2",
+		EntityInfo(44, glm::vec3(-5.0, 0.3, 10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dS-1",
+		EntityInfo(45, glm::vec3(-2.5, 0.3, 10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dS",
+		EntityInfo(46, glm::vec3(0, 0.3, 10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dS1",
+		EntityInfo(47, glm::vec3(2.5, 0.3, 10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dS2",
+		EntityInfo(48, glm::vec3(5.0, 0.3, 10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dS3",
+		EntityInfo(49, glm::vec3(7.5, 0.3, 10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dW-3",
+		EntityInfo(50, glm::vec3(-10.0, 0.3, 7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dE-3",
+		EntityInfo(51, glm::vec3(10.0, 0.3, 7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cS-2",
+		EntityInfo(52, glm::vec3(-5.0, 0.3, 7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cS-1",
+		EntityInfo(53, glm::vec3(-2.5, 0.3, 7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cS",
+		EntityInfo(54, glm::vec3(0, 0.3, 7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cS1",
+		EntityInfo(55, glm::vec3(2.5, 0.3, 7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cS2",
+		EntityInfo(56, glm::vec3(5.0, 0.3, 7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dW-2",
+		EntityInfo(57, glm::vec3(-10.0, 0.3, 5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cW-2",
+		EntityInfo(58, glm::vec3(-7.5, 0.3, 5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cE-2",
+		EntityInfo(59, glm::vec3(7.5, 0.3, 5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dE-2",
+		EntityInfo(60, glm::vec3(10.0, 0.3, 5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bS-1",
+		EntityInfo(61, glm::vec3(-2.5, 0.3, 5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bS",
+		EntityInfo(62, glm::vec3(0, 0.3, 5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bS1",
+		EntityInfo(63, glm::vec3(2.5, 0.3, 5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dW-1",
+		EntityInfo(64, glm::vec3(-10, 0.3, 2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cW-1",
+		EntityInfo(65, glm::vec3(-7.5, 0.3, 2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bW-1",
+		EntityInfo(66, glm::vec3(-5.0, 0.3, 2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bE-1",
+		EntityInfo(67, glm::vec3(5.0, 0.3, 2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cE-1",
+		EntityInfo(68, glm::vec3(7.5, 0.3, 2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dE-1",
+		EntityInfo(69, glm::vec3(10, 0.3, 2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("aS",
+		EntityInfo(70, glm::vec3(0, 0.3, 2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dW",
+		EntityInfo(71, glm::vec3(-10, 0.3, 0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cW",
+		EntityInfo(72, glm::vec3(-7.5, 0.3, 0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bW",
+		EntityInfo(73, glm::vec3(-5.0, 0.3, 0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("aW",
+		EntityInfo(74, glm::vec3(-2.5, 0.3, 0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("0",
+		EntityInfo(75, glm::vec3(0, 0.3, 0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("aE",
+		EntityInfo(76, glm::vec3(2.5, 0.3, 0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bE",
+		EntityInfo(77, glm::vec3(5.0, 0.3, 0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cE",
+		EntityInfo(78, glm::vec3(7.5, 0.3, 0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dE",
+		EntityInfo(79, glm::vec3(10, 0.3, 0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("aN",
+		EntityInfo(80, glm::vec3(0, 0.3, -2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dW1",
+		EntityInfo(81, glm::vec3(-10, 0.3, -2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cW1",
+		EntityInfo(82, glm::vec3(-7.5, 0.3, -2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bW1",
+		EntityInfo(83, glm::vec3(-5.0, 0.3, -2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bE1",
+		EntityInfo(84, glm::vec3(5.0, 0.3, -2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cE1",
+		EntityInfo(85, glm::vec3(7.5, 0.3, -2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dE1",
+		EntityInfo(86, glm::vec3(10, 0.3, -2.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bN-1",
+		EntityInfo(87, glm::vec3(-2.5, 0.3, -5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bN",
+		EntityInfo(88, glm::vec3(0, 0.3, -5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("bN1",
+		EntityInfo(89, glm::vec3(2.5, 0.3, -5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dW2",
+		EntityInfo(90, glm::vec3(-10.0, 0.3, -5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cW2",
+		EntityInfo(91, glm::vec3(-7.5, 0.3, -5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cE2",
+		EntityInfo(92, glm::vec3(7.5, 0.3, -5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dE2",
+		EntityInfo(93, glm::vec3(10.0, 0.3, -5.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cN-2",
+		EntityInfo(94, glm::vec3(-5.0, 0.3, -7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cN-1",
+		EntityInfo(95, glm::vec3(-2.5, 0.3, -7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cN",
+		EntityInfo(96, glm::vec3(0, 0.3, -7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cN1",
+		EntityInfo(97, glm::vec3(2.5, 0.3, -7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("cN2",
+		EntityInfo(98, glm::vec3(5.0, 0.3, -7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dW3",
+		EntityInfo(99, glm::vec3(-10.0, 0.3, -7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dE3",
+		EntityInfo(100, glm::vec3(10.0, 0.3, -7.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dN-3",
+		EntityInfo(101, glm::vec3(-7.5, 0.3, -10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dN-2",
+		EntityInfo(102, glm::vec3(-5.0, 0.3, -10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dN-1",
+		EntityInfo(103, glm::vec3(-2.5, 0.3, -10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dN",
+		EntityInfo(104, glm::vec3(0, 0.3, -10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dN1",
+		EntityInfo(105, glm::vec3(2.5, 0.3, -10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dN2",
+		EntityInfo(106, glm::vec3(5.0, 0.3, -10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("dN3",
+		EntityInfo(107, glm::vec3(7.5, 0.3, -10.0), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("eNW",
+		EntityInfo(108, glm::vec3(-12.5, 0.3, -12.5), glm::quat())));
+	entity_info_map.insert(std::pair<std::string, EntityInfo>("eNE",
+		EntityInfo(109, glm::vec3(12.5, 0.3, -12.5), glm::quat())));
 }
 
 void MessageReceiver::pushLoadSceneMessages()

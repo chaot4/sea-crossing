@@ -24,11 +24,11 @@ int main(){
 	testReceiver->pushLoadSceneMessages();
 	
 	Board board;
-	ConsolePlayer player1("Spongebob");
-	ConsolePlayer player2("Patrick");
+	RandomAIPlayer player1("Spongebob", board);
+	RandomAIPlayer player2("Patrick", board);
 	
-	DebugGame g(&player1, &player2, board, testReceiver);
-	std::thread gameThread(&DebugGame::start,&g);
+	SimpleGUIGame g(&player1, &player2, board, testReceiver);
+	std::thread gameThread(&SimpleGUIGame::start,&g);
 
 	gameThread.join();
 	renderThread.join();
