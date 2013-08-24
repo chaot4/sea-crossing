@@ -835,7 +835,7 @@ bool ResourceManager::parseMaterial(const char* const materialPath, MaterialInfo
 				iter2 = (iter1 + 1);
 				iter1 = buffer.end();
 				tempStr.assign(iter2,iter1);
-				inOutMtlInfo.diff_path = new char[tempStr.length()];
+				inOutMtlInfo.diff_path = new char[tempStr.length()+1];
 				strcpy((inOutMtlInfo.diff_path),tempStr.c_str());
 			}
 			else if(tempStr == "ts")
@@ -843,7 +843,7 @@ bool ResourceManager::parseMaterial(const char* const materialPath, MaterialInfo
 				iter2 = (iter1 + 1);
 				iter1 = buffer.end();
 				tempStr.assign(iter2,iter1);
-				inOutMtlInfo.spec_path = new char[tempStr.length()];
+				inOutMtlInfo.spec_path = new char[tempStr.length()+1];
 				strcpy((inOutMtlInfo.spec_path),tempStr.c_str());
 			}
 			else if(tempStr == "tn")
@@ -851,7 +851,7 @@ bool ResourceManager::parseMaterial(const char* const materialPath, MaterialInfo
 				iter2 = (iter1 + 1);
 				iter1 = buffer.end();
 				tempStr.assign(iter2,iter1);
-				inOutMtlInfo.normal_path = new char[tempStr.length()];
+				inOutMtlInfo.normal_path = new char[tempStr.length()+1];
 				strcpy((inOutMtlInfo.normal_path),tempStr.c_str());
 			}
 			else
