@@ -33,7 +33,7 @@ void Controls::updateCamera(GLFWwindow *window, Scene *scene)
 
 void Controls::mouseScrollFeedback(GLFWwindow *window, double x_offset, double y_offset)
 {
-	float new_radius = activeInstance->latest_radius - 0.25f * (float)y_offset;
+	float new_radius = activeInstance->latest_radius - 0.5f * (float)y_offset;
 
 	if(new_radius > 0.0) {activeInstance->latest_radius = new_radius;}
 }

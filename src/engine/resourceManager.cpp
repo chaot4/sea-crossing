@@ -223,6 +223,7 @@ bool ResourceManager::createShaderProgram(shaderType type, GLSLProgram*& inOutPr
 	}
 
 	GLSLProgram shaderPrg;
+	shaderPrg.init();
 	std::string vertSource;
 	std::string fragSource;
 
@@ -417,6 +418,7 @@ bool ResourceManager::loadFbxGeometry(const char* const path, Mesh* geomPtr)
 
 	bool hasNormal = fbxMesh->GetElementNormalCount() > 0;
 	bool hasTangent = fbxMesh->GetElementTangentCount() > 0;
+	bool hasBitangent = fbxMesh->GetElementBinormalCount() > 0;
 	bool hasColor = fbxMesh->GetElementVertexColorCount() > 0;
 	bool hasUV = fbxMesh->GetElementUVCount() > 0;
 
@@ -657,7 +659,7 @@ bool ResourceManager::loadFbxGeometry(const char* const path, Mesh* geomPtr)
 				}
 
 				/* Save the bitangent/binormal */
-				if (true)
+				if (hasBitangent)
 				{
 					int bitangentIndex = vertexCounter;
 					if (fbxBitangentElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)

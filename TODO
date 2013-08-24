@@ -1,11 +1,12 @@
 * game: Implement the first-move-switching rule.
 * game: Fix 'Floating point exception (core dumped)' error.
 * engine: Fix 'program crashes when glfw is closed manaully' issue
-			(propably caused by the default destructor of ResourceManager class).
-* engine: Implement coordinate/orientation mapping for markers and gems.
+			This is a multi-threading issue. Guarantee that OpenGL related destructors 
+			are called by the thread that has the context!
 * engine: Write a more sophisticated surface shader.
 * engine: Implement picking for user input.
 * engine: Rewrite render method in Scene class.
 * engine: Implement full render pipeline
 			(shadowmap-pass,geometry-pass,tone-mapping,gamma,fxaa).
 * engine: Think about turning RenderHub into a singleton...
+* engine: Correct clean-up of graphics resources

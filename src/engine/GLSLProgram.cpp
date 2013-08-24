@@ -1,9 +1,7 @@
 #include "GLSLProgram.h"
 
-GLSLProgram::GLSLProgram()
+GLSLProgram::GLSLProgram() : linkStatus(false)
 {
-	handle = glCreateProgram();
-	linkStatus = false;
 }
 
 GLSLProgram::~GLSLProgram()
@@ -14,6 +12,11 @@ GLSLProgram::~GLSLProgram()
 GLuint GLSLProgram::getUniformLocation(const char *name)
 {
 	return glGetUniformLocation(handle, name);
+}
+
+void GLSLProgram::init()
+{
+	handle = glCreateProgram();
 }
 
 bool GLSLProgram::compileShaderFromString(const std::string * const source, GLenum shaderType)

@@ -62,6 +62,7 @@ private:
 	static RenderHub *activeInstance;
 	static void setActiveInstance(RenderHub *instance);
 	static void windowSizeCallback(GLFWwindow* window, int width, int height);
+	static void windowCloseCallback(GLFWwindow* window);
 };
 
 #endif
