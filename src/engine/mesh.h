@@ -13,6 +13,8 @@
 class Mesh
 {
 private:
+	//Mesh(Mesh &) {}
+
 	const std::string filename;
 	GLuint vertexCount;
 

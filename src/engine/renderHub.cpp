@@ -126,7 +126,7 @@ void RenderHub::run()
 	if(!(activeScene->createSceneCamera(0,glm::vec3(0.0,0.0,20.0),glm::quat(),16.0f/9.0f,(9.0f/16.0f)*60.0f)))
 		std::cout<<"Failed to create camera"<<"\n";
 
-	if(!(activeScene->createSceneLight(0,glm::vec3(0.0,10.0,0.0),glm::vec4(1.0,1.0,1.0,1.0))))
+	if(!(activeScene->createSceneLight(0,glm::vec3(0.0,25.0,0.0),glm::vec4(1.0,1.0,1.0,1.0))))
 		std::cout<<"Failed to create light"<<"\n";
 
 	activeScene->setActiveCamera(0);
@@ -134,7 +134,7 @@ void RenderHub::run()
 	//activeScene->testing();
 
 	running = true;
-	glClearColor(0.0f,0.0f,0.0f,1.0f);
+	glClearColor(0.2f,0.2f,0.2f,1.0f);
 	glEnable (GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable( GL_MULTISAMPLE );
@@ -269,7 +269,6 @@ void RenderHub::windowSizeCallback(GLFWwindow *window, int width, int height)
 
 void RenderHub::windowCloseCallback(GLFWwindow *window)
 {
-	delete[] &(activeInstance->resourceMngr);
 }
 
 void RenderHub::setActiveInstance(RenderHub *instance)

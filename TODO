@@ -9,4 +9,4 @@
 * engine: Implement full render pipeline
 			(shadowmap-pass,geometry-pass,tone-mapping,gamma,fxaa).
 * engine: Think about turning RenderHub into a singleton...
-* engine: Correct clean-up of graphics resources
+* engine: Proper clean-up of graphics resources
