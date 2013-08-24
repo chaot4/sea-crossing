@@ -361,7 +361,7 @@ Board::Board()/*:
 	adj_faces.clear(); adj_faces.push_back(19); adj_faces.push_back(32); adj_faces.push_back(34);
     faces.push_back(Face(33, "ESE", adj_nodes, adj_faces));
 	adj_nodes.clear(); adj_nodes.push_back(6); adj_nodes.push_back(7); adj_nodes.push_back(8);
-	adj_faces.clear(); adj_faces.push_back(19); adj_faces.push_back(20); adj_faces.push_back(3); adj_faces.push_back(35);
+	adj_faces.clear(); adj_faces.push_back(19); adj_faces.push_back(20); adj_faces.push_back(33); adj_faces.push_back(35);
     faces.push_back(Face(34, "ES1", adj_nodes, adj_faces));
 	adj_nodes.clear(); adj_nodes.push_back(4); adj_nodes.push_back(5); adj_nodes.push_back(6);
 	adj_faces.clear(); adj_faces.push_back(20); adj_faces.push_back(21); adj_faces.push_back(34); adj_faces.push_back(36);
