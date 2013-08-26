@@ -10,6 +10,7 @@ struct MaterialInfo
 	int id;
 	char* diff_path;
 	char* spec_path;
+	char* roughness_path;
 	char* normal_path;
 };
 
@@ -22,15 +23,16 @@ private:
 
 	Texture *diffuseMap;
 	Texture *specularMap;
+	Texture *roughnessMap;
 	Texture *normalMap;
 
 public:
 	~Material();
 
-	Material(int,GLSLProgram*,Texture*,Texture*,Texture*);
+	Material(int,GLSLProgram*,Texture*,Texture*,Texture*,Texture*);
 	
 	//	for later use, when some kind of editor allows to change material properties at runtime
-	bool update(int,GLSLProgram*,Texture*,Texture*,Texture*);
+	bool update(int,GLSLProgram*,Texture*,Texture*,Texture*,Texture*);
 
 	void use();
 

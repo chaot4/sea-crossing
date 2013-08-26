@@ -243,9 +243,8 @@ void MessageReceiver::pushCreateMarkerMessage(std::string label, int player)
 	glm::vec3 scaling(1, 1, 1);
 	std::string geom_path = "../resources/meshes/marker.fbx";
 	std::string mat_path = "../resources/materials/default.slmtl";
-	mat_path = "../resources/materials/default.slmtl";
-	//if(player == 0) mat_path = "../data/materials/bright_wood.slmtl";
-	if(player == 1) mat_path = "../resources/materials/conhex/dark_marker.slmtl";
+	if(player == 0) mat_path = "../resources/materials/templates/silver.slmtl";
+	if(player == 1) mat_path = "../resources/materials/templates/gold.slmtl";
 	Message newMsg(CREATE,id,euclid_pos,orientation,scaling,geom_path,mat_path);
 
 	message_fifo.push(newMsg);
@@ -261,9 +260,8 @@ void MessageReceiver::pushCreateGemMessage(std::string label, int player)
 	glm::vec3 scaling(1, 1, 1);
 	std::string geom_path = "../resources/meshes/gem.fbx";
 	std::string mat_path = "../resources/materials/default.slmtl";
-	mat_path = "../resources/materials/default.slmtl";
-	//if(player == 0) mat_path = "../data/materials/bright_stone.slmtl";
-	if(player == 1) mat_path = "../resources/materials/conhex/dark_gem.slmtl";
+	if(player == 0) mat_path = "../resources/materials/templates/silver.slmtl";
+	if(player == 1) mat_path = "../resources/materials/templates/gold.slmtl";
 	Message newMsg(CREATE,id,euclid_pos,orientation,scaling,geom_path,mat_path);
 
 	message_fifo.push(newMsg);

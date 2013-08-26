@@ -159,11 +159,14 @@ bool ResourceManager::createMaterial(Material*& inOutMtlPtr)
 
 	float* diffuseData = new float[4];
 	float* specularData = new float[4];
+	float* roughnessData = new float[4];
 	float* normalData = new float[4];
 	/*	white diffuse texture */
 	diffuseData[0]=1.0f; diffuseData[1]=1.0f; diffuseData[2]=1.0f; diffuseData[3]=1.0f;
 	/*	dark grey specular texture */
 	specularData[0]=0.3f; specularData[1]=0.3f; specularData[2]=0.3f; specularData[3]=1.0f;
+	/*	dark grey roughness texture */
+	roughnessData[0]=0.3f; roughnessData[1]=0.3f; roughnessData[2]=0.3f; roughnessData[3]=1.0f;
 	/*	normal pointing upwards */
 	normalData[0]=0.5f; normalData[1]=0.5f; normalData[2]=1.0f; normalData[3]=0.0f;
 	
@@ -171,11 +174,13 @@ bool ResourceManager::createMaterial(Material*& inOutMtlPtr)
 	Texture* texPtr1;
 	Texture* texPtr2;
 	Texture* texPtr3;
-	if(!createShaderProgram(PHONG,prgPtr)) return false;
+	Texture* texPtr4;
+	if(!createShaderProgram(SURFACE_LIGHTING,prgPtr)) return false;
 	if(!createTexture2D(1,1,diffuseData,texPtr1)) return false;
 	if(!createTexture2D(1,1,specularData,texPtr2)) return false;
-	if(!createTexture2D(1,1,normalData,texPtr3)) return false;
-	materialList.push_back(Material(0,prgPtr,texPtr1,texPtr2,texPtr3));
+	if(!createTexture2D(1,1,roughnessData,texPtr3)) return false;
+	if(!createTexture2D(1,1,normalData,texPtr4)) return false;
+	materialList.push_back(Material(0,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
 
 	std::list<Material>::iterator lastElement = --(materialList.end());
 	inOutMtlPtr = &(*lastElement);
@@ -200,11 +205,13 @@ bool ResourceManager::createMaterial(const char * const path, Material*& inOutMt
 	Texture* texPtr1;
 	Texture* texPtr2;
 	Texture* texPtr3;
-	if(!createShaderProgram(PHONG,prgPtr)) return false;
+	Texture* texPtr4;
+	if(!createShaderProgram(SURFACE_LIGHTING,prgPtr)) return false;
 	if(!createTexture2D(inOutMtlInfo.diff_path,texPtr1)) return false;
 	if(!createTexture2D(inOutMtlInfo.spec_path,texPtr2)) return false;
-	if(!createTexture2D(inOutMtlInfo.normal_path,texPtr3)) return false;
-	materialList.push_back(Material(inOutMtlInfo.id,prgPtr,texPtr1,texPtr2,texPtr3));
+	if(!createTexture2D(inOutMtlInfo.roughness_path,texPtr3)) return false;
+	if(!createTexture2D(inOutMtlInfo.normal_path,texPtr4)) return false;
+	materialList.push_back(Material(inOutMtlInfo.id,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
 
 	std::list<Material>::iterator lastElement = --(materialList.end());
 	inOutMtlPtr = &(*lastElement);
@@ -229,15 +236,15 @@ bool ResourceManager::createShaderProgram(shaderType type, GLSLProgram*& inOutPr
 
 	switch(type)
 	{
-	case PHONG : {
-		vertSource = readShaderFile("../resources/shaders/v_phong.glsl");
-		fragSource = readShaderFile("../resources/shaders/f_phong.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vNormal");
-		shaderPrg.bindAttribLocation(2,"vTangent");
-		shaderPrg.bindAttribLocation(3,"vColour");
-		shaderPrg.bindAttribLocation(4,"vUVCoord");
-		shaderPrg.bindAttribLocation(5,"vBitangent");
+	case SURFACE_LIGHTING : {
+		vertSource = readShaderFile("../resources/shaders/surface_lighting_v.glsl");
+		fragSource = readShaderFile("../resources/shaders/surface_lighting_f.glsl");
+		shaderPrg.bindAttribLocation(0,"v_position");
+		shaderPrg.bindAttribLocation(1,"v_normal");
+		shaderPrg.bindAttribLocation(2,"v_tangent");
+		shaderPrg.bindAttribLocation(3,"v_colour");
+		shaderPrg.bindAttribLocation(4,"v_uv_coord");
+		shaderPrg.bindAttribLocation(5,"v_bitangent");
 		break; }
 	case FLAT : {
 		vertSource = readShaderFile("../resources/shaders/v_flat.glsl");
@@ -845,6 +852,14 @@ bool ResourceManager::parseMaterial(const char* const materialPath, MaterialInfo
 				tempStr.assign(iter2,iter1);
 				inOutMtlInfo.spec_path = new char[tempStr.length()+1];
 				strcpy((inOutMtlInfo.spec_path),tempStr.c_str());
+			}
+			else if(tempStr == "tr")
+			{
+				iter2 = (iter1 + 1);
+				iter1 = buffer.end();
+				tempStr.assign(iter2,iter1);
+				inOutMtlInfo.roughness_path = new char[tempStr.length()+1];
+				strcpy((inOutMtlInfo.roughness_path),tempStr.c_str());
 			}
 			else if(tempStr == "tn")
 			{

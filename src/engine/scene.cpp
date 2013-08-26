@@ -126,12 +126,12 @@ void Scene::render()
 
 		currentPrgm->use();
 
-		currentPrgm->setUniform("normalMatrix",normalMx);
-		currentPrgm->setUniform("viewMatrix", viewMx);
-		currentPrgm->setUniform("modelViewMatrix",modelViewMx);
-		currentPrgm->setUniform("modelViewProjectionMatrix",modelViewProjectionMx);
-		currentPrgm->setUniform("lightPosition",(lightSourceList.begin())->getPosition());
-		currentPrgm->setUniform("lightColour",(lightSourceList.begin())->getColour());
+		currentPrgm->setUniform("normal_matrix",normalMx);
+		currentPrgm->setUniform("view_matrix", viewMx);
+		currentPrgm->setUniform("model_view_matrix",modelViewMx);
+		currentPrgm->setUniform("model_view_projection_matrix",modelViewProjectionMx);
+		currentPrgm->setUniform("light_position",(lightSourceList.begin())->getPosition());
+		currentPrgm->setUniform("light_colour",(lightSourceList.begin())->getColour());
 
 		currentMtl->use();
 
