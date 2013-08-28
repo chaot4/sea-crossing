@@ -89,7 +89,7 @@ void Scene::render()
 
 	glm::mat4 modelMx;
 	glm::mat4 viewMx(activeCamera->computeViewMatrix());
-	glm::mat4 projectionMx(activeCamera->computeProjectionMatrix(0.01f,500.0f));
+	glm::mat4 projectionMx(activeCamera->computeProjectionMatrix(0.01f,5000.0f));
 
 	////
 	//	access each entity of the Scene and draw it

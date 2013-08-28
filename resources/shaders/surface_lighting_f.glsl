@@ -48,17 +48,23 @@ vec3 cookTorranceShading(in vec3 surface_albedo, in vec3 surface_specular_color,
 	float v_dot_h = dot(viewer_direction,halfway);
 	float l_dot_h = dot(light_direction,halfway);
 	
-	/*	Compute Fresnel term using the Schlick approximation */
-	vec3 fresnel_term = mix(surface_specular_color, vec3(1.0) , pow(l_dot_h,5.0) );
+	/*
+	/	Compute Fresnel term using the Schlick approximation.
+	/	To avoid artifact, a small epsilon is added to 1.0-l_dot_h
+	*/
+	vec3 fresnel_term = mix(surface_specular_color,vec3(1.0), pow(1.01-l_dot_h,5.0) );
 	
-	/*	Compute geometric attenuation */
-	float g_1 = 2.0/(1.0 + sqrt(1.0 + (pow(surface_roughness,2.0)*(1.0 - pow(n_dot_v,2.0))/pow(n_dot_v,2.0))));
-	float g_2 = 2.0/(1.0 + sqrt(1.0 + (pow(surface_roughness,2.0)*(1.0 - pow(n_dot_l,2.0))/pow(n_dot_l,2.0))));
+	/*	
+	/	Compute geometric attenuation, based on Smith shadowing term and following 
+	/	"Crafting a Next-Gen Material Pipeline for The Order: 1886" Euqation 5.
+	*/
+	float g_1 = (2.0*n_dot_v) / (n_dot_v + sqrt(1.0 + pow(surface_roughness,2.0)*(1.0 - pow(n_dot_v,2.0))));
+	float g_2 = (2.0*n_dot_l) / (n_dot_l + sqrt(1.0 + pow(surface_roughness,2.0)*(1.0 - pow(n_dot_l,2.0))));
 	float geometry_term = g_1*g_2;
 	//	float geometry_term = min( min(1.0, (2.0*n_dot_h*n_dot_v)/v_dot_h) , (2.0*n_dot_h*n_dot_l)/v_dot_h );
 	
 	/*	Compute microfacet normal distrubution term using GGX distribution by Walter et al (2007) */
-	float distribution_term = (surface_roughness)/
+	float distribution_term = pow(surface_roughness,2.0)/
 								(PI*pow(pow(n_dot_h,2.0)*(pow(surface_roughness,2.0)-1.0)+1.0 , 2.0));
 	//	/*	Beckman distribution */
 	//	float distribution_term = exp( -(1.0-pow(n_dot_h,2.0))/(pow(surface_roughness,2.0)*pow(n_dot_h,2.0)) )/
@@ -67,8 +73,15 @@ vec3 cookTorranceShading(in vec3 surface_albedo, in vec3 surface_specular_color,
 	/*	Compute Cook Torrance BRDF */
 	vec3 specular_brdf = (fresnel_term*geometry_term*distribution_term)/(4.0*n_dot_l*n_dot_v);
 	
-	/*	"Compute" diffuse lambertian BRDF and */
-	vec3 diffuse_brdf = (vec3(1.0)-specular_brdf)*(surface_albedo/PI);
+	/*
+	/	Compute diffuse lambertian BRDF.
+	/	The specular reflection takes away some energy from the diffuse reflection.
+	/	Only the fresnel term is considered, as to not include specular reflected light "blocked" 
+	/	by the geometry or distribution term in the diffuse energy.
+	/	To avoid tampering of the color, the mean of all three color channels is considered.
+	*/
+	float used_up_energy = (fresnel_term.x+fresnel_term.y+fresnel_term.z)/3.0;
+	vec3 diffuse_brdf = (1.0-used_up_energy)*(surface_albedo/PI);
 
 	vec3 surfance_reflectance = light_colour * (diffuse_brdf+specular_brdf) * max(0.0,n_dot_l);
 
@@ -95,9 +108,12 @@ void main()
 	//vec3 tNormal = texture2D(normal_tx2D, uv_coord).xyz;
 
 	/*	Calculate Cook Torrance shading */
-	fragColour = vec4( cookTorranceShading(tColour,tSpecColour,tRoughness,
-											tNormal, light_direction, viewer_direction, light_colour.xyz), 1.0 );
-
+	vec3 rgb_linear = cookTorranceShading(tColour,tSpecColour,tRoughness,
+											tNormal, light_direction, viewer_direction, light_colour.xyz);
+	
+	/*	Temporary gamma correction */
+	fragColour = vec4( pow( rgb_linear, vec3(1.0/2.2) ), 1.0);
+	
 	/*	Let's do some debugging */
 	//fragColour = vec4(vec3(tSpecFactor),1.0);
 }
