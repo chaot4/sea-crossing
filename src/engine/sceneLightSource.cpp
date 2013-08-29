@@ -9,7 +9,6 @@ SceneLightSource::~SceneLightSource()
 {
 }
 
-SceneLightSource::SceneLightSource(int inId, const glm::vec3& inPosition, const glm::vec4& inLightColour) : SceneEntity(inId, inPosition)
+SceneLightSource::SceneLightSource(int inId, const glm::vec3& inPosition, const glm::vec3& inLightColour) : SceneEntity(inId, inPosition), lightColour(inLightColour)
 {
-	lightColour = inLightColour;
 }

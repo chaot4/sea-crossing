@@ -7,12 +7,19 @@ Description: Standard vertex shader for lighting calculations of opaque surfaces
 ---------------------------------------------------------------------------------------------------*/
 #version 330
 
+struct LightProperties 
+{
+	vec3 position[5];
+	vec3 intensity[5];
+};
+
 uniform mat3 normal_matrix;
 uniform mat4 view_matrix;
 uniform mat4 model_view_matrix;
 uniform mat4 model_view_projection_matrix;
 
-uniform vec3 light_position;
+uniform LightProperties lights;
+uniform int num_lights;
 
 in vec3 v_position;
 in vec3 v_normal;
@@ -25,10 +32,10 @@ out vec3 position;
 out vec4 colour;
 out vec2 uv_coord;
 out vec3 viewer_direction;
-out vec3 light_direction;
 out vec3 normal;
 out vec3 tangent;
 out vec3 bitangent;
+out LightProperties lights_tangent_space;
 
 void main()
 {
@@ -54,7 +61,13 @@ void main()
 	
 	/*	Compute direction to the viewer/camer and light source into tangent space */
 	viewer_direction = normalize(tangentSpaceMatrix * normalize( -position ));
-	light_direction = normalize(tangentSpaceMatrix * normalize((view_matrix * vec4(light_position,1.0)).xyz - position));
+	
+	for(int i=0;i<num_lights;i++)
+	{
+		/*	For the output, the position variable will actually contain the direction to the light! */
+		lights_tangent_space.position[i] = normalize(tangentSpaceMatrix * normalize((view_matrix * vec4(lights.position[i],1.0)).xyz - position));
+		lights_tangent_space.intensity[i] = lights.intensity[i];
+	}
 	
 	colour = v_colour;
 	uv_coord = v_uv_coord;

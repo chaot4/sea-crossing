@@ -347,6 +347,8 @@ bool ResourceManager::createTexture2D(const std::string path, Texture*& inOutTex
 	if(!(lastElement->loadArrayC(imgDimX,imgDimY,imageData))) return false;
 
 	inOutTexPtr = &(*lastElement);
+
+	delete imageData;
 	return true;
 }
 

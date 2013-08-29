@@ -21,7 +21,7 @@ bool Scene::createVolumetricSceneObject(const int id, const glm::vec3 position, 
 	return true;
 }
 
-bool Scene::createSceneLight(const int id, const glm::vec3 position, glm::vec4 colour)
+bool Scene::createSceneLight(const int id, const glm::vec3 position, glm::vec3 colour)
 {
 	lightSourceList.push_back(SceneLightSource(id, position, colour));
 	return true;
@@ -130,8 +130,27 @@ void Scene::render()
 		currentPrgm->setUniform("view_matrix", viewMx);
 		currentPrgm->setUniform("model_view_matrix",modelViewMx);
 		currentPrgm->setUniform("model_view_projection_matrix",modelViewProjectionMx);
-		currentPrgm->setUniform("light_position",(lightSourceList.begin())->getPosition());
-		currentPrgm->setUniform("light_colour",(lightSourceList.begin())->getColour());
+
+		int light_counter = 0;
+		std::string uniform_name;
+		for(std::list<SceneLightSource>::iterator light_itr = lightSourceList.begin(); light_itr != lightSourceList.end(); ++light_itr)
+		{
+			uniform_name = "lights.position["+ std::to_string(light_counter);
+			uniform_name.append("]");
+			currentPrgm->setUniform(uniform_name.c_str(),light_itr->getPosition());
+			
+			uniform_name = "lights.intensity["+ std::to_string(light_counter);
+			uniform_name.append("]");
+			currentPrgm->setUniform(uniform_name.c_str(),light_itr->getColour());
+
+		   
+			//currentPrgm->setUniform("lights.position[0]",light_itr->getPosition());
+			//currentPrgm->setUniform("lights.intensity[0]",light_itr->getColour());
+
+			light_counter++;
+			if(light_counter>=20) break;
+		}
+		currentPrgm->setUniform("num_lights",light_counter);
 
 		currentMtl->use();
 

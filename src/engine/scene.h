@@ -39,7 +39,7 @@ public:
 	bool createVolumetricSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling, Mesh* geomPtr, Texture3D* volPtr, GLSLProgram* prgmPtr);
 	
 	//	create a scene light source
-	bool createSceneLight(const int id, const glm::vec3 position, glm::vec4 lightColour);
+	bool createSceneLight(const int id, const glm::vec3 position, glm::vec3 lightColour);
 	//	create a scene camera
 	bool createSceneCamera(const int id, const glm::vec3 position, const glm::quat orientations, float aspect, float fov);
 

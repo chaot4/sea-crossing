@@ -123,10 +123,25 @@ void RenderHub::run()
 	/	Support for adding cameras and lights via message system will follow later on
 	*/
 
+	/*	TEMPORARY SHADER TESTING */
+	Mesh* geomPtr;
+	Material* matPtr;
+	resourceMngr.createBox(geomPtr);
+	if(!(resourceMngr.createMaterial("../resources/materials/debugging.slmtl",matPtr)))
+		std::cout<<"Failed to create material."<<std::endl;
+	if(!(activeScene->createStaticSceneObject(0,glm::vec3(0.0,0.0,0.0),glm::quat(),geomPtr,matPtr)))
+		std::cout<<"Failed to create scene object."<<std::endl;
+
 	if(!(activeScene->createSceneCamera(0,glm::vec3(0.0,0.0,20.0),glm::quat(),16.0f/9.0f,(9.0f/16.0f)*60.0f)))
 		std::cout<<"Failed to create camera"<<"\n";
 
-	if(!(activeScene->createSceneLight(0,glm::vec3(0.0,25.0,0.0),glm::vec4(1.0,1.0,1.0,1.0))))
+	if(!(activeScene->createSceneLight(0,glm::vec3(15.0,10.0,15.0),glm::vec3(0.2,0.2,0.2))))
+		std::cout<<"Failed to create light"<<"\n";
+	if(!(activeScene->createSceneLight(0,glm::vec3(20.0,10.0,-20.0),glm::vec3(0.2,0.2,0.2))))
+		std::cout<<"Failed to create light"<<"\n";
+	if(!(activeScene->createSceneLight(0,glm::vec3(-12.0,10.0,0.0),glm::vec3(0.2,0.2,0.2))))
+		std::cout<<"Failed to create light"<<"\n";
+	if(!(activeScene->createSceneLight(0,glm::vec3(0.0,5.0,0.0),glm::vec3(0.2,0.2,0.2))))
 		std::cout<<"Failed to create light"<<"\n";
 
 	activeScene->setActiveCamera(0);
@@ -141,11 +156,11 @@ void RenderHub::run()
 
 	while(running && !glfwWindowShouldClose(activeWindow))
 	{
-		while(messageRcvr.checkQueue())
-		{
-			Message msg(messageRcvr.popMessage());
-			processMessage(&msg);
-		}
+		//while(messageRcvr.checkQueue())
+		//{
+		//	Message msg(messageRcvr.popMessage());
+		//	processMessage(&msg);
+		//}
 
 		/*	For now, I avoid using glfw callback functions */
 		controlHandler.updateCamera(activeWindow,activeScene);
@@ -198,7 +213,7 @@ void RenderHub::runVolumeTest()
 		std::cout<<"Failed to create camera"
 				<<"\n";
 	}
-	if(!(activeScene->createSceneLight(0,glm::vec3(0.0,2.0,0.0),glm::vec4(1.0,1.0,1.0,1.0))))
+	if(!(activeScene->createSceneLight(0,glm::vec3(0.0,2.0,0.0),glm::vec3(1.0,1.0,1.0))))
 	{
 		std::cout<<"Failed to create light"
 				<<"\n";

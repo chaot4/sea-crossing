@@ -228,7 +228,7 @@ void MessageReceiver::pushLoadSceneMessages()
 {
 	Message newMsg(CREATE,100,glm::vec3(0.0,0.0,0.0),glm::quat(),glm::vec3(1.0),
 		"../resources/meshes/board.fbx",
-		"../resources/materials/default.slmtl");
+		"../resources/materials/debugging.slmtl");
 
 	message_fifo.push(newMsg);
 	message_counter++;

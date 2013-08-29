@@ -7,14 +7,14 @@
 class SceneLightSource : public SceneEntity
 {
 private:
-	glm::vec4 lightColour;
+	glm::vec3 lightColour;
 public:
 	SceneLightSource();
 	~SceneLightSource();
 
-	SceneLightSource(int, const glm::vec3&, const glm::vec4&);
+	SceneLightSource(int, const glm::vec3&, const glm::vec3&);
 
-	glm::vec4 getColour() {return lightColour;}
+	glm::vec3 getColour() {return lightColour;}
 };
 
 #endif

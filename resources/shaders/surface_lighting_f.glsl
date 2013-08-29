@@ -10,21 +10,30 @@ Description: Standard fragment shader for lighting calculations of opaque surfac
 
 #define PI 3.1415926535
 
+struct LightProperties 
+{
+	vec3 position[5];
+	vec3 intensity[5];
+};
+
 uniform sampler2D diffuse_tx2D;
 uniform sampler2D specular_tx2D;
 uniform sampler2D roughness_tx2D;
 uniform sampler2D normal_tx2D;
 
-uniform vec4 light_colour;
+uniform LightProperties lights;
+uniform int num_lights;
+
+uniform mat4 view_matrix;
 
 in vec3 position;
 in vec4 colour;
 in vec2 uv_coord;
 in vec3 viewer_direction;
-in vec3 light_direction;
 in vec3 normal;
 in vec3 tangent;
 in vec3 bitangent;
+in LightProperties lights_tangent_space;
 
 out vec4 fragColour;
 
@@ -107,9 +116,16 @@ void main()
 	vec3 tNormal = ((texture(normal_tx2D, uv_coord).xyz)*2.0)-1.0;
 	//vec3 tNormal = texture2D(normal_tx2D, uv_coord).xyz;
 
-	/*	Calculate Cook Torrance shading */
-	vec3 rgb_linear = cookTorranceShading(tColour,tSpecColour,tRoughness,
-											tNormal, light_direction, viewer_direction, light_colour.xyz);
+	/*	Calculate Cook Torrance shading for each light source */
+	vec3 rgb_linear = vec3(0.0);
+	for(int i=0;i<num_lights;i++)
+	{
+		/*	Quick&Dirty light attenuation */
+		vec3 light_intensity = 100.0 * lights_tangent_space.intensity[i] / pow(length(position-(view_matrix*vec4(lights.position[i],1.0)).xyz),2.0);
+		
+		rgb_linear += cookTorranceShading(tColour,tSpecColour,tRoughness,
+											tNormal, lights_tangent_space.position[i], viewer_direction, light_intensity);
+	}
 	
 	/*	Temporary gamma correction */
 	fragColour = vec4( pow( rgb_linear, vec3(1.0/2.2) ), 1.0);
