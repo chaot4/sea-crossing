@@ -9,13 +9,13 @@ Scene::~Scene()
 {
 }
 
-bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, Mesh* geomPtr, Material* mtlPtr)
+bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, std::shared_ptr<Mesh> geomPtr, Material* mtlPtr)
 {
 	scenegraph.push_back(StaticSceneObject(id,position,orientation,geomPtr,mtlPtr));
 	return true;
 }
 
-bool Scene::createVolumetricSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling, Mesh* geomPtr, Texture3D* volPtr, GLSLProgram* prgmPtr)
+bool Scene::createVolumetricSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling, std::shared_ptr<Mesh> geomPtr, Texture3D* volPtr, GLSLProgram* prgmPtr)
 {
 	volumetricObjectList.push_back(VolumetricSceneObject(id,position,orientation,scaling,geomPtr,volPtr,prgmPtr));
 	return true;

@@ -124,13 +124,14 @@ void RenderHub::run()
 	*/
 
 	/*	TEMPORARY SHADER TESTING */
-	Mesh* geomPtr;
+	std::shared_ptr<Mesh> geomPtr;
 	Material* matPtr;
 	resourceMngr.createBox(geomPtr);
 	if(!(resourceMngr.createMaterial("../resources/materials/debugging.slmtl",matPtr)))
 		std::cout<<"Failed to create material."<<std::endl;
 	if(!(activeScene->createStaticSceneObject(0,glm::vec3(0.0,0.0,0.0),glm::quat(),geomPtr,matPtr)))
 		std::cout<<"Failed to create scene object."<<std::endl;
+	geomPtr.reset();
 
 	if(!(activeScene->createSceneCamera(0,glm::vec3(0.0,0.0,20.0),glm::quat(),16.0f/9.0f,(9.0f/16.0f)*60.0f)))
 		std::cout<<"Failed to create camera"<<"\n";
@@ -146,6 +147,8 @@ void RenderHub::run()
 
 	activeScene->setActiveCamera(0);
 	
+	std::cout<<geomPtr.use_count()<<std::endl;
+
 	//activeScene->testing();
 
 	running = true;
@@ -182,7 +185,7 @@ void RenderHub::run()
 
 void RenderHub::runVolumeTest()
 {
-	Mesh* geomPtr;
+	std::shared_ptr<Mesh> geomPtr;
 	Texture3D* volPtr;
 	GLSLProgram* prgmPtr;
 	resourceMngr.createBox(geomPtr);
@@ -244,10 +247,10 @@ void RenderHub::runVolumeTest()
 void RenderHub::processMessage(Message *msg)
 {
 	messageType msgType = (msg->type);
-	switch (msgType)
-	{
+	switch (msgType){
 	case CREATE:
-		Mesh* geomPtr;
+	{
+		std::shared_ptr<Mesh> geomPtr;
 		Material* materialPtr;
 		if(!(resourceMngr.createMaterial((msg->material_path).c_str(),materialPtr)))
 		{
@@ -263,7 +266,9 @@ void RenderHub::processMessage(Message *msg)
 		if(!(activeScene->createStaticSceneObject((msg->id),(msg->position),(msg->orientation),geomPtr,materialPtr)))
 			std::cout<<"Failed to create scene object."<<std::endl;
 
+		geomPtr.reset();
 		break;
+	}
 	case DELETE:
 		break;
 	case EXIT:

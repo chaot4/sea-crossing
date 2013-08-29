@@ -4,7 +4,7 @@ ResourceManager::ResourceManager(){}
 
 ResourceManager::~ResourceManager(){}
 
-bool ResourceManager::createTriangle(Mesh*& inOutGeomPtr)
+bool ResourceManager::createTriangle(std::shared_ptr<Mesh> &inOutGeomPtr)
 {
 	Vertex_pn *vertexArray = new Vertex_pn[3];
 	GLuint *indexArray = new GLuint[3];
@@ -15,23 +15,25 @@ bool ResourceManager::createTriangle(Mesh*& inOutGeomPtr)
 
 	indexArray[0]=0;indexArray[1]=1;indexArray[2]=2;
 
-	geometryList.push_back(Mesh("0"));
-	std::list<Mesh>::iterator lastElement = --(geometryList.end());
-	if(!(lastElement->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pn)*3,sizeof(GLuint)*3))) return false;
-	lastElement->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pn),0);
-	lastElement->setVertexAttribPointer(3,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pn),(GLvoid*) sizeof(Vertex_p));
+	std::shared_ptr<Mesh> triangle_mesh(new Mesh("0"));
+	
+	if(!(triangle_mesh->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pn)*3,sizeof(GLuint)*3))) return false;
+	triangle_mesh->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pn),0);
+	triangle_mesh->setVertexAttribPointer(3,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pn),(GLvoid*) sizeof(Vertex_p));
 
-	inOutGeomPtr = &(*lastElement);
+	inOutGeomPtr = triangle_mesh;
+	geometryList.push_back(std::move(triangle_mesh));
+
 	return true;
 }
 
-bool ResourceManager::createBox(Mesh*& inOutGeomPtr)
+bool ResourceManager::createBox(std::shared_ptr<Mesh> &inOutGeomPtr)
 {
 	/*	Check list of vertexBufferObjects for default box object(filename="0") */
-	for(std::list<Mesh>::iterator i = geometryList.begin(); i != geometryList.end(); ++i)
+	for(std::list<std::shared_ptr<Mesh>>::iterator i = geometryList.begin(); i != geometryList.end(); ++i)
 	{
-		if(i->getFilename() == "0"){
-			inOutGeomPtr = &(*i);
+		if((*i)->getFilename() == "0"){
+			inOutGeomPtr = (*i);
 			return true;
 		}
 	}
@@ -84,26 +86,26 @@ bool ResourceManager::createBox(Mesh*& inOutGeomPtr)
 	indexArray[30]=20;indexArray[31]=22;indexArray[32]=21;
 	indexArray[33]=22;indexArray[34]=20;indexArray[35]=23;
 
-	geometryList.push_back(Mesh("0"));
-	std::list<Mesh>::iterator lastElement = --(geometryList.end());
-	if(!(lastElement->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pntcu)*24,sizeof(GLuint)*36))) return false;
-	lastElement->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),0);
-	lastElement->setVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_p));
-	lastElement->setVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pn));
-	lastElement->setVertexAttribPointer(3,4,GL_UNSIGNED_BYTE,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pnt));
-	lastElement->setVertexAttribPointer(4,2,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pntc));
+	std::shared_ptr<Mesh> box_mesh(new Mesh("0"));
+	if(!(box_mesh->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pntcu)*24,sizeof(GLuint)*36))) return false;
+	box_mesh->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),0);
+	box_mesh->setVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_p));
+	box_mesh->setVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pn));
+	box_mesh->setVertexAttribPointer(3,4,GL_UNSIGNED_BYTE,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pnt));
+	box_mesh->setVertexAttribPointer(4,2,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pntc));
 
-	inOutGeomPtr = &(*lastElement);
+	inOutGeomPtr = box_mesh;
+	geometryList.push_back(std::move(box_mesh));
 	return true;
 }
 
-bool ResourceManager::createMesh(const std::string path, Mesh*& inOutGeomPtr)
+bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &inOutGeomPtr)
 {
 	/*	Check list of vertexBufferObjects for filename */
-	for(std::list<Mesh>::iterator i = geometryList.begin(); i != geometryList.end(); ++i)
+	for(std::list<std::shared_ptr<Mesh>>::iterator i = geometryList.begin(); i != geometryList.end(); ++i)
 	{
-		if(i->getFilename() == path){
-			inOutGeomPtr = &(*i);
+		if((*i)->getFilename() == "0"){
+			inOutGeomPtr = (*i);
 			return true;
 		}
 	}
@@ -117,23 +119,23 @@ bool ResourceManager::createMesh(const std::string path, Mesh*& inOutGeomPtr)
 
 	if(file_type == "fbx")
 	{
-		geometryList.push_back(Mesh(path));
-		std::list<Mesh>::iterator lastElement = --(geometryList.end());
+		std::shared_ptr<Mesh> mesh(new Mesh("0"));
 
 		/* Just some testing */
-		if( !loadFbxGeometry(path.c_str(),&(*lastElement)) ) {return false;}
+		if( !loadFbxGeometry(path.c_str(),&(*mesh)) ) {return false;}
 
-		inOutGeomPtr = &(*lastElement);
+		inOutGeomPtr = mesh;
+		geometryList.push_back(std::move(mesh));
 	}
 	else if(file_type == "slraw")
 	{
-		geometryList.push_back(Mesh(path));
-		std::list<Mesh>::iterator lastElement = --(geometryList.end());
+		std::shared_ptr<Mesh> mesh(new Mesh("0"));
 
 		/* Just some testing */
-		if( !loadBinaryGeometry(path.c_str(),&(*lastElement)) ) {return false;}
+		if( !loadBinaryGeometry(path.c_str(),&(*mesh)) ) {return false;}
 
-		inOutGeomPtr = &(*lastElement);
+		inOutGeomPtr = mesh;
+		geometryList.push_back(std::move(mesh));
 	}
 	else
 	{

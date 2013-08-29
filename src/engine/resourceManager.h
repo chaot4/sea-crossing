@@ -21,6 +21,7 @@
 #include <list>
 #include <fstream>
 #include <sstream>
+#include <memory>
 
 /*	Include non-std dependencies */ 
 #include <fbxsdk.h>
@@ -51,14 +52,14 @@ public:
 	 * \param inOutGeomPtr A pointer set to the newly created vertex geometry via in-out parameter
 	 * \return Returns true if the triangle was succesfully created, false otherwise
 	 */
-	bool createTriangle(Mesh*& inOutGeomPtr);
+	bool createTriangle(std::shared_ptr<Mesh> &inOutGeomPtr);
 
 	/**
 	 * \brief Creates a simple box object for debugging purposes
 	 * \param inOutGeomPtr A pointer set to the newly created vertex geometry via in-out parameter
 	 * \return Returns true if box was succesfully created, false otherwise
 	 */
-	bool createBox(Mesh*& inOutGeomPtr);
+	bool createBox(std::shared_ptr<Mesh> &inOutGeomPtr);
 
 	/**
 	 * \brief Creates a Mesh object from a local file.
@@ -67,7 +68,7 @@ public:
 	 * \param inOutGeomPtr A pointer set to the newly created vertex geometry via in-out parameter
 	 * \return Returns true if Mesh was succesfully created, false otherwise
 	 */
-	bool createMesh(const std::string path, Mesh*& inOutGeomPtr);
+	bool createMesh(const std::string path, std::shared_ptr<Mesh> &inOutGeomPtr);
 
 	/**
 	 * \brief Creates default material object for debugging purposes
@@ -160,7 +161,7 @@ private:
 	*/
 
 	/** List containing all Mesh objects */
-	std::list<Mesh> geometryList;
+	std::list<std::shared_ptr<Mesh>> geometryList;
 	/** List containing all materials */
 	std::list<Material> materialList;
 	/** List containing all 2D textures */
