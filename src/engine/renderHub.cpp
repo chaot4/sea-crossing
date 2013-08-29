@@ -125,13 +125,14 @@ void RenderHub::run()
 
 	/*	TEMPORARY SHADER TESTING */
 	std::shared_ptr<Mesh> geomPtr;
-	Material* matPtr;
+	std::shared_ptr<Material> matPtr;
 	resourceMngr.createBox(geomPtr);
 	if(!(resourceMngr.createMaterial("../resources/materials/debugging.slmtl",matPtr)))
 		std::cout<<"Failed to create material."<<std::endl;
 	if(!(activeScene->createStaticSceneObject(0,glm::vec3(0.0,0.0,0.0),glm::quat(),geomPtr,matPtr)))
 		std::cout<<"Failed to create scene object."<<std::endl;
 	geomPtr.reset();
+	matPtr.reset();
 
 	if(!(activeScene->createSceneCamera(0,glm::vec3(0.0,0.0,20.0),glm::quat(),16.0f/9.0f,(9.0f/16.0f)*60.0f)))
 		std::cout<<"Failed to create camera"<<"\n";
@@ -251,7 +252,7 @@ void RenderHub::processMessage(Message *msg)
 	case CREATE:
 	{
 		std::shared_ptr<Mesh> geomPtr;
-		Material* materialPtr;
+		std::shared_ptr<Material> materialPtr;
 		if(!(resourceMngr.createMaterial((msg->material_path).c_str(),materialPtr)))
 		{
 			std::cout<<"Failed to create material: "<<msg->material_path<<std::endl;
@@ -267,6 +268,7 @@ void RenderHub::processMessage(Message *msg)
 			std::cout<<"Failed to create scene object."<<std::endl;
 
 		geomPtr.reset();
+		materialPtr.reset();
 		break;
 	}
 	case DELETE:

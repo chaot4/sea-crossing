@@ -9,7 +9,7 @@ Scene::~Scene()
 {
 }
 
-bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, std::shared_ptr<Mesh> geomPtr, Material* mtlPtr)
+bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Material> mtlPtr)
 {
 	scenegraph.push_back(StaticSceneObject(id,position,orientation,geomPtr,mtlPtr));
 	return true;
@@ -122,7 +122,7 @@ void Scene::render()
 		modelViewProjectionMx = projectionMx * viewMx * modelMx;
 
 		currentPrgm = (i->getMaterial())->getShaderProgram();
-		currentMtl = i->getMaterial();
+		currentMtl = &(*(i->getMaterial()));
 
 		currentPrgm->use();
 

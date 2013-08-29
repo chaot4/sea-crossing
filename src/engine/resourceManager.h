@@ -75,7 +75,7 @@ public:
 	 * \param inOutMtlPtr A pointer set to the newly created material via in-out parameter
 	 * \return Returns true if material was succesfully created, false otherwise
 	 */
-	bool createMaterial(Material*& inOutMtlPtr);
+	bool createMaterial(std::shared_ptr<Material> &inOutMtlPtr);
 
 	/**
 	 * \brief Creates a material object from a local file
@@ -83,7 +83,7 @@ public:
 	 * \param inOutMtlPtr A pointer set to the newly created material via in-out parameter
 	 * \return Returns true if material was succesfully created, false otherwise
 	 */
-	bool createMaterial(const char * const path, Material*& inOutMtlPtr);
+	bool createMaterial(const char * const path, std::shared_ptr<Material> &inOutMtlPtr);
 
 	/**
 	 * \brief Reload a material object from file
@@ -163,7 +163,7 @@ private:
 	/** List containing all Mesh objects */
 	std::list<std::shared_ptr<Mesh>> geometryList;
 	/** List containing all materials */
-	std::list<Material> materialList;
+	std::list<std::shared_ptr<Material>> materialList;
 	/** List containing all 2D textures */
 	std::list<Texture2D> textureList;
 	/** List containing all 3D textures */

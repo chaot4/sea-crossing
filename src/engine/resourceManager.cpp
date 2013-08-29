@@ -104,7 +104,7 @@ bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &
 	/*	Check list of vertexBufferObjects for filename */
 	for(std::list<std::shared_ptr<Mesh>>::iterator i = geometryList.begin(); i != geometryList.end(); ++i)
 	{
-		if((*i)->getFilename() == "0"){
+		if((*i)->getFilename() == path){
 			inOutGeomPtr = (*i);
 			return true;
 		}
@@ -119,7 +119,7 @@ bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &
 
 	if(file_type == "fbx")
 	{
-		std::shared_ptr<Mesh> mesh(new Mesh("0"));
+		std::shared_ptr<Mesh> mesh(new Mesh(path));
 
 		/* Just some testing */
 		if( !loadFbxGeometry(path.c_str(),&(*mesh)) ) {return false;}
@@ -129,7 +129,7 @@ bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &
 	}
 	else if(file_type == "slraw")
 	{
-		std::shared_ptr<Mesh> mesh(new Mesh("0"));
+		std::shared_ptr<Mesh> mesh(new Mesh(path));
 
 		/* Just some testing */
 		if( !loadBinaryGeometry(path.c_str(),&(*mesh)) ) {return false;}
@@ -145,14 +145,14 @@ bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &
 	return true;
 }
 
-bool ResourceManager::createMaterial(Material*& inOutMtlPtr)
+bool ResourceManager::createMaterial(std::shared_ptr<Material> &inOutMtlPtr)
 {
 	/*	Check list of materials for default material(id=0) */
-	for(std::list<Material>::iterator i = materialList.begin(); i != materialList.end(); ++i)
+	for(std::list<std::shared_ptr<Material>>::iterator i = materialList.begin(); i != materialList.end(); ++i)
 	{
-		if((i->getId())==0)
+		if( (*i)->getId() == 0 )
 		{
-			inOutMtlPtr = &*i;
+			inOutMtlPtr = (*i);
 			return true;
 		}
 	}
@@ -182,23 +182,24 @@ bool ResourceManager::createMaterial(Material*& inOutMtlPtr)
 	if(!createTexture2D(1,1,specularData,texPtr2)) return false;
 	if(!createTexture2D(1,1,roughnessData,texPtr3)) return false;
 	if(!createTexture2D(1,1,normalData,texPtr4)) return false;
-	materialList.push_back(Material(0,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
 
-	std::list<Material>::iterator lastElement = --(materialList.end());
-	inOutMtlPtr = &(*lastElement);
+	std::shared_ptr<Material> material(new Material(0,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
+	inOutMtlPtr = material;
+	materialList.push_back(std::move(material));
+
 	return true;
 }
 
-bool ResourceManager::createMaterial(const char * const path, Material*& inOutMtlPtr)
+bool ResourceManager::createMaterial(const char * const path, std::shared_ptr<Material> &inOutMtlPtr)
 {
 	MaterialInfo inOutMtlInfo;
 	if(!parseMaterial(path,inOutMtlInfo))return false;
 
-	for(std::list<Material>::iterator i = materialList.begin(); i != materialList.end(); ++i)
+	for(std::list<std::shared_ptr<Material>>::iterator i = materialList.begin(); i != materialList.end(); ++i)
 	{
-		if((i->getId())==inOutMtlInfo.id)
+		if( (*i)->getId() == inOutMtlInfo.id )
 		{
-			inOutMtlPtr = &*i;
+			inOutMtlPtr = (*i);
 			return true;
 		}
 	}
@@ -213,10 +214,11 @@ bool ResourceManager::createMaterial(const char * const path, Material*& inOutMt
 	if(!createTexture2D(inOutMtlInfo.spec_path,texPtr2)) return false;
 	if(!createTexture2D(inOutMtlInfo.roughness_path,texPtr3)) return false;
 	if(!createTexture2D(inOutMtlInfo.normal_path,texPtr4)) return false;
-	materialList.push_back(Material(inOutMtlInfo.id,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
 
-	std::list<Material>::iterator lastElement = --(materialList.end());
-	inOutMtlPtr = &(*lastElement);
+	std::shared_ptr<Material> material(new Material(inOutMtlInfo.id,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
+	inOutMtlPtr = material;
+	materialList.push_back(std::move(material));
+
 	return true;
 }
 
