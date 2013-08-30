@@ -5,7 +5,8 @@ Material::~Material(void)
 {
 }
 
-Material::Material(int in_id,GLSLProgram* prgm,Texture* diff,Texture* spec,Texture* roughness,Texture* normal) :
+Material::Material(int in_id,std::shared_ptr<GLSLProgram> prgm,std::shared_ptr<Texture> diff,
+					std::shared_ptr<Texture> spec,std::shared_ptr<Texture> roughness,std::shared_ptr<Texture> normal) :
 	id(in_id), shaderProgram(prgm), diffuseMap(diff), specularMap(spec), roughnessMap(roughness), normalMap(normal)
 {
 }

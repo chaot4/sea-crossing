@@ -55,7 +55,7 @@ vec3 cookTorranceShading(in vec3 surface_albedo, in vec3 surface_specular_color,
 	float n_dot_l = dot(surface_normal,light_direction);
 	float n_dot_v = dot(surface_normal,viewer_direction);
 	float v_dot_h = dot(viewer_direction,halfway);
-	float l_dot_h = dot(light_direction,halfway);
+	float l_dot_h = v_dot_h;
 	
 	/*
 	/	Compute Fresnel term using the Schlick approximation.

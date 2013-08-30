@@ -22,7 +22,7 @@ bool ResourceManager::createTriangle(std::shared_ptr<Mesh> &inOutGeomPtr)
 	triangle_mesh->setVertexAttribPointer(3,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pn),(GLvoid*) sizeof(Vertex_p));
 
 	inOutGeomPtr = triangle_mesh;
-	geometryList.push_back(std::move(triangle_mesh));
+	geometry_list.push_back(std::move(triangle_mesh));
 
 	return true;
 }
@@ -30,7 +30,7 @@ bool ResourceManager::createTriangle(std::shared_ptr<Mesh> &inOutGeomPtr)
 bool ResourceManager::createBox(std::shared_ptr<Mesh> &inOutGeomPtr)
 {
 	/*	Check list of vertexBufferObjects for default box object(filename="0") */
-	for(std::list<std::shared_ptr<Mesh>>::iterator i = geometryList.begin(); i != geometryList.end(); ++i)
+	for(std::list<std::shared_ptr<Mesh>>::iterator i = geometry_list.begin(); i != geometry_list.end(); ++i)
 	{
 		if((*i)->getFilename() == "0"){
 			inOutGeomPtr = (*i);
@@ -95,14 +95,14 @@ bool ResourceManager::createBox(std::shared_ptr<Mesh> &inOutGeomPtr)
 	box_mesh->setVertexAttribPointer(4,2,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pntc));
 
 	inOutGeomPtr = box_mesh;
-	geometryList.push_back(std::move(box_mesh));
+	geometry_list.push_back(std::move(box_mesh));
 	return true;
 }
 
 bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &inOutGeomPtr)
 {
 	/*	Check list of vertexBufferObjects for filename */
-	for(std::list<std::shared_ptr<Mesh>>::iterator i = geometryList.begin(); i != geometryList.end(); ++i)
+	for(std::list<std::shared_ptr<Mesh>>::iterator i = geometry_list.begin(); i != geometry_list.end(); ++i)
 	{
 		if((*i)->getFilename() == path){
 			inOutGeomPtr = (*i);
@@ -125,7 +125,7 @@ bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &
 		if( !loadFbxGeometry(path.c_str(),&(*mesh)) ) {return false;}
 
 		inOutGeomPtr = mesh;
-		geometryList.push_back(std::move(mesh));
+		geometry_list.push_back(std::move(mesh));
 	}
 	else if(file_type == "slraw")
 	{
@@ -135,7 +135,7 @@ bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &
 		if( !loadBinaryGeometry(path.c_str(),&(*mesh)) ) {return false;}
 
 		inOutGeomPtr = mesh;
-		geometryList.push_back(std::move(mesh));
+		geometry_list.push_back(std::move(mesh));
 	}
 	else
 	{
@@ -148,7 +148,7 @@ bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &
 bool ResourceManager::createMaterial(std::shared_ptr<Material> &inOutMtlPtr)
 {
 	/*	Check list of materials for default material(id=0) */
-	for(std::list<std::shared_ptr<Material>>::iterator i = materialList.begin(); i != materialList.end(); ++i)
+	for(std::list<std::shared_ptr<Material>>::iterator i = material_list.begin(); i != material_list.end(); ++i)
 	{
 		if( (*i)->getId() == 0 )
 		{
@@ -172,11 +172,11 @@ bool ResourceManager::createMaterial(std::shared_ptr<Material> &inOutMtlPtr)
 	/*	normal pointing upwards */
 	normalData[0]=0.5f; normalData[1]=0.5f; normalData[2]=1.0f; normalData[3]=0.0f;
 	
-	GLSLProgram* prgPtr;
-	Texture* texPtr1;
-	Texture* texPtr2;
-	Texture* texPtr3;
-	Texture* texPtr4;
+	std::shared_ptr<GLSLProgram> prgPtr;
+	std::shared_ptr<Texture> texPtr1;
+	std::shared_ptr<Texture> texPtr2;
+	std::shared_ptr<Texture> texPtr3;
+	std::shared_ptr<Texture> texPtr4;
 	if(!createShaderProgram(SURFACE_LIGHTING,prgPtr)) return false;
 	if(!createTexture2D(1,1,diffuseData,texPtr1)) return false;
 	if(!createTexture2D(1,1,specularData,texPtr2)) return false;
@@ -185,8 +185,13 @@ bool ResourceManager::createMaterial(std::shared_ptr<Material> &inOutMtlPtr)
 
 	std::shared_ptr<Material> material(new Material(0,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
 	inOutMtlPtr = material;
-	materialList.push_back(std::move(material));
+	material_list.push_back(std::move(material));
 
+	prgPtr.reset();
+	texPtr1.reset();
+	texPtr2.reset();
+	texPtr3.reset();
+	texPtr4.reset();
 	return true;
 }
 
@@ -195,7 +200,7 @@ bool ResourceManager::createMaterial(const char * const path, std::shared_ptr<Ma
 	MaterialInfo inOutMtlInfo;
 	if(!parseMaterial(path,inOutMtlInfo))return false;
 
-	for(std::list<std::shared_ptr<Material>>::iterator i = materialList.begin(); i != materialList.end(); ++i)
+	for(std::list<std::shared_ptr<Material>>::iterator i = material_list.begin(); i != material_list.end(); ++i)
 	{
 		if( (*i)->getId() == inOutMtlInfo.id )
 		{
@@ -204,11 +209,11 @@ bool ResourceManager::createMaterial(const char * const path, std::shared_ptr<Ma
 		}
 	}
 
-	GLSLProgram* prgPtr;
-	Texture* texPtr1;
-	Texture* texPtr2;
-	Texture* texPtr3;
-	Texture* texPtr4;
+	std::shared_ptr<GLSLProgram> prgPtr;
+	std::shared_ptr<Texture> texPtr1;
+	std::shared_ptr<Texture> texPtr2;
+	std::shared_ptr<Texture> texPtr3;
+	std::shared_ptr<Texture> texPtr4;
 	if(!createShaderProgram(SURFACE_LIGHTING,prgPtr)) return false;
 	if(!createTexture2D(inOutMtlInfo.diff_path,texPtr1)) return false;
 	if(!createTexture2D(inOutMtlInfo.spec_path,texPtr2)) return false;
@@ -217,24 +222,29 @@ bool ResourceManager::createMaterial(const char * const path, std::shared_ptr<Ma
 
 	std::shared_ptr<Material> material(new Material(inOutMtlInfo.id,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
 	inOutMtlPtr = material;
-	materialList.push_back(std::move(material));
+	material_list.push_back(std::move(material));
 
+	prgPtr.reset();
+	texPtr1.reset();
+	texPtr2.reset();
+	texPtr3.reset();
+	texPtr4.reset();
 	return true;
 }
 
-bool ResourceManager::createShaderProgram(shaderType type, GLSLProgram*& inOutPrgPtr)
+bool ResourceManager::createShaderProgram(shaderType type, std::shared_ptr<GLSLProgram> &inOutPrgPtr)
 {
 	/*	Check list of shader programs for the shader type */
-	for(std::list<GLSLProgram>::iterator i = shaderProgramList.begin(); i != shaderProgramList.end(); ++i)
+	for(std::list<std::shared_ptr<GLSLProgram>>::iterator i = shader_program_list.begin(); i != shader_program_list.end(); ++i)
 	{
-		if((i->getType())==type){
-			inOutPrgPtr = &*i;
+		if(((*i)->getType())==type){
+			inOutPrgPtr = (*i);
 			return true;
 		}
 	}
 
-	GLSLProgram shaderPrg;
-	shaderPrg.init();
+	std::shared_ptr<GLSLProgram> shaderPrg(new GLSLProgram());
+	shaderPrg->init();
 	std::string vertSource;
 	std::string fragSource;
 
@@ -243,96 +253,96 @@ bool ResourceManager::createShaderProgram(shaderType type, GLSLProgram*& inOutPr
 	case SURFACE_LIGHTING : {
 		vertSource = readShaderFile("../resources/shaders/surface_lighting_v.glsl");
 		fragSource = readShaderFile("../resources/shaders/surface_lighting_f.glsl");
-		shaderPrg.bindAttribLocation(0,"v_position");
-		shaderPrg.bindAttribLocation(1,"v_normal");
-		shaderPrg.bindAttribLocation(2,"v_tangent");
-		shaderPrg.bindAttribLocation(3,"v_colour");
-		shaderPrg.bindAttribLocation(4,"v_uv_coord");
-		shaderPrg.bindAttribLocation(5,"v_bitangent");
+		shaderPrg->bindAttribLocation(0,"v_position");
+		shaderPrg->bindAttribLocation(1,"v_normal");
+		shaderPrg->bindAttribLocation(2,"v_tangent");
+		shaderPrg->bindAttribLocation(3,"v_colour");
+		shaderPrg->bindAttribLocation(4,"v_uv_coord");
+		shaderPrg->bindAttribLocation(5,"v_bitangent");
 		break; }
 	case FLAT : {
 		vertSource = readShaderFile("../resources/shaders/v_flat.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_flat.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vNormal");
-		shaderPrg.bindAttribLocation(2,"vTangent");
-		shaderPrg.bindAttribLocation(3,"vColour");
-		shaderPrg.bindAttribLocation(4,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vNormal");
+		shaderPrg->bindAttribLocation(2,"vTangent");
+		shaderPrg->bindAttribLocation(3,"vColour");
+		shaderPrg->bindAttribLocation(4,"vUVCoord");
 		break; }
 	case FXAA : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_fxaa.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	case IDLE : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_idle.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	case VOLUME_RAYCASTING : {
 		vertSource = readShaderFile("../resources/shaders/v_volRen.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_volRen.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(3,"vColour");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(3,"vColour");
 		break; }
 	case GAUSSIAN : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_seperatedGaussian.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	case GRADIENT : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_gradient.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	case STRUCTURE_TENSOR : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_structureTensor.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	case HESSE : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_hesse.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	default : {
 		return false;
 		break; }
 	}
 
-	if(!shaderPrg.compileShaderFromString(&vertSource,GL_VERTEX_SHADER)){ std::cout<<shaderPrg.getLog(); return false;}
-	if(!shaderPrg.compileShaderFromString(&fragSource,GL_FRAGMENT_SHADER)){ std::cout<<shaderPrg.getLog(); return false;}
-	if(!shaderPrg.link()){ std::cout<<shaderPrg.getLog(); return false;}
+	if(!shaderPrg->compileShaderFromString(&vertSource,GL_VERTEX_SHADER)){ std::cout<<shaderPrg->getLog(); return false;}
+	if(!shaderPrg->compileShaderFromString(&fragSource,GL_FRAGMENT_SHADER)){ std::cout<<shaderPrg->getLog(); return false;}
+	if(!shaderPrg->link()){ std::cout<<shaderPrg->getLog(); return false;}
 
-	shaderProgramList.push_back(shaderPrg);
-	std::list<GLSLProgram>::iterator lastElement = --(shaderProgramList.end());
-	inOutPrgPtr = &(*lastElement);
+	inOutPrgPtr = shaderPrg;
+	shader_program_list.push_back(std::move(shaderPrg));
+
 	return true;
 }
 
-bool ResourceManager::createTexture2D(int dimX, int dimY, float* data, Texture*& inOutTexPtr)
+bool ResourceManager::createTexture2D(int dimX, int dimY, float* data, std::shared_ptr<Texture> &inOutTexPtr)
 {
-	textureList.push_back(Texture2D());
-	std::list<Texture2D>::iterator lastElement = --(textureList.end());
-	if(!(lastElement->loadArrayF(dimX, dimY, data))) return false;
+	std::shared_ptr<Texture2D> texture(new Texture2D());
+	if(!(texture->loadArrayF(dimX, dimY, data))) return false;
+	inOutTexPtr = texture;
+	texture_list.push_back(std::move(texture));
 
-	inOutTexPtr = &(*lastElement);
 	return true;
 }
 
-bool ResourceManager::createTexture2D(const std::string path, Texture*& inOutTexPtr)
+bool ResourceManager::createTexture2D(const std::string path, std::shared_ptr<Texture> &inOutTexPtr)
 {
-	for(std::list<Texture2D>::iterator i = textureList.begin(); i != textureList.end(); ++i)
+	for(std::list<std::shared_ptr<Texture2D>>::iterator i = texture_list.begin(); i != texture_list.end(); ++i)
 	{
-		if((i->getFilename())==path)
+		if(((*i)->getFilename())==path)
 		{
-			inOutTexPtr = &*i;
+			inOutTexPtr = (*i);
 			return true;
 		}
 	}
@@ -346,42 +356,41 @@ bool ResourceManager::createTexture2D(const std::string path, Texture*& inOutTex
 	imageData = new char[3*imgDimX*imgDimY];
 	if(!readPpmData(path.c_str(),imageData,dataBegin,imgDimX,imgDimY)) return false;
 
-	textureList.push_back(Texture2D());
-	std::list<Texture2D>::iterator lastElement = --(textureList.end());
-	if(!(lastElement->loadArrayC(imgDimX,imgDimY,imageData))) return false;
-
-	inOutTexPtr = &(*lastElement);
+	std::shared_ptr<Texture2D> texture(new Texture2D(path));
+	if(!(texture->loadArrayC(imgDimX,imgDimY,imageData))) return false;
+	inOutTexPtr = texture;
+	texture_list.push_back(std::move(texture));
 
 	delete imageData;
 	return true;
 }
 
-bool ResourceManager::createTexture3D(const std::string path, glm::ivec3 textureRes, Texture3D*& inOutTexPtr)
+bool ResourceManager::createTexture3D(const std::string path, glm::ivec3 textureRes, std::shared_ptr<Texture3D> &inOutTexPtr)
 {
-	for(std::list<Texture3D>::iterator i = volumeList.begin(); i != volumeList.end(); ++i)
+	for(std::list<std::shared_ptr<Texture3D>>::iterator i = volume_list.begin(); i != volume_list.end(); ++i)
 	{
-		if((i->getFilename())==path)
+		if(((*i)->getFilename())==path)
 		{
-			inOutTexPtr = &*i;
+			inOutTexPtr = (*i);
 			return true;
 		}
 	}
 
-	volumeList.push_back(Texture3D());
-	std::list<Texture3D>::iterator lastElement = --(volumeList.end());
-	if(!(lastElement->loadTextureFile(path,textureRes))) return false;
+	std::shared_ptr<Texture3D> volume(new Texture3D(path));
+	if(!(volume->loadTextureFile(path,textureRes))) return false;
+	inOutTexPtr = volume;
+	volume_list.push_back(std::move(volume));
 
-	inOutTexPtr = &(*lastElement);
 	return true;
 }
 
-bool ResourceManager::createTexture3D(float* volumeData, glm::ivec3 textureRes, GLenum internalFormat, GLenum format, Texture3D*& inOutTexPtr)
+bool ResourceManager::createTexture3D(float* volumeData, glm::ivec3 textureRes, GLenum internalFormat, GLenum format, std::shared_ptr<Texture3D> &inOutTexPtr)
 {
-	volumeList.push_back(Texture3D());
-	std::list<Texture3D>::iterator lastElement = --(volumeList.end());
-	if(!(lastElement->loadArrayF(volumeData,textureRes,internalFormat,format))) return false;
+	std::shared_ptr<Texture3D> volume(new Texture3D());
+	if(!(volume->loadArrayF(volumeData,textureRes,internalFormat,format))) return false;
+	inOutTexPtr = volume;
+	volume_list.push_back(std::move(volume));
 
-	inOutTexPtr = &(*lastElement);
 	return true;
 }
 

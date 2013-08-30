@@ -36,9 +36,6 @@
     <ClCompile Include="..\src\game\game.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\engine\volumetricSceneObject.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\engine\framebufferObject.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>

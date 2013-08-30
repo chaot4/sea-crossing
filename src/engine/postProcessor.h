@@ -60,12 +60,12 @@ protected:
 	/*	FBO used for the seperated gaussian. Not to be used outside the gaussian method! */
 	FramebufferObject gaussianBackBuffer;
 
-	GLSLProgram *fxaaShaderPrg;
-	GLSLProgram *idleShaderPrg;
-	GLSLProgram *gaussianShaderPrg;
-	GLSLProgram *gradientShaderPrg;
-	GLSLProgram *hesseShaderPrg;
-	GLSLProgram *structureTensorShaderPrg;
+	std::shared_ptr<GLSLProgram> fxaaShaderPrg;
+	std::shared_ptr<GLSLProgram> idleShaderPrg;
+	std::shared_ptr<GLSLProgram> gaussianShaderPrg;
+	std::shared_ptr<GLSLProgram> gradientShaderPrg;
+	std::shared_ptr<GLSLProgram> hesseShaderPrg;
+	std::shared_ptr<GLSLProgram> structureTensorShaderPrg;
 };
 
 #endif

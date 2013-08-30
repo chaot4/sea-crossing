@@ -32,11 +32,13 @@ public:
 	Scene();
 	~Scene();
 
-	//	create a scene entity with default geometry and default material
-	bool createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Material> mtlPtr);
+	/* */
+	bool createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation,
+									std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Material> mtlPtr);
 	
 	/* create a volumetric scene entity */
-	bool createVolumetricSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling, std::shared_ptr<Mesh> geomPtr, Texture3D* volPtr, GLSLProgram* prgmPtr);
+	bool createVolumetricSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling,
+										std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Texture3D> volPtr, std::shared_ptr<GLSLProgram> prgmPtr);
 	
 	//	create a scene light source
 	bool createSceneLight(const int id, const glm::vec3 position, glm::vec3 lightColour);

@@ -129,8 +129,9 @@ void RenderHub::run()
 	resourceMngr.createBox(geomPtr);
 	if(!(resourceMngr.createMaterial("../resources/materials/debugging.slmtl",matPtr)))
 		std::cout<<"Failed to create material."<<std::endl;
-	if(!(activeScene->createStaticSceneObject(0,glm::vec3(0.0,0.0,0.0),glm::quat(),geomPtr,matPtr)))
+	if(!(activeScene->createStaticSceneObject(0,glm::vec3(0.0,-0.5,0.0),glm::quat(),geomPtr,matPtr)))
 		std::cout<<"Failed to create scene object."<<std::endl;
+
 	geomPtr.reset();
 	matPtr.reset();
 
@@ -147,8 +148,6 @@ void RenderHub::run()
 		std::cout<<"Failed to create light"<<"\n";
 
 	activeScene->setActiveCamera(0);
-	
-	std::cout<<geomPtr.use_count()<<std::endl;
 
 	//activeScene->testing();
 
@@ -160,11 +159,11 @@ void RenderHub::run()
 
 	while(running && !glfwWindowShouldClose(activeWindow))
 	{
-		//while(messageRcvr.checkQueue())
-		//{
-		//	Message msg(messageRcvr.popMessage());
-		//	processMessage(&msg);
-		//}
+		while(messageRcvr.checkQueue())
+		{
+			Message msg(messageRcvr.popMessage());
+			processMessage(&msg);
+		}
 
 		/*	For now, I avoid using glfw callback functions */
 		controlHandler.updateCamera(activeWindow,activeScene);
@@ -187,8 +186,8 @@ void RenderHub::run()
 void RenderHub::runVolumeTest()
 {
 	std::shared_ptr<Mesh> geomPtr;
-	Texture3D* volPtr;
-	GLSLProgram* prgmPtr;
+	std::shared_ptr<Texture3D> volPtr;
+	std::shared_ptr<GLSLProgram> prgmPtr;
 	resourceMngr.createBox(geomPtr);
 	resourceMngr.createTexture3D("../resources/volumeData/f.raw",glm::ivec3(67,67,67),volPtr);
 	resourceMngr.createShaderProgram(VOLUME_RAYCASTING,prgmPtr);
@@ -222,6 +221,8 @@ void RenderHub::runVolumeTest()
 		std::cout<<"Failed to create light"
 				<<"\n";
 	}
+
+	//	TODO: RESET LOCAL SHARED_PTR
 
 	activeScene->setActiveCamera(0);
 

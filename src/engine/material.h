@@ -3,6 +3,7 @@
 
 #include "GLSLProgram.h"
 #include "texture.h"
+#include <memory>
 
 struct MaterialInfo
 {
@@ -19,17 +20,17 @@ class Material
 private:
 	int id;
 
-	GLSLProgram *shaderProgram;
+	std::shared_ptr<GLSLProgram> shaderProgram;
 
-	Texture *diffuseMap;
-	Texture *specularMap;
-	Texture *roughnessMap;
-	Texture *normalMap;
+	std::shared_ptr<Texture> diffuseMap;
+	std::shared_ptr<Texture> specularMap;
+	std::shared_ptr<Texture> roughnessMap;
+	std::shared_ptr<Texture> normalMap;
 
 public:
 	~Material();
 
-	Material(int,GLSLProgram*,Texture*,Texture*,Texture*,Texture*);
+	Material(int,std::shared_ptr<GLSLProgram>,std::shared_ptr<Texture>,std::shared_ptr<Texture>,std::shared_ptr<Texture>,std::shared_ptr<Texture>);
 	
 	//	for later use, when some kind of editor allows to change material properties at runtime
 	bool update(int,GLSLProgram*,Texture*,Texture*,Texture*,Texture*);
@@ -37,10 +38,10 @@ public:
 	void use();
 
 	int getId() {return id;}
-	GLSLProgram* getShaderProgram() {return shaderProgram;}
-	const Texture* getDiffuseMap() {return diffuseMap;}
-	const Texture* getSpecularMap() {return specularMap;}
-	const Texture* getNormalMap() {return normalMap;}
+	std::shared_ptr<GLSLProgram> getShaderProgram() {return shaderProgram;}
+	std::shared_ptr<Texture> getDiffuseMap() {return diffuseMap;}
+	std::shared_ptr<Texture> getSpecularMap() {return specularMap;}
+	std::shared_ptr<Texture> getNormalMap() {return normalMap;}
 };
 
 #endif

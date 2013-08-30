@@ -8,17 +8,16 @@ class Texture2D : public Texture
 private:
 
 public:
+	Texture2D() {}
+	Texture2D(std::string in_filename) : Texture(in_filename) {}
+
 	void bindTexture() const;
 	void texParameteri(GLenum, GLenum);
 
-	/*
-	/	load a texture from an array of floats
-	*/
+	/*	Load a texture from an array of floats */
 	bool loadArrayF(int dimX, int dimY, float* data);
 
-	/*
-	/	load a texture from an array of characters (bytes)
-	*/
+	/*	Load a texture from an array of characters (bytes) */
 	bool loadArrayC(int dimX, int dimY, char* data);
 };
 

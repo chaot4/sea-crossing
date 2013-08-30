@@ -155,7 +155,6 @@
     <ClCompile Include="..\src\engine\sceneLightSource.cpp" />
     <ClCompile Include="..\src\engine\texture2D.cpp" />
     <ClCompile Include="..\src\engine\texture3D.cpp" />
-    <ClCompile Include="..\src\engine\volumetricSceneObject.cpp" />
     <ClCompile Include="..\src\game\board.cpp" />
     <ClCompile Include="..\src\game\game.cpp" />
     <ClCompile Include="..\src\game\human_players.cpp" />

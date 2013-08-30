@@ -15,7 +15,8 @@ bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, cons
 	return true;
 }
 
-bool Scene::createVolumetricSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling, std::shared_ptr<Mesh> geomPtr, Texture3D* volPtr, GLSLProgram* prgmPtr)
+bool Scene::createVolumetricSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling,
+											std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Texture3D> volPtr, std::shared_ptr<GLSLProgram> prgmPtr)
 {
 	volumetricObjectList.push_back(VolumetricSceneObject(id,position,orientation,scaling,geomPtr,volPtr,prgmPtr));
 	return true;
@@ -91,28 +92,8 @@ void Scene::render()
 	glm::mat4 viewMx(activeCamera->computeViewMatrix());
 	glm::mat4 projectionMx(activeCamera->computeProjectionMatrix(0.01f,5000.0f));
 
-	////
-	//	access each entity of the Scene and draw it
-	////
-	//	if(materialList.size() > 0)
-	//	{
-	//	GLSLProgram* currentPrgm(&(*shaderProgramList.begin()));
-	//	material* currentMtl(&(*materialList.begin()));
-	//	currentPrgm->use();
-	//	
-	//	glEnable(GL_TEXTURE_2D);
-	//	glActiveTexture(GL_TEXTURE0);
-	//	currentPrgm->setUniform("diffuseMap",0);
-	//	currentMtl->getDiffuseMap()->bindTexture();
-	//	glActiveTexture(GL_TEXTURE1);
-	//	currentPrgm->setUniform("specularMap",1);
-	//	currentMtl->getSpecularMap()->bindTexture();
-	//	glActiveTexture(GL_TEXTURE2);
-	//	currentPrgm->setUniform("normalMap",2);
-	//	currentMtl->getNormalMap()->bindTexture();
-
-	GLSLProgram* currentPrgm;
-	Material* currentMtl;
+	std::shared_ptr<GLSLProgram> currentPrgm;
+	std::shared_ptr<Material> currentMtl;
 
 	for(std::list<StaticSceneObject>::iterator i = scenegraph.begin(); i != scenegraph.end(); ++i)
 	{
@@ -121,8 +102,9 @@ void Scene::render()
 		normalMx = glm::transpose(glm::inverse(glm::mat3(modelViewMx)));
 		modelViewProjectionMx = projectionMx * viewMx * modelMx;
 
-		currentPrgm = (i->getMaterial())->getShaderProgram();
-		currentMtl = &(*(i->getMaterial()));
+		currentMtl = i->getMaterial();
+		currentPrgm = currentMtl->getShaderProgram();
+		
 
 		currentPrgm->use();
 
@@ -170,7 +152,7 @@ void Scene::renderVolumetricObjects()
 	glm::mat4 viewMx(activeCamera->computeViewMatrix());
 	glm::mat4 projectionMx(activeCamera->computeProjectionMatrix(0.01f,100.0f));
 
-	GLSLProgram* currentPrgm(volumetricObjectList.begin()->getShaderProgram());
+	std::shared_ptr<GLSLProgram> currentPrgm(volumetricObjectList.begin()->getShaderProgram());
 	currentPrgm->use();
 
 	for(std::list<VolumetricSceneObject>::iterator i = volumetricObjectList.begin(); i != volumetricObjectList.end(); ++i)

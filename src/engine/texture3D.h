@@ -12,6 +12,9 @@ class Texture3D : public Texture
 private:
 
 public:
+	Texture3D() {}
+	Texture3D(std::string in_filename) : Texture(in_filename) {}
+
 	void bindTexture() const;
 	void texParameteri(GLenum, GLenum);
 

@@ -98,7 +98,7 @@ public:
 	 * \param inOutPrgPtr A pointer set to the newly created shader program via in-out parameter
 	 * \retrun Returns true if GLSLprogram was succesfully created, false otherwise
 	 */
-	bool createShaderProgram(shaderType type, GLSLProgram*& inOutPrgPtr);
+	bool createShaderProgram(shaderType type, std::shared_ptr<GLSLProgram> &inOutPrgPtr);
 
 	/**
 	 * \brief Creates a 2D texture from a given float array
@@ -112,7 +112,7 @@ public:
 	 * \param inOutTexPtr A pointer set to the newly created texture via in-out parameter
 	 * \return Returns true if texture was succesfully created, false otherwise
 	 */
-	bool createTexture2D(int dimX, int dimY, float* data, Texture*& inOutTexPtr);
+	bool createTexture2D(int dimX, int dimY, float* data, std::shared_ptr<Texture> &inOutTexPtr);
 
 	/**
 	 * \brief Creates a 2D texture from a file
@@ -120,7 +120,7 @@ public:
 	 * \param inOutTexPtr A pointer set to the newly created texture via in-out parameter
 	 * \return Returns true if texture was succesfully created, false otherwise
 	 */
-	bool createTexture2D(const std::string path, Texture*& inOutTexPtr);
+	bool createTexture2D(const std::string path, std::shared_ptr<Texture> &inOutTexPtr);
 
 	/**
 	 * \brief Reloads a texture in case a texture file is changed during runtime
@@ -136,7 +136,7 @@ public:
 	 * \param inOutTexPtr A pointer set to the newly created
 	 * \return Returns true if volume texture was succesfully created, false otherwise
 	 */
-	bool createTexture3D(const std::string path, glm::ivec3 textureRes, Texture3D*& inOutTexPtr);
+	bool createTexture3D(const std::string path, glm::ivec3 textureRes, std::shared_ptr<Texture3D> &inOutTexPtr);
 
 	/**
 	 * \brief Creates a 3D texture for volume rendering from a given float array
@@ -147,7 +147,7 @@ public:
 	 * \param inOutTexPtr A pointer set to the newly created
 	 * \return Returns true if volume texture was succesfully created, false otherwise
 	 */
-	bool createTexture3D(float* volumeData, glm::ivec3 textureRes, GLenum internalFormat, GLenum format, Texture3D*& inOutTexPtr);
+	bool createTexture3D(float* volumeData, glm::ivec3 textureRes, GLenum internalFormat, GLenum format, std::shared_ptr<Texture3D> &inOutTexPtr);
 
 private:
 	/** Log string */
@@ -155,21 +155,21 @@ private:
 
 	/*
 	/	The following lists contain all resources that are managed by an instance of this class.
-	/	There is only a single "instance" of any (uniquely identifiable) resouce kept in these lists.
+	/	There is only a single "instance" of any (uniquely identifiable) resouce kept/referenced in these lists.
 	/	Different scene entities making use of the same resource, will both be refering to the single
-	/	instance kept within one of these lists.
+	/	instance kept/referenced within one of these lists.
 	*/
 
 	/** List containing all Mesh objects */
-	std::list<std::shared_ptr<Mesh>> geometryList;
+	std::list<std::shared_ptr<Mesh>> geometry_list;
 	/** List containing all materials */
-	std::list<std::shared_ptr<Material>> materialList;
+	std::list<std::shared_ptr<Material>> material_list;
 	/** List containing all 2D textures */
-	std::list<Texture2D> textureList;
+	std::list<std::shared_ptr<Texture2D>> texture_list;
 	/** List containing all 3D textures */
-	std::list<Texture3D> volumeList;
+	std::list<std::shared_ptr<Texture3D>> volume_list;
 	/** List containing all shader programs */
-	std::list<GLSLProgram> shaderProgramList;
+	std::list<std::shared_ptr<GLSLProgram>> shader_program_list;
 
 	/**
 	 * \brief Load geometry information from an fbx file
