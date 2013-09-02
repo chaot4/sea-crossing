@@ -4,6 +4,7 @@
 #include <string>
 #include "GL/glew.h"
 #include "vertexStructs.h"
+#include <iostream>
 
 //pragma seem to be only necessary in windows
 #ifdef _WIN32
@@ -13,17 +14,16 @@
 class Mesh
 {
 private:
-	//Mesh(Mesh &) {}
-
 	const std::string filename;
-	GLuint vertexCount;
+	GLuint num_vertices;
+	GLenum type;
 
-	//vertex array
-	GLuint vaHandle;
-	//vertex buffer object
-	GLuint vboHandle;
-	//index buffer object
-	GLuint iboHandle;
+	/*	Handle of the vertex array on the GPU */
+	GLuint va_handle;
+	/*	Handle of the vertex buffer object on the GPU */
+	GLuint vbo_handle;
+	/*	Handle of the index buffer object  on the GPU */
+	GLuint ibo_handle;
 
 public:
 	Mesh();
@@ -31,13 +31,9 @@ public:
 
 	Mesh(const std::string fn);
 
-	bool bufferDataFromArray(const Vertex_p *vertexArray, const GLuint *indexArray, const GLsizei vaSize, const GLsizei viSize);
-	bool bufferDataFromFile(const char *path);
+	bool bufferDataFromArray(const Vertex_p *vertex_data, const GLuint *index_data, const GLsizei va_size, const GLsizei vi_size, GLenum mesh_type);
 
-	void bindVertexBuffer();
-	void bindVertexArray();
-	void bindIndexBuffer();
-	void draw(GLenum type, GLint count, int indexOffset);
+	void draw();
 
 	void setVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer);
 	void setVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid* pointer);

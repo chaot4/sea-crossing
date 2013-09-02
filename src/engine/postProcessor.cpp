@@ -14,7 +14,7 @@ bool PostProcessor::init(ResourceManager* resourceMngr)
 	indexArray[0]=0;indexArray[1]=2;indexArray[2]=1;
 	indexArray[3]=2;indexArray[4]=0;indexArray[5]=3;
 
-	if(!(renderPlane.bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pu)*4,sizeof(GLuint)*6))) return false;
+	if(!(renderPlane.bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pu)*4,sizeof(GLuint)*6,GL_TRIANGLES))) return false;
 	renderPlane.setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pu),0);
 	renderPlane.setVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,sizeof(Vertex_pu),(GLvoid*) sizeof(Vertex_p));
 
@@ -43,7 +43,7 @@ void PostProcessor::applyFxaa(GLuint inputImage)
 	fxaaShaderPrg->setUniform("inputImage",0);
 	glBindTexture(GL_TEXTURE_2D, inputImage);
 
-	renderPlane.draw(GL_TRIANGLES,6,0);
+	renderPlane.draw();
 }
 
 void PostProcessor::applyFxaa(FramebufferObject *currentFrame)
@@ -55,7 +55,7 @@ void PostProcessor::applyFxaa(FramebufferObject *currentFrame)
 	fxaaShaderPrg->setUniform("inputImage",0);
 	currentFrame->bindColorbuffer(0);
 
-	renderPlane.draw(GL_TRIANGLES,6,0);
+	renderPlane.draw();
 }
 
 void PostProcessor::applyGaussian(FramebufferObject *inputFbo, FramebufferObject *targetFbo, float sigma, int stencilRadius)
@@ -76,7 +76,7 @@ void PostProcessor::applyGaussian(FramebufferObject *inputFbo, FramebufferObject
 	glActiveTexture(GL_TEXTURE0);
 	gaussianShaderPrg->setUniform("inputImage",0);
 	inputFbo->bindColorbuffer(0);
-	renderPlane.draw(GL_TRIANGLES,6,0);
+	renderPlane.draw();
 
 	/*	switch rendering to the input frambuffer for the second, vertical filtering step*/
 	targetFbo->bind();
@@ -87,7 +87,7 @@ void PostProcessor::applyGaussian(FramebufferObject *inputFbo, FramebufferObject
 	glActiveTexture(GL_TEXTURE0);
 	gaussianShaderPrg->setUniform("inputImage",0);
 	B.bindColorbuffer(0);
-	renderPlane.draw(GL_TRIANGLES,6,0);
+	renderPlane.draw();
 }
 
 void PostProcessor::computeGradient(FramebufferObject *inputFbo, FramebufferObject *targetFbo)
@@ -104,7 +104,7 @@ void PostProcessor::computeGradient(FramebufferObject *inputFbo, FramebufferObje
 	gradientShaderPrg->setUniform("inputImage",0);
 	inputFbo->bindColorbuffer(0);
 
-	renderPlane.draw(GL_TRIANGLES,6,0);
+	renderPlane.draw();
 }
 
 void PostProcessor::computeHesse(FramebufferObject *inputFbo, FramebufferObject *targetFbo)
@@ -121,7 +121,7 @@ void PostProcessor::computeHesse(FramebufferObject *inputFbo, FramebufferObject 
 	hesseShaderPrg->setUniform("inputImage",0);
 	inputFbo->bindColorbuffer(0);
 
-	renderPlane.draw(GL_TRIANGLES,6,0);
+	renderPlane.draw();
 }
 
 void PostProcessor::computeStructureTensor(FramebufferObject *inputFbo, FramebufferObject *targetFbo)
@@ -138,7 +138,7 @@ void PostProcessor::computeStructureTensor(FramebufferObject *inputFbo, Framebuf
 	structureTensorShaderPrg->setUniform("inputImage",0);
 	inputFbo->bindColorbuffer(0);
 
-	renderPlane.draw(GL_TRIANGLES,6,0);
+	renderPlane.draw();
 }
 
 void PostProcessor::imageToFBO(GLuint inputImage)
@@ -150,7 +150,7 @@ void PostProcessor::imageToFBO(GLuint inputImage)
 	idleShaderPrg->setUniform("inputImage",0);
 	glBindTexture(GL_TEXTURE_2D, inputImage);
 
-	renderPlane.draw(GL_TRIANGLES,6,0);
+	renderPlane.draw();
 }
 
 void PostProcessor::FBOToFBO(FramebufferObject *inputFbo)
@@ -161,5 +161,5 @@ void PostProcessor::FBOToFBO(FramebufferObject *inputFbo)
 	idleShaderPrg->setUniform("inputImage",0);
 	inputFbo->bindColorbuffer(0);
 
-	renderPlane.draw(GL_TRIANGLES,6,0);
+	renderPlane.draw();
 }

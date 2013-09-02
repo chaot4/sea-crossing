@@ -136,7 +136,7 @@ void Scene::render()
 
 		currentMtl->use();
 
-		(i->getGeometry())->draw(GL_TRIANGLES,2000,0);
+		(i->getGeometry())->draw();
 		//i->rotate(0.1f,glm::vec3(0.0f,1.0f,0.0f));
 	}
 }
@@ -177,7 +177,7 @@ void Scene::renderVolumetricObjects()
 		currentPrgm->setUniform("textureMatrix",textureMatrix);
 		currentPrgm->setUniform("cameraPosition",activeCamera->getPosition());
 
-		(i->getGeometry())->draw(GL_TRIANGLES,36,0);
+		(i->getGeometry())->draw();
 		i->rotate(0.1f,glm::vec3(0.0f,1.0f,0.0f));
 	}
 }

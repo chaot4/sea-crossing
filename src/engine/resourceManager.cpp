@@ -4,6 +4,16 @@ ResourceManager::ResourceManager(){}
 
 ResourceManager::~ResourceManager(){}
 
+
+void ResourceManager::clearLists()
+{
+	geometry_list.clear();
+	material_list.clear();
+	texture_list.clear();
+	volume_list.clear();
+	shader_program_list.clear();
+}
+
 bool ResourceManager::createTriangle(std::shared_ptr<Mesh> &inOutGeomPtr)
 {
 	Vertex_pn *vertexArray = new Vertex_pn[3];
@@ -17,7 +27,7 @@ bool ResourceManager::createTriangle(std::shared_ptr<Mesh> &inOutGeomPtr)
 
 	std::shared_ptr<Mesh> triangle_mesh(new Mesh("0"));
 	
-	if(!(triangle_mesh->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pn)*3,sizeof(GLuint)*3))) return false;
+	if(!(triangle_mesh->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pn)*3,sizeof(GLuint)*3,GL_TRIANGLES))) return false;
 	triangle_mesh->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pn),0);
 	triangle_mesh->setVertexAttribPointer(3,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pn),(GLvoid*) sizeof(Vertex_p));
 
@@ -87,7 +97,7 @@ bool ResourceManager::createBox(std::shared_ptr<Mesh> &inOutGeomPtr)
 	indexArray[33]=22;indexArray[34]=20;indexArray[35]=23;
 
 	std::shared_ptr<Mesh> box_mesh(new Mesh("0"));
-	if(!(box_mesh->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pntcu)*24,sizeof(GLuint)*36))) return false;
+	if(!(box_mesh->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pntcu)*24,sizeof(GLuint)*36,GL_TRIANGLES))) return false;
 	box_mesh->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),0);
 	box_mesh->setVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_p));
 	box_mesh->setVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pn));
@@ -744,7 +754,7 @@ bool ResourceManager::loadFbxGeometry(const char* const path, Mesh* geomPtr)
 
 	//std::cout<<"Filled index buffer.\n";
 
-	if( !geomPtr->bufferDataFromArray(vertices,indices,sizeof(Vertex_pntcub)*vertexCount,sizeof(unsigned int)*(fbxPolyCount * 3)) ) return false;
+	if( !geomPtr->bufferDataFromArray(vertices,indices,sizeof(Vertex_pntcub)*vertexCount,sizeof(unsigned int)*(fbxPolyCount * 3),GL_TRIANGLES) ) return false;
 
 	geomPtr->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcub),0);
 	geomPtr->setVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcub),(GLvoid*) sizeof(Vertex_p));
@@ -809,7 +819,7 @@ bool ResourceManager::loadBinaryGeometry(const std::string path, Mesh* geomPtr)
 
 		fread(vertices,sizeof(Vertex_pntcub),num_vertices,vraw_file);
 
-		if( !geomPtr->bufferDataFromArray(vertices,indices,sizeof(Vertex_pntcub)*num_vertices,sizeof(unsigned int)*num_indices) ) return false;
+		if( !geomPtr->bufferDataFromArray(vertices,indices,sizeof(Vertex_pntcub)*num_vertices,sizeof(unsigned int)*num_indices,GL_TRIANGLES) ) return false;
 	}
 	else
 	{

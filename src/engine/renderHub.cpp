@@ -124,16 +124,17 @@ void RenderHub::run()
 	*/
 
 	/*	TEMPORARY SHADER TESTING */
-	std::shared_ptr<Mesh> geomPtr;
-	std::shared_ptr<Material> matPtr;
-	resourceMngr.createBox(geomPtr);
-	if(!(resourceMngr.createMaterial("../resources/materials/debugging.slmtl",matPtr)))
-		std::cout<<"Failed to create material."<<std::endl;
-	if(!(activeScene->createStaticSceneObject(0,glm::vec3(0.0,-0.5,0.0),glm::quat(),geomPtr,matPtr)))
-		std::cout<<"Failed to create scene object."<<std::endl;
-
-	geomPtr.reset();
-	matPtr.reset();
+	//std::shared_ptr<Mesh> geomPtr;
+	//std::shared_ptr<Material> matPtr;
+	//resourceMngr.createBox(geomPtr);
+	////resourceMngr.createMesh("../resources/meshes/workfiles/terrain.fbx",geomPtr);
+	//if(!(resourceMngr.createMaterial("../resources/materials/debugging.slmtl",matPtr)))
+	//	std::cout<<"Failed to create material."<<std::endl;
+	//if(!(activeScene->createStaticSceneObject(0,glm::vec3(0.0,-0.5,0.0),glm::quat(),geomPtr,matPtr)))
+	//	std::cout<<"Failed to create scene object."<<std::endl;
+	//
+	//geomPtr.reset();
+	//matPtr.reset();
 
 	if(!(activeScene->createSceneCamera(0,glm::vec3(0.0,0.0,20.0),glm::quat(),16.0f/9.0f,(9.0f/16.0f)*60.0f)))
 		std::cout<<"Failed to create camera"<<"\n";
@@ -158,6 +159,7 @@ void RenderHub::run()
 	glEnable( GL_MULTISAMPLE );
 
 	while(running && !glfwWindowShouldClose(activeWindow))
+	//while(running)
 	{
 		while(messageRcvr.checkQueue())
 		{
@@ -179,6 +181,10 @@ void RenderHub::run()
 		glfwSwapBuffers(activeWindow);
 		glfwPollEvents();
 	}
+
+	/*	Make sure to delete all OpenGL resources while the context is still active */
+	sceneList.clear();
+	resourceMngr.clearLists();
 
 	glfwDestroyWindow(activeWindow);
 }
@@ -292,6 +298,7 @@ void RenderHub::windowSizeCallback(GLFWwindow *window, int width, int height)
 
 void RenderHub::windowCloseCallback(GLFWwindow *window)
 {
+	
 }
 
 void RenderHub::setActiveInstance(RenderHub *instance)

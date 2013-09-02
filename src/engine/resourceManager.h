@@ -47,6 +47,8 @@ public:
 	/** Returns log string */
 	const std::string& getLog() {return resourcelog;}
 
+	void clearLists();
+
 	/**
 	 * \brief Creates a triangle for debugging purposes
 	 * \param inOutGeomPtr A pointer set to the newly created vertex geometry via in-out parameter

@@ -18,7 +18,7 @@ protected:
 public:
 	Texture() {}
 	Texture(std::string in_filename) : filename(in_filename) {}
-	~Texture() {}
+	~Texture() {glDeleteTextures(1,&handle);}
 
 	virtual void bindTexture() const = 0;
 	virtual void texParameteri(GLenum, GLenum) = 0;

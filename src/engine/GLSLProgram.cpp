@@ -6,6 +6,7 @@ GLSLProgram::GLSLProgram() : linkStatus(false)
 
 GLSLProgram::~GLSLProgram()
 {
+	glDeleteProgram(handle);
 }
 
 
