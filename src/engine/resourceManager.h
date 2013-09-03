@@ -179,7 +179,7 @@ private:
 	 * \param goemPtr Pointer to the Mesh object where the loaded geometry will be stored
 	 * \return Returns true if the geometry was succesfully loaded, false otherwise
 	 */
-	bool loadFbxGeometry(const char* const path, Mesh* goemPtr);
+	bool loadFbxGeometry(const std::string &path, std::shared_ptr<Mesh> &geomPtr);
 
 	/**
 	 * \brief Load geometry information from a binary file
@@ -188,7 +188,7 @@ private:
 	 * \param goemPtr Pointer to the Mesh object where the loaded geometry will be stored
 	 * \return Returns true if the geometry was succesfully loaded, false otherwise
 	 */
-	bool loadBinaryGeometry(const std::string path, Mesh* goemPtr);
+	bool loadBinaryGeometry(const std::string &path, std::shared_ptr<Mesh> &geomPtr);
 
 	/**
 	 * \brief Parses a material file

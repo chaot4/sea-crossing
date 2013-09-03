@@ -129,23 +129,17 @@ bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &
 
 	if(file_type == "fbx")
 	{
-		std::shared_ptr<Mesh> mesh(new Mesh(path));
-
 		/* Just some testing */
-		if( !loadFbxGeometry(path.c_str(),&(*mesh)) ) {return false;}
+		if( !loadFbxGeometry(path, inOutGeomPtr) ) {return false;}
 
-		inOutGeomPtr = mesh;
-		geometry_list.push_back(std::move(mesh));
+		geometry_list.push_back(inOutGeomPtr);
 	}
 	else if(file_type == "slraw")
 	{
-		std::shared_ptr<Mesh> mesh(new Mesh(path));
-
 		/* Just some testing */
-		if( !loadBinaryGeometry(path.c_str(),&(*mesh)) ) {return false;}
+		if( !loadBinaryGeometry(path, inOutGeomPtr) ) {return false;}
 
-		inOutGeomPtr = mesh;
-		geometry_list.push_back(std::move(mesh));
+		geometry_list.push_back(inOutGeomPtr);
 	}
 	else
 	{
@@ -404,8 +398,10 @@ bool ResourceManager::createTexture3D(float* volumeData, glm::ivec3 textureRes, 
 	return true;
 }
 
-bool ResourceManager::loadFbxGeometry(const char* const path, Mesh* geomPtr)
+bool ResourceManager::loadFbxGeometry(const std::string &path, std::shared_ptr<Mesh> &geomPtr)
 {
+	geomPtr.reset(new Mesh(path));
+
 	/*	Initialize an fbx sdk manager. It handles memory management */
 	FbxManager *fbxMngr = FbxManager::Create();
 
@@ -417,7 +413,7 @@ bool ResourceManager::loadFbxGeometry(const char* const path, Mesh* geomPtr)
 	FbxImporter *fbxImprtr = FbxImporter::Create(fbxMngr,""); 
 
 	/*	Intialize the importer with the path to the file */
-	if( !fbxImprtr->Initialize(path, -1, fbxMngr->GetIOSettings()) )
+	if( !fbxImprtr->Initialize(path.c_str(), -1, fbxMngr->GetIOSettings()) )
 	{
 		printf("Call to FbxImporter::Initialize() failed.\n"); 
 		printf("Error returned: %s\n\n", fbxImprtr->GetStatus().GetErrorString()); 
@@ -766,8 +762,10 @@ bool ResourceManager::loadFbxGeometry(const char* const path, Mesh* geomPtr)
 	return true;
 }
 
-bool ResourceManager::loadBinaryGeometry(const std::string path, Mesh* geomPtr)
+bool ResourceManager::loadBinaryGeometry(const std::string &path, std::shared_ptr<Mesh> &geomPtr)
 {
+	geomPtr.reset(new Mesh(path));
+
 	std::ifstream dat_file (path,std::ios::in | std::ios::binary);
 
 	/*	Check if the file could be opened */
