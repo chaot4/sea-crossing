@@ -29,10 +29,6 @@
 #include "texture3D.h"
 #include "mesh.h"
 
-#ifdef _WIN32
-	#pragma comment(lib,"libfbxsdk.lib")
-#endif
-
 #define DEBUG_OUTPUT 0
 
 class ResourceManager

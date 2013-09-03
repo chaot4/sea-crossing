@@ -11,11 +11,6 @@
 #include <string>
 #include <iostream>
 
-//pragmas seem to be only necessary in windows
-#ifdef _WIN32
-	#pragma comment(lib,"glew32.lib")
-#endif
-
 enum shaderType	{ SURFACE_LIGHTING,FLAT,FXAA,IDLE,STAMP,DISTANCEMAPPING,VOLUME_RAYCASTING,GAUSSIAN,GRADIENT,STRUCTURE_TENSOR,COHERENCE,HESSE};
 
 class GLSLProgram
