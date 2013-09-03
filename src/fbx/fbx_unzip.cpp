@@ -3,11 +3,7 @@
 
 extern "C" {
 	#include <string.h>
-	#ifdef _WIN32
-		#include "zlib.h"
-	#else
-		#include <zlib>
-	#endif
+	#include <zlib.h>
 }
 
 namespace FBX {

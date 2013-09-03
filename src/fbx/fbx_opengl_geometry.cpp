@@ -150,7 +150,7 @@ namespace FBX {
 		void Geometry::draw() {
 			glBindVertexArray(handle_vertex_array);
 			if (ndx_static_color >= 0) {
-				glVertexAttrib4f(ndx_static_color, static_color.red, static_color.green, static_color.blue, 0.0);
+				glVertexAttrib4f(ndx_static_color, (GLfloat) static_color.red, (GLfloat) static_color.green, (GLfloat) static_color.blue, 0.0f);
 			}
 			glDrawElements(GL_TRIANGLES, m_vertices, GL_UNSIGNED_INT, nullptr);
 			glBindVertexArray(0);

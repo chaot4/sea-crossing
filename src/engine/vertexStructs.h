@@ -10,11 +10,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-//pragma seem to be only necessary in windows
-#ifdef _WIN32
-	#pragma comment(lib,"glew32.lib")
-#endif
-
 //	Basic Vertex with x,y and z component
 struct Vertex_p
 {
