@@ -122,7 +122,7 @@ namespace FBX {
 	}
 
 	off_t Reader::tellg() {
-		return m_file.tellg() - (off_t) m_buffer.size();
+		return (off_t) m_file.tellg() - (off_t) m_buffer.size();
 	}
 
 	off_t Reader::size() {
