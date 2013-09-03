@@ -14,9 +14,9 @@ namespace FBX {
 	public:
 		class NodeChildren {
 		private:
-			off_t pos, end;
+			std::streamoff pos, end;
 			friend class Reader;
-			NodeChildren(off_t pos, off_t end) : pos(pos), end(end) { }
+			NodeChildren(std::streamoff pos, std::streamoff end) : pos(pos), end(end) { }
 		public:
 			NodeChildren() : pos(0), end(0) {}
 		};
@@ -50,9 +50,9 @@ namespace FBX {
 
 		ByteVector read_property_array();
 
-		void seekg(off_t pos);
-		off_t tellg();
-		off_t size();
+		void seekg(std::streamoff pos);
+		std::streamoff tellg();
+		std::streamoff size();
 		void skip(size_t bytes);
 
 		ByteVector getMemory(size_t bytes);
