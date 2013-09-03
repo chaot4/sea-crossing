@@ -153,7 +153,7 @@ Board::Board()/*:
 	nodes.push_back(Node(15, "cS2", adj_faces));
 	adj_faces.clear(); adj_faces.push_back(22); adj_faces.push_back(23); adj_faces.push_back(38);
 	nodes.push_back(Node(16, "dW-2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(11); adj_faces.push_back(2); adj_faces.push_back(23);
+	adj_faces.clear(); adj_faces.push_back(11); adj_faces.push_back(22); adj_faces.push_back(23);
 	nodes.push_back(Node(17, "cW-2", adj_faces));
 	adj_faces.clear(); adj_faces.push_back(9); adj_faces.push_back(18); adj_faces.push_back(19);
 	nodes.push_back(Node(18, "cE-2", adj_faces));
