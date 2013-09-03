@@ -1,7 +1,7 @@
 #ifndef framebufferObject_h
 #define framebufferObject_h
 
-#include "GL/glew.h"
+#include <GL/glew.h>
 #include <vector>
 #include <iostream>
 

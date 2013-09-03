@@ -2,7 +2,7 @@
 #define mesh_h
 
 #include <string>
-#include "GL/glew.h"
+#include <GL/glew.h>
 #include "vertexStructs.h"
 #include <iostream>
 #include "../fbx/fbx_opengl_geometry.hpp"
