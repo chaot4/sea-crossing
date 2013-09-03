@@ -18,6 +18,7 @@ namespace FBX {
 		protected:
 			BaseContent() { }
 		private:
+			/* not copyable */
 			BaseContent(const BaseContent& other);
 			BaseContent& operator=(const BaseContent& other);
 		};
@@ -82,6 +83,7 @@ namespace FBX {
 		protected:
 			BaseContent() { }
 		private:
+			/* not copyable */
 			BaseContent(const BaseContent& other);
 			BaseContent& operator=(const BaseContent& other);
 		};

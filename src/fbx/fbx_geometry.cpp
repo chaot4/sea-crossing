@@ -192,7 +192,7 @@ namespace FBX {
 				if (colors.load(reader, node, NodeName::LayerElementColor, NodeName::Colors)) {
 					features |= Geometry::COLOR;
 				} else {
-					auto it = props.properties.find(std::string("Color"));
+					Parser::Properties70::const_iterator it = props.properties.find(std::string("Color"));
 					if (it != props.properties.end()) {
 						geometry.static_color = it->second.value.get<ColorRGB>();
 					}

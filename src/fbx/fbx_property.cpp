@@ -41,7 +41,7 @@ namespace FBX {
 		}
 
 		void Properties70::show(std::ostream& os, const std::string &indent) const {
-			for (auto& prop: properties) {
+			for (const std::pair<std::string, Parser::PropertyValue> &prop: properties) {
 				os << indent << "+ " << prop.first << "(" + prop.second.stype + "): " << prop.second.value << "\n";
 			}
 		}

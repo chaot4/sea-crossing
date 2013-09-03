@@ -28,7 +28,6 @@ namespace FBX {
 		};
 
 		explicit Reader(const std::string& filename);
-		//explicit Reader(const Reader &reader) = delete;
 
 		NodeChildren load();
 		NodeChildren load(uint32_t& version);
@@ -40,7 +39,8 @@ namespace FBX {
 		bool find(Node &child, Node parent, NodeName name);
 
 	private:
-		explicit Reader(const Reader &reader) {}
+		explicit Reader(const Reader &other);
+		Reader& operator =(const Reader &other);
 
 		std::ifstream m_file;
 		ByteVector m_buffer;
