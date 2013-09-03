@@ -5,6 +5,7 @@
 #include "GL/glew.h"
 #include "vertexStructs.h"
 #include <iostream>
+#include "../fbx/fbx_opengl_geometry.hpp"
 
 //pragma seem to be only necessary in windows
 #ifdef _WIN32
@@ -40,6 +41,8 @@ public:
 	void setVertexAttribLPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid* pointer);
 
 	const std::string getFilename() {return filename;}
+
+	static std::shared_ptr<Mesh> loadFromFBX(const std::string &filename, FBX::OpenGL::BindAttribLocations locations = FBX::OpenGL::BindAttribLocations());
 };
 
 #endif
