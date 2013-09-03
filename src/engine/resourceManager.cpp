@@ -122,10 +122,8 @@ bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &
 
 	/*	Check file type before trying to load it */
 	std::string file_type;
-	std::string::const_iterator itr0 = path.end();
-	std::string::const_iterator itr1;
-	for(itr1 = path.end(); *itr1 != '.'; --itr1);
-	file_type.assign(++itr1,itr0);
+	std::size_t found = path.rfind('.');
+	if (found != std::string::npos) file_type = path.substr(found + 1);
 
 	if(file_type == "fbx")
 	{
