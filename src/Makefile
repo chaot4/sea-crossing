@@ -1,6 +1,6 @@
 CC = g++
-CPPFLAGS = -Wall -g -std=c++11 -isystem ./../lib/
-LFLAGS = -lGLEW -lGL -lglfw -lfbxsdk -L./../lib/ -Wl,-R./../lib/ -lz
+CPPFLAGS = -Wall -g -std=c++11
+LFLAGS = -lGLEW -lGL -lglfw -lz
 BIN = ../bin/main
 OBJ = conf.o \
 	game/game.o game/board.o game/player.o game/human_players.o \

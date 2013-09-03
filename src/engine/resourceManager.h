@@ -23,9 +23,6 @@
 #include <sstream>
 #include <memory>
 
-/*	Include non-std dependencies */ 
-#include <fbxsdk.h>
-
 /*	Include space-lion headers */
 #include "material.h"
 #include "texture2D.h"
