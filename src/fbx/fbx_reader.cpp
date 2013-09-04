@@ -219,17 +219,17 @@ namespace FBX {
 		return name;
 	}
 
-	ByteVector Reader::read_property_array() {
+	ByteVector Reader::read_property_array(size_t expected_size) {
 		uint32_t encoding = getUInt32();
 		ByteVector data = getRaw();
 		if (0 == encoding) return data;
-		if (1 == encoding) return inflate(data);
+		if (1 == encoding) return inflate(data, expected_size);
 		throw ReaderException("can't decompress array data yet");
 	}
 
 	#define READ_ARRAY_PROPERTY(type, reader, elementsize) {\
 			uint32_t entries = getUInt32(); \
-			ByteVector data = read_property_array(); \
+			ByteVector data = read_property_array(entries * elementsize); \
 			if (data.size() != entries * elementsize) throw ReaderException("array data size mismatch"); \
 			uint8_t *ptr = data.data(); \
 			std::vector<type> list; \

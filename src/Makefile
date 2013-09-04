@@ -1,5 +1,5 @@
 CC = g++
-CPPFLAGS = -Wall -g -std=c++11
+CPPFLAGS = -Wall -g -std=c++11 -DUSE_ZLIB
 LFLAGS = -lGLEW -lGL -lglfw -lz
 BIN = ../bin/main
 OBJ = conf.o \

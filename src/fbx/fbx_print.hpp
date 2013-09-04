@@ -21,7 +21,7 @@ namespace FBX {
 	template<> struct Print< std::vector<X> > { \
 		static void print(std::ostream &os, const std::vector<X>& data, uint32_t limit) { \
 			os << data.size() << " * ["; \
-			for (uint32_t ndx = 0, l = data.size(); ndx < l; ++ndx) { \
+			for (size_t ndx = 0, l = data.size(); ndx < l; ++ndx) { \
 				if (ndx >= limit) { os << ", ..."; break; } \
 				if (ndx != 0) os << ", "; \
 				Print< X >::print(os, data[ndx], limit); \

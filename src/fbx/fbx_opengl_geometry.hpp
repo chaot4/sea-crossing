@@ -65,7 +65,7 @@ namespace FBX {
 			GLuint handle_index_buffer;
 
 			GeometrySerialize m_serialize;
-			uint32_t m_vertices;
+			size_t m_vertices;
 
 			/* used if features don't include COLOR */
 			GLint ndx_static_color;

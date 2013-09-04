@@ -120,30 +120,30 @@ namespace FBX {
 
 			if (locations.ndx_position >= 0) {
 				glEnableVertexAttribArray(locations.ndx_position);
-				glVertexAttribPointer(locations.ndx_position, 3, GL_FLOAT        , GL_FALSE, s.stride, (void*) s.offset_position);
+				glVertexAttribPointer(locations.ndx_position, 3, GL_FLOAT        , GL_FALSE, (GLsizei) s.stride, (void*) s.offset_position);
 			}
 			if (f & FBX::Geometry::NORMAL && locations.ndx_normal >= 0) {
 				glEnableVertexAttribArray(locations.ndx_normal);
-				glVertexAttribPointer(locations.ndx_normal  , 3, GL_FLOAT        , GL_FALSE, s.stride, (void*) s.offset_normal);
+				glVertexAttribPointer(locations.ndx_normal  , 3, GL_FLOAT        , GL_FALSE, (GLsizei) s.stride, (void*) s.offset_normal);
 			}
 			if (f & FBX::Geometry::TANGENT && locations.ndx_tangent >= 0) {
 				glEnableVertexAttribArray(locations.ndx_tangent);
-				glVertexAttribPointer(locations.ndx_tangent , 3, GL_FLOAT        , GL_FALSE, s.stride, (void*) s.offset_tangent);
+				glVertexAttribPointer(locations.ndx_tangent , 3, GL_FLOAT        , GL_FALSE, (GLsizei) s.stride, (void*) s.offset_tangent);
 			}
 			if (f & FBX::Geometry::COLOR && locations.ndx_color >= 0) {
 				glEnableVertexAttribArray(locations.ndx_color);
-				glVertexAttribPointer(locations.ndx_color   , 4, GL_UNSIGNED_BYTE, GL_TRUE , s.stride, (void*) s.offset_color);
+				glVertexAttribPointer(locations.ndx_color   , 4, GL_UNSIGNED_BYTE, GL_TRUE , (GLsizei) s.stride, (void*) s.offset_color);
 				ndx_static_color = -1;
 			} else {
 				ndx_static_color = locations.ndx_color;
 			}
 			if (f & FBX::Geometry::UVCOORD && locations.ndx_uvcoord >= 0) {
 				glEnableVertexAttribArray(locations.ndx_uvcoord);
-				glVertexAttribPointer(locations.ndx_uvcoord , 2, GL_FLOAT        , GL_FALSE, s.stride, (void*) s.offset_uvcoord);
+				glVertexAttribPointer(locations.ndx_uvcoord , 2, GL_FLOAT        , GL_FALSE, (GLsizei) s.stride, (void*) s.offset_uvcoord);
 			}
 			if (f & FBX::Geometry::BINORMAL && locations.ndx_binormal >= 0) {
 				glEnableVertexAttribArray(locations.ndx_binormal);
-				glVertexAttribPointer(locations.ndx_binormal, 3, GL_FLOAT        , GL_FALSE, s.stride, (void*) s.offset_binormal);
+				glVertexAttribPointer(locations.ndx_binormal, 3, GL_FLOAT        , GL_FALSE, (GLsizei) s.stride, (void*) s.offset_binormal);
 			}
 		}
 
@@ -152,7 +152,7 @@ namespace FBX {
 			if (ndx_static_color >= 0) {
 				glVertexAttrib4f(ndx_static_color, (GLfloat) static_color.red, (GLfloat) static_color.green, (GLfloat) static_color.blue, 0.0f);
 			}
-			glDrawElements(GL_TRIANGLES, m_vertices, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, (GLsizei) m_vertices, GL_UNSIGNED_INT, nullptr);
 			glBindVertexArray(0);
 		}
 
