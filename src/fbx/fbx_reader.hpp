@@ -48,7 +48,7 @@ namespace FBX {
 		bool _fill_buffer(size_t bytes);
 		void _require_bytes(size_t bytes);
 
-		ByteVector read_property_array();
+		ByteVector read_property_array(size_t expected_size);
 
 		void seekg(std::streamoff pos);
 		std::streamoff tellg();
