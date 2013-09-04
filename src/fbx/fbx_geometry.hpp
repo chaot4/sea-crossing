@@ -28,6 +28,7 @@ namespace FBX {
 
 		static std::shared_ptr<Geometry> fbxLoadFirstGeometry(std::string filename, uint32_t features = ALL);
 	private:
+		/* not copyable */
 		Geometry(const Geometry& other);
 		Geometry& operator=(const Geometry& other);
 

@@ -17,7 +17,7 @@ namespace FBX {
 		if (data.size() % 2 != 0) throw Exception("data length not a multiple of 2");
 		result.reserve(data.size() / 2);
 		for (size_t i = 0; i < data.size(); i += 2) {
-			result.push_back(OpenGL::UVCoord(data[i], data[i+1]));
+			result.push_back(OpenGL::UVCoord((float) data[i], (float) data[i + 1]));
 		}
 	}
 
@@ -25,7 +25,7 @@ namespace FBX {
 		if (data.size() % 3 != 0) throw Exception("data length not a multiple of 3");
 		result.reserve(data.size() / 3);
 		for (size_t i = 0; i < data.size(); i += 3) {
-			result.push_back(OpenGL::Vector3(data[i], data[i+1], data[i+2]));
+			result.push_back(OpenGL::Vector3((float) data[i], (float) data[i + 1], (float) data[i + 2]));
 		}
 	}
 
@@ -149,7 +149,7 @@ namespace FBX {
 				if (cps.size() % 3 != 0) throw Exception("vertices length not a multiple of 3");
 				controlpoints.reserve(cps.size() / 3);
 				for (size_t i = 0; i < cps.size(); i += 3) {
-					controlpoints.push_back(OpenGL::Vector3(cps[i], cps[i+1], cps[i+2]));
+					controlpoints.push_back(OpenGL::Vector3((float) cps[i], (float) cps[i + 1], (float) cps[i + 2]));
 				}
 				cp_variants_ndx.resize(controlpoints.size());
 			}
@@ -192,7 +192,7 @@ namespace FBX {
 				if (colors.load(reader, node, NodeName::LayerElementColor, NodeName::Colors)) {
 					features |= Geometry::COLOR;
 				} else {
-					auto it = props.properties.find(std::string("Color"));
+					Parser::Properties70::const_iterator it = props.properties.find(std::string("Color"));
 					if (it != props.properties.end()) {
 						geometry.static_color = it->second.value.get<ColorRGB>();
 					}

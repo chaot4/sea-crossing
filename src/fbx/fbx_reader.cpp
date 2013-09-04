@@ -106,7 +106,7 @@ namespace FBX {
 			size_t have = m_buffer.size();
 			m_buffer.resize(want);
 			m_file.read((char*) m_buffer.data() + have, want - have);
-			m_buffer.resize(have + m_file.gcount());
+			m_buffer.resize(have + (size_t) m_file.gcount());
 		}
 		return m_buffer.size() >= bytes;
 	}
@@ -115,20 +115,20 @@ namespace FBX {
 		if (!_fill_buffer(bytes)) throw ReaderException("Unexpected end of file");
 	}
 
-	void Reader::seekg(off_t pos) {
+	void Reader::seekg(std::streamoff pos) {
 		m_buffer.clear();
 		m_file.clear();
 		m_file.seekg(pos);
 	}
 
-	off_t Reader::tellg() {
-		return (off_t) m_file.tellg() - (off_t) m_buffer.size();
+	std::streamoff Reader::tellg() {
+		return (std::streamoff) m_file.tellg() - (std::streamoff) m_buffer.size();
 	}
 
-	off_t Reader::size() {
-		off_t cur = m_file.tellg();
+	std::streamoff Reader::size() {
+		std::streamoff cur = m_file.tellg();
 		m_file.seekg(0, std::ifstream::end);
-		off_t s = m_file.tellg(); 
+		std::streamoff s = m_file.tellg();
 		m_file.seekg(cur);
 		return s;
 	}
@@ -274,7 +274,7 @@ namespace FBX {
 		if (children.pos >= children.end) return false;
 		seekg(children.pos);
 
-		off_t node_start = tellg();
+		std::streamoff node_start = tellg();
 		uint32_t end = getUInt32();
 		uint32_t n_props = getUInt32();
 		uint32_t len_props = getUInt32();
@@ -282,7 +282,7 @@ namespace FBX {
 		child.name = NodeName(name);
 		child.properties.clear();
 		for (uint32_t i = 0; i < n_props; ++i) child.properties.push_back(getNodeProperty());
-		if (tellg() != (off_t) (node_start + len_props + 13 + name.length())) throw ReaderException("property length mismatch");
+		if (tellg() != (std::streamoff) (node_start + len_props + 13 + name.length())) throw ReaderException("property length mismatch");
 
 		if (end == 0 || children.pos + 13 == end) { children.pos = children.end; return false; } /* end = 0 or null node ends list */
 		child.children.pos = tellg();

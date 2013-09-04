@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 namespace FBX {
-	const static std::unordered_map<std::string, NodeName::NodeNameE> node_names_strToEnum = {
+	const static std::unordered_map<std::string, NodeName::NodeNameE> node_names_strToEnum {
 		{ "Actor"                        , NodeName::Actor                        },
 		{ "Add"                          , NodeName::Add                          },
 		{ "Additive"                     , NodeName::Additive                     },

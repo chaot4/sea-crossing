@@ -71,6 +71,7 @@ namespace FBX {
 			GLint ndx_static_color;
 			ColorRGB static_color;
 
+			/* not copyable */
 			Geometry(const Geometry &other);
 			Geometry& operator=(const Geometry &other);
 

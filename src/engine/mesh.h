@@ -2,15 +2,10 @@
 #define mesh_h
 
 #include <string>
-#include "GL/glew.h"
+#include <GL/glew.h>
 #include "vertexStructs.h"
 #include <iostream>
 #include "../fbx/fbx_opengl_geometry.hpp"
-
-//pragma seem to be only necessary in windows
-#ifdef _WIN32
-	#pragma comment(lib,"glew32.lib")
-#endif
 
 class Mesh
 {

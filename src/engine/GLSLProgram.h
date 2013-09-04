@@ -1,7 +1,7 @@
 #ifndef GLSLProgram_h
 #define GLSLProgram_h
 
-#include "GL/glew.h"
+#include <GL/glew.h>
 //	OpenGL Math Library
 #include <glm/glm.hpp>
 #include <glm/core/type_vec3.hpp>
@@ -10,11 +10,6 @@
 
 #include <string>
 #include <iostream>
-
-//pragmas seem to be only necessary in windows
-#ifdef _WIN32
-	#pragma comment(lib,"glew32.lib")
-#endif
 
 enum shaderType	{ SURFACE_LIGHTING,FLAT,FXAA,IDLE,STAMP,DISTANCEMAPPING,VOLUME_RAYCASTING,GAUSSIAN,GRADIENT,STRUCTURE_TENSOR,COHERENCE,HESSE};
 

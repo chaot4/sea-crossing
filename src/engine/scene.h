@@ -9,11 +9,6 @@
 #include "sceneLightSource.h"
 #include "volumetricSceneObject.h"
 
-//pragmas seem to be only necessary in windows
-#ifdef _WIN32
-	#pragma comment(lib,"opengl32.lib")
-#endif
-
 class Scene
 {
 protected:
