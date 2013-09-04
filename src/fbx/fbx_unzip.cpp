@@ -19,7 +19,7 @@ namespace FBX {
 		ret = ::inflateInit(&strm);
 		if (ret != Z_OK) throw InflateException("inflateInit failed");
 
-		strm.avail_in = data.size();
+		strm.avail_in = (unsigned int) data.size();
 		strm.next_in = const_cast<unsigned char*>(data.data());
 
 		strm.avail_out = sizeof(out);
