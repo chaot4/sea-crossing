@@ -35,6 +35,7 @@ extern "C" {
 	static int inflate(z_stream* pStream, int flush) { return ::mz_inflate(pStream, flush); }
 
 	// these constants should be safe to #define - uppercase names are expected to be #define'd
+	#define Z_NO_FLUSH            MZ_NO_FLUSH
 	#define Z_FINISH              MZ_FINISH
 	#define Z_OK                  MZ_OK
 	#define Z_STREAM_END          MZ_STREAM_END
@@ -53,8 +54,8 @@ namespace FBX {
 		memset(&strm, 0, sizeof(strm));
 		uint8_t out[4096];
 		std::vector<uint8_t> result;
-
-		result.reserve(out_hint);
+		bool appending = false;
+		result.resize(out_hint);
 
 		ret = ::inflateInit(&strm);
 		if (ret != Z_OK) throw InflateException("inflateInit failed");
@@ -62,24 +63,36 @@ namespace FBX {
 		strm.avail_in = (unsigned int) data.size();
 		strm.next_in = const_cast<unsigned char*>(data.data());
 
-		strm.avail_out = sizeof(out);
-		strm.next_out = out;
+		strm.avail_out = result.size();
+		strm.next_out = result.data();
 
 		for (;;) {
-			ret = ::inflate(&strm, Z_FINISH);
+			bool finish = strm.avail_in == 0;
+			ret = ::inflate(&strm, finish ? Z_FINISH : Z_NO_FLUSH);
 			if (ret != Z_OK && ret != Z_BUF_ERROR) break;
 
-			if (strm.next_out == out) {
-				inflateEnd(&strm);
-				throw InflateException("inflate: no progress");
+			if (appending) {
+				if (ret == Z_BUF_ERROR && strm.next_out == out) {
+					inflateEnd(&strm);
+					throw InflateException("inflate: no progress");
+				}
+
+				result.insert(result.end(), out, strm.next_out);
+
+				strm.avail_out = sizeof(out);
+				strm.next_out = out;
+			} else if (strm.avail_out == 0 && (finish || strm.avail_in != 0)) {
+				appending = true;
+				result.resize(strm.total_out);
+				strm.avail_out = sizeof(out);
+				strm.next_out = out;
 			}
-
-			result.insert(result.end(), out, strm.next_out);
-
-			strm.avail_out = sizeof(out);
-			strm.next_out = out;
 		}
-		result.insert(result.end(), out, strm.next_out);
+		if (appending) {
+			result.insert(result.end(), out, strm.next_out);
+		} else {
+			result.resize(strm.total_out);
+		}
 
 		::inflateEnd(&strm);
 
