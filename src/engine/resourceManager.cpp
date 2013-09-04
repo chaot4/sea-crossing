@@ -400,7 +400,7 @@ bool ResourceManager::loadFbxGeometry(const std::string &path, std::shared_ptr<M
 {
 	try {
 		geomPtr = Mesh::loadFromFBX(path);
-	} catch (FBX::Exception e) {
+	} catch (FBX::BaseException e) {
 		std::cerr << "Couldn't load " << path << ": " << e.what() << "\n";
 		return false;
 	}
