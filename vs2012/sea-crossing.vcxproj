@@ -152,7 +152,6 @@
     <ClCompile Include="..\src\engine\resourceManager.cpp" />
     <ClCompile Include="..\src\engine\scene.cpp" />
     <ClCompile Include="..\src\engine\sceneCamera.cpp" />
-    <ClCompile Include="..\src\engine\sceneEntity.cpp" />
     <ClCompile Include="..\src\engine\sceneLightSource.cpp" />
     <ClCompile Include="..\src\engine\texture2D.cpp" />
     <ClCompile Include="..\src\engine\texture3D.cpp" />

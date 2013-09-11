@@ -69,9 +69,6 @@
     <ClCompile Include="..\src\engine\sceneCamera.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\engine\sceneEntity.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\engine\sceneLightSource.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
@@ -244,6 +241,9 @@
     </ClInclude>
     <ClInclude Include="..\src\fbx\fbx_unzip.hpp">
       <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\miniz.c">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

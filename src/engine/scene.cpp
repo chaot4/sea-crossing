@@ -9,9 +9,10 @@ Scene::~Scene()
 {
 }
 
-bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Material> mtlPtr)
+bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling,
+										std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Material> mtlPtr)
 {
-	scenegraph.push_back(StaticSceneObject(id,position,orientation,geomPtr,mtlPtr));
+	scenegraph.push_back(StaticSceneObject(id,position,orientation,scaling,geomPtr,mtlPtr));
 	return true;
 }
 
@@ -84,13 +85,11 @@ void Scene::testing()
 void Scene::render()
 {
 	/*	obtain transformation matrices */
-	glm::mat4 modelViewMx;
-	glm::mat4 modelViewProjectionMx;
-	glm::mat3 normalMx;
-
 	glm::mat4 modelMx;
+	glm::mat4 modelViewMx;
 	glm::mat4 viewMx(activeCamera->computeViewMatrix());
-	glm::mat4 projectionMx(activeCamera->computeProjectionMatrix(0.01f,5000.0f));
+	glm::mat4 projectionMx(activeCamera->computeProjectionMatrix(1.0f,500000.0f));
+	glm::mat4 viewProjectionMx = projectionMx * viewMx;;
 
 	std::shared_ptr<GLSLProgram> currentPrgm;
 	std::shared_ptr<Material> currentMtl;
@@ -99,39 +98,39 @@ void Scene::render()
 	{
 		modelMx = i->computeModelMatrix();
 		modelViewMx = viewMx * modelMx;
-		normalMx = glm::transpose(glm::inverse(glm::mat3(modelViewMx)));
-		modelViewProjectionMx = projectionMx * viewMx * modelMx;
 
 		currentMtl = i->getMaterial();
 		currentPrgm = currentMtl->getShaderProgram();
 		
-
 		currentPrgm->use();
 
-		currentPrgm->setUniform("normal_matrix",normalMx);
+		currentPrgm->setUniform("model_view_matrix[0]", modelViewMx);
 		currentPrgm->setUniform("view_matrix", viewMx);
-		currentPrgm->setUniform("model_view_matrix",modelViewMx);
-		currentPrgm->setUniform("model_view_projection_matrix",modelViewProjectionMx);
+		currentPrgm->setUniform("projection_matrix", projectionMx);
 
 		int light_counter = 0;
 		std::string uniform_name;
-		for(std::list<SceneLightSource>::iterator light_itr = lightSourceList.begin(); light_itr != lightSourceList.end(); ++light_itr)
-		{
-			uniform_name = "lights.position["+ std::to_string(light_counter);
-			uniform_name.append("]");
-			currentPrgm->setUniform(uniform_name.c_str(),light_itr->getPosition());
-			
-			uniform_name = "lights.intensity["+ std::to_string(light_counter);
-			uniform_name.append("]");
-			currentPrgm->setUniform(uniform_name.c_str(),light_itr->getColour());
+		//for(std::list<SceneLightSource>::iterator light_itr = lightSourceList.begin(); light_itr != lightSourceList.end(); ++light_itr)
+		//{
+		//	uniform_name = "lights.position["+ std::to_string(light_counter);
+		//	uniform_name.append("]");
+		//	currentPrgm->setUniform(uniform_name.c_str(),light_itr->getPosition());
+		//	
+		//	uniform_name = "lights.intensity["+ std::to_string(light_counter);
+		//	uniform_name.append("]");
+		//	currentPrgm->setUniform(uniform_name.c_str(),light_itr->getColour());
+		//
+		//   
+		//	//currentPrgm->setUniform("lights.position[0]",light_itr->getPosition());
+		//	//currentPrgm->setUniform("lights.intensity[0]",light_itr->getColour());
+		//
+		//	light_counter++;
+		//	if(light_counter>=20) break;
+		//}
 
-		   
-			//currentPrgm->setUniform("lights.position[0]",light_itr->getPosition());
-			//currentPrgm->setUniform("lights.intensity[0]",light_itr->getColour());
+		currentPrgm->setUniform("lights.position", lightSourceList.begin()->getPosition());
+		currentPrgm->setUniform("lights.intensity", lightSourceList.begin()->getColour());
 
-			light_counter++;
-			if(light_counter>=20) break;
-		}
 		currentPrgm->setUniform("num_lights",light_counter);
 
 		currentMtl->use();

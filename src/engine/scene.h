@@ -28,7 +28,7 @@ public:
 	~Scene();
 
 	/* */
-	bool createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation,
+	bool createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling,
 									std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Material> mtlPtr);
 	
 	/* create a volumetric scene entity */

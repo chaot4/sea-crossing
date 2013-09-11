@@ -9,7 +9,7 @@
 * 
 * \author Michael Becher
 * 
-* \date 7th June 2013
+* \date 10th September 2013
 */
 
 #ifndef resourceManager_h
@@ -40,6 +40,9 @@ public:
 	/** Returns log string */
 	const std::string& getLog() {return resourcelog;}
 
+	/**
+	* \brief Clear lists containing graphics resources
+	*/
 	void clearLists();
 
 	/**

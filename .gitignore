@@ -93,3 +93,7 @@ UpgradeLog*.XML
 vs2012/include
 vs2012/lib
 resources/meshes/workfiles
+resources/meshes/torii
+resources/meshes/performance_test
+resources/materials/torii
+resources/textures/torii
