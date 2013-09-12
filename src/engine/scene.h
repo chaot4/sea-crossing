@@ -2,6 +2,7 @@
 #define scene_h
 
 #include <list>
+#include <map>
 
 #include "sceneEntity.h"
 #include "staticSceneObject.h"
@@ -18,8 +19,14 @@ protected:
 	*/
 	std::list<SceneLightSource> lightSourceList;
 	std::list<SceneCamera> cameraList;
-	std::list<StaticSceneObject> scenegraph;
+	//std::list<StaticSceneObject> scenegraph;
 	std::list<VolumetricSceneObject> volumetricObjectList;
+
+	/*	Static scene entities (objects) sorted for optimzed drawing in a tree-like structure*/
+	typedef std::map< std::shared_ptr<Mesh>, std::list<StaticSceneObject> > MeshMap;
+	typedef std::map< std::shared_ptr<Material>, MeshMap > MaterialMap;
+	typedef std::map< std::shared_ptr<GLSLProgram>, MaterialMap > ShaderMap;
+	ShaderMap render_graph;
 
 	SceneCamera* activeCamera;
 
@@ -39,6 +46,8 @@ public:
 	bool createSceneLight(const int id, const glm::vec3 position, glm::vec3 lightColour);
 	//	create a scene camera
 	bool createSceneCamera(const int id, const glm::vec3 position, const glm::quat orientations, float aspect, float fov);
+	//	create a scene camera
+	bool createSceneCamera(const int id, const glm::vec3 position, const glm::vec3 lookAt, float aspect, float fov);
 
 	void setActiveCamera(const int);
 	SceneCamera* getActiveCamera();

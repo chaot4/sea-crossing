@@ -1,6 +1,8 @@
 #ifndef sceneCamera_h
 #define sceneCamera_h
 
+#include <iostream>
+
 #include "sceneEntity.h"
 
 class SceneCamera : public SceneEntity
@@ -15,9 +17,23 @@ public:
 	SceneCamera() {}
 	~SceneCamera() {}
 
-	SceneCamera(int inId, const glm::vec3& inPosition, const glm::quat& inOrientation,
-					float inAspect, float inFov, const glm::vec3& inLookAt = glm::vec3(0.0))
-		: SceneEntity(inId, inPosition, inOrientation, glm::vec3(1.0)), look_at(inLookAt), aspect_ratio(inAspect), field_of_view(inFov) {}
+	SceneCamera(int inId, const glm::vec3& inPosition, const glm::quat& inOrientation, float inAspect, float inFov)
+		: SceneEntity(inId, inPosition, inOrientation, glm::vec3(1.0f)), look_at(glm::vec3(0.0f)), aspect_ratio(inAspect), field_of_view(inFov) {}
+
+	SceneCamera(int inId, const glm::vec3& inPosition, const glm::vec3& inLookAt, float inAspect, float inFov)
+		: SceneEntity(inId, inPosition, glm::quat(), glm::vec3(1.0f)), look_at(inLookAt), aspect_ratio(inAspect), field_of_view(inFov)
+	{
+		/*	Compute initial orientation as given by position and look-at-point */
+		glm::vec3 difference_vec = glm::normalize(inLookAt - inPosition);
+		glm::vec3 projected_vec = glm::normalize(glm::vec3(difference_vec.x, 0.0f, difference_vec.z));
+		float rot_angle_0 = acos(glm::dot(projected_vec, difference_vec));
+		float rot_angle_1 = acos(glm::dot(projected_vec, glm::vec3(0.0f, 0.0f, -1.0f)));
+		
+		glm::quat orientation_0 = glm::rotate(glm::quat(), -(rot_angle_0 / 3.1415926535f)*180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::quat orientation_1 = glm::rotate(glm::quat(), (rot_angle_1 / 3.1415926535f)*180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		setOrientation(orientation_1*orientation_0);
+		
+	}
 
 	void setAspectRation(const float inAspectRation) { aspect_ratio = inAspectRation; }
 	float getAspectRatio() { return aspect_ratio; }

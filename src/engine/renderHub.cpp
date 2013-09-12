@@ -135,7 +135,7 @@ void RenderHub::run()
 	//
 	//geomPtr.reset();
 	//matPtr.reset();
-	//
+	
 	//resourceMngr.createMesh("../resources/meshes/performance_test/terrain.fbx", geomPtr);
 	//if (!(resourceMngr.createMaterial("../resources/materials/default.slmtl", matPtr)))
 	//	std::cout << "Failed to create material." << std::endl;
@@ -145,7 +145,7 @@ void RenderHub::run()
 	//geomPtr.reset();
 	//matPtr.reset();
 
-	if(!(activeScene->createSceneCamera(0,glm::vec3(0.0,0.0,25.0),glm::quat(),16.0f/9.0f,(9.0f/16.0f)*60.0f)))
+	if(!(activeScene->createSceneCamera(0,glm::vec3(25.0,25.0,25.0),glm::vec3(0.0,0.0,0.0),16.0f/9.0f,(9.0f/16.0f)*60.0f)))
 		std::cout<<"Failed to create camera"<<"\n";
 
 	if(!(activeScene->createSceneLight(0,glm::vec3(3000.0,5000.0,1500.0),glm::vec3(150000.0))))
