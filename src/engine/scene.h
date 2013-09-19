@@ -19,7 +19,7 @@ protected:
 	*/
 	std::list<SceneLightSource> lightSourceList;
 	std::list<SceneCamera> cameraList;
-	//std::list<StaticSceneObject> scenegraph;
+	std::list<StaticSceneObject> static_entity_list;
 	std::list<VolumetricSceneObject> volumetricObjectList;
 
 	/*	Static scene entities (objects) sorted for optimzed drawing in a tree-like structure*/
@@ -54,8 +54,11 @@ public:
 
 	void testing();
 
-	/* render the scene */
-	void render();
+	/*	draw the scene for a forward render pass */
+	void drawFroward();
+	
+	/*	 draw the scene for a picking pass */
+	void drawPicking(std::shared_ptr<GLSLProgram> prgm);
 
 	/*
 	/	Render the volumetric objects of the scene.

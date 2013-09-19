@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------------
 File: surface_lighting_v.glsl
 Author: Michael Becher
-Date of (presumingly) last edit: 26.08.2013
+Date of (presumingly) last edit: 11.09.2013
 
 Description: Standard vertex shader for lighting calculations of opaque surfaces.
 ---------------------------------------------------------------------------------------------------*/

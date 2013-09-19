@@ -34,7 +34,7 @@ bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, cons
 
 	itr_thirdlevel.first->second.push_back(StaticSceneObject(id,position,orientation,scaling,geomPtr,mtlPtr));
 
-	//	scenegraph.push_back(StaticSceneObject(id,position,orientation,scaling,geomPtr,mtlPtr));
+	//static_entity_list.push_back(StaticSceneObject(id,position,orientation,scaling,geomPtr,mtlPtr));
 	return true;
 }
 
@@ -110,7 +110,7 @@ void Scene::testing()
 /*
 /	Temporary render method
 */
-void Scene::render()
+void Scene::drawFroward()
 {
 	glm::mat4 modelMx;
 	glm::mat4 viewMx;
@@ -221,6 +221,46 @@ void Scene::render()
 	//	(i->getGeometry())->draw();
 	//	//i->rotate(0.1f,glm::vec3(0.0f,1.0f,0.0f));
 	//}
+}
+
+void Scene::drawPicking(std::shared_ptr<GLSLProgram> prgm)
+{
+	prgm->use();
+
+	glm::mat4 model_mx;
+	glm::mat4 view_mx = activeCamera->computeViewMatrix();
+	glm::mat4 projection_mx = activeCamera->computeProjectionMatrix(1.0f, 500000.0f);
+	glm::mat4 model_view_projection_mx;
+
+	/*	Iterate through all levels of the rendergraph */
+	for (ShaderMap::iterator shader_itr = render_graph.begin(); shader_itr != render_graph.end(); ++shader_itr)
+	{	
+		for (MaterialMap::iterator material_itr = shader_itr->second.begin(); material_itr != shader_itr->second.end(); ++material_itr)
+		{
+			for (MeshMap::iterator mesh_itr = material_itr->second.begin(); mesh_itr != material_itr->second.end(); ++mesh_itr)
+			{
+				/*	Draw all entities instanced */
+				int instance_counter = 0;
+				std::string uniform_name;
+
+				for (std::list<StaticSceneObject>::iterator entity_itr = mesh_itr->second.begin(); entity_itr != mesh_itr->second.end(); ++entity_itr)
+				{
+					/*	Set transformation matrix for each instance */
+					model_mx = entity_itr->computeModelMatrix();
+					model_view_projection_mx = projection_mx*view_mx*model_mx;
+					uniform_name = "model_view_projection_matrix[" + std::to_string(instance_counter) + "]";
+					prgm->setUniform(uniform_name.c_str(), model_view_projection_mx);
+
+					uniform_name = "entity_id[" + std::to_string(instance_counter) + "]";
+					prgm->setUniform(uniform_name.c_str(), entity_itr->getId());
+
+					instance_counter++;
+				}
+
+				mesh_itr->first->draw(instance_counter);
+			}
+		}
+	}
 }
 
 void Scene::renderVolumetricObjects()

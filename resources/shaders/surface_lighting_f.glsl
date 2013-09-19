@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------------
-FFile: surface_lighting_f.glsl
+File: surface_lighting_f.glsl
 Author: Michael Becher
-Date of (presumingly) last edit: 26.08.2013
+Date of (presumingly) last edit: 11.09.2013
 
 Description: Standard fragment shader for lighting calculations of opaque surfaces.
 			 Based on the Cook-Torrance BRDF.
