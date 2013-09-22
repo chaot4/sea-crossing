@@ -24,13 +24,13 @@
 class FramebufferObject
 {
 private:
-	GLuint handle;
-	std::vector<Texture2D> colorbuffer;
-	GLuint depthbuffer;
-	GLuint stencilbuffer;
+	GLuint m_handle;
+	std::vector<Texture2D> m_colorbuffers;
+	GLuint m_depthbuffer;
+	GLuint m_stencilbuffer;
 
-	int width;
-	int height;
+	int m_width;
+	int m_height;
 
 	/*	Private copy constructor. Don't wanna go around copying objects with OpenGL handles. */
 	FramebufferObject(FramebufferObject&);
@@ -39,7 +39,7 @@ public:
 	FramebufferObject();
 	~FramebufferObject();
 
-	FramebufferObject(int w, int h, bool hasDepth, bool hasStencil);
+	FramebufferObject(int width, int height, bool has_depth, bool has_stencil);
 
 	/**
 	* \brief Adds one color attachment to the framebuffer.
@@ -96,13 +96,13 @@ public:
 	* \brief Get the width of the framebuffer object's color attachments
 	* \return Returns widths.
 	*/
-	int getWidth() {return width;}
+	int getWidth() {return m_width;}
 
 	/**
 	* \brief Get the height of the framebuffer object's color attachments
 	* \return Returns height.
 	*/
-	int getHeight() {return height;}
+	int getHeight() {return m_height;}
 };
 
 #endif
