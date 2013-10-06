@@ -147,7 +147,7 @@ public:
 	 */
 	bool createTexture3D(float* volumeData, glm::ivec3 textureRes, GLenum internalFormat, GLenum format, std::shared_ptr<Texture3D> &inOutTexPtr);
 
-private:
+protected:
 	/** Log string */
 	std::string resourcelog;
 

@@ -11,11 +11,13 @@
 #include <string>
 #include <iostream>
 
-enum shaderType	{ SURFACE_LIGHTING,PICKING,FLAT, FXAA, IDLE, STAMP, DISTANCEMAPPING, VOLUME_RAYCASTING, GAUSSIAN, GRADIENT, STRUCTURE_TENSOR, COHERENCE, HESSE };
+enum shaderType	{ SURFACE_LIGHTING,PICKING,FLAT, FXAA, IDLE, VOLUME_RAYCASTING, GAUSSIAN, GRADIENT, STRUCTURE_TENSOR, HESSE };
 
 class GLSLProgram
 {
 private:
+	GLSLProgram(GLSLProgram &cpy) {}
+
 	shaderType type;
 	GLuint handle;
 	bool linkStatus;
