@@ -220,16 +220,7 @@ void DebugGame::command_forward()
 
 
 Game::Game(Player* player1, Player* player2, Board& board, GameConf const& conf)
-	: player(new Player*[2]), board(board), conf(conf)
-{
-	player[0] = player1;
-	player[1] = player2;
-}
-
-Game::~Game()
-{
-	delete[] player;
-}
+	: player{player1, player2}, board(board), conf(conf) {}
 
 void Game::start()
 {
@@ -278,8 +269,6 @@ bool Game::makeMove(PlayerID player_id)
 /* CONSOLE GAME */
 
 
-//ConsoleGame::ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
-//	:player{player1, player2}{}
 ConsoleGame::ConsoleGame(Player* player1, Player* player2, Board& board,
 		GameConf const& conf)
 	: Game(player1, player2, board, conf) {}
@@ -303,8 +292,6 @@ void ConsoleGame::placeGem(PlayerID player_id, NodeLabel label)
 /* SIMPLE GUI GAME */
 
 
-//SimpleGUIGame::SimpleGUIGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
-//	:player{player1, player2}{}
 SimpleGUIGame::SimpleGUIGame(Player* player1, Player* player2, Board& board,
 		GameConf const& conf, MessageReceiver* receiver)
 	: Game(player1, player2, board, conf), receiver(receiver) {}

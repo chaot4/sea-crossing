@@ -49,7 +49,7 @@ class DebugGame{
 
 class Game{
 	protected:
-		Player** player;
+		std::vector<Player*> player;
 		Board& board;
 		GameConf conf;
 
@@ -58,7 +58,6 @@ class Game{
 
 	public:
 		Game(Player* player1, Player* player2, Board& board, GameConf const& conf);
-		~Game();
 
 		void start();
 };

@@ -3,7 +3,7 @@
 using namespace std;
 
 
-Board::Board()/*:
+Board::Board():
 	nodes{
 		Node(0, "eSW", {37}),
 		Node(1, "eSE", {33}),
@@ -73,8 +73,7 @@ Board::Board()/*:
 		Node(65, "dN2", {15, 16, 28}),
 		Node(66, "dN3", {16, 28, 29}),
 		Node(67, "eNW", {25}),
-		Node(68, "eNE", {29})
-	},
+		Node(68, "eNE", {29})},
 	faces{
                 Face(0, "A", {29, 33, 34, 35, 39}, {1, 2, 3, 4}),
                 Face(1, "BNW", {32, 33, 39, 42, 46, 47}, {0, 2, 4, 5, 6, 12}),
@@ -116,272 +115,8 @@ Board::Board()/*:
                 Face(37, "ESW", {0, 2, 9}, {22, 36, 38}),
                 Face(38, "EW-1", {9, 16, 23}, {22, 23, 37, 39}),
                 Face(39, "EW", {23, 30, 40}, {23, 24, 38, 40}),
-                Face(40, "EW1", {40, 49, 58}, {13, 24, 25, 39})
-	}*/
+                Face(40, "EW1", {40, 49, 58}, {13, 24, 25, 39})}
 {
-	std::vector<NodeID> adj_faces; adj_faces.push_back(37);
-	nodes.push_back(Node(0, "eSW", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(33);
-	nodes.push_back(Node(1, "eSE", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(22); adj_faces.push_back(36); adj_faces.push_back(37);
-	nodes.push_back(Node(2, "dS-3", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(21); adj_faces.push_back(22); adj_faces.push_back(36);
-	nodes.push_back(Node(3, "dS-2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(21); adj_faces.push_back(35); adj_faces.push_back(36);
-	nodes.push_back(Node(4, "dS-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(20); adj_faces.push_back(21); adj_faces.push_back(35);
-	nodes.push_back(Node(5, "dS", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(20); adj_faces.push_back(34); adj_faces.push_back(35);
-	nodes.push_back(Node(6, "dS1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(19); adj_faces.push_back(20); adj_faces.push_back(34);
-	nodes.push_back(Node(7, "dS2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(19); adj_faces.push_back(33); adj_faces.push_back(34);
-	nodes.push_back(Node(8, "dS3", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(22); adj_faces.push_back(37); adj_faces.push_back(38);
-	nodes.push_back(Node(9, "dW-3", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(19); adj_faces.push_back(32); adj_faces.push_back(33);
-	nodes.push_back(Node(10, "dE-3", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(11); adj_faces.push_back(21); adj_faces.push_back(22);
-	nodes.push_back(Node(11, "cS-2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(10); adj_faces.push_back(11); adj_faces.push_back(21);
-	nodes.push_back(Node(12, "cS-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(10); adj_faces.push_back(20); adj_faces.push_back(21);
-	nodes.push_back(Node(13, "cS", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(9); adj_faces.push_back(10); adj_faces.push_back(20);
-	nodes.push_back(Node(14, "cS1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(9); adj_faces.push_back(19); adj_faces.push_back(20);
-	nodes.push_back(Node(15, "cS2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(22); adj_faces.push_back(23); adj_faces.push_back(38);
-	nodes.push_back(Node(16, "dW-2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(11); adj_faces.push_back(2); adj_faces.push_back(23);
-	nodes.push_back(Node(17, "cW-2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(9); adj_faces.push_back(18); adj_faces.push_back(19);
-	nodes.push_back(Node(18, "cE-2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(18); adj_faces.push_back(19); adj_faces.push_back(32);
-	nodes.push_back(Node(19, "dE-2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(4); adj_faces.push_back(10); adj_faces.push_back(11);
-	nodes.push_back(Node(20, "bS-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(3); adj_faces.push_back(4); adj_faces.push_back(10);
-	nodes.push_back(Node(21, "bS", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(3); adj_faces.push_back(9); adj_faces.push_back(10);
-	nodes.push_back(Node(22, "bS1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(23); adj_faces.push_back(38); adj_faces.push_back(39);
-	nodes.push_back(Node(23, "dW-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(11); adj_faces.push_back(12); adj_faces.push_back(23);
-	nodes.push_back(Node(24, "cW-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(4); adj_faces.push_back(11); adj_faces.push_back(12);
-	nodes.push_back(Node(25, "bW-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(3); adj_faces.push_back(8); adj_faces.push_back(9);
-	nodes.push_back(Node(26, "bE-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(8); adj_faces.push_back(9); adj_faces.push_back(18);
-	nodes.push_back(Node(27, "cE-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(18); adj_faces.push_back(31); adj_faces.push_back(32);
-	nodes.push_back(Node(28, "dE-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(0); adj_faces.push_back(3); adj_faces.push_back(4);
-	nodes.push_back(Node(29, "aS", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(23); adj_faces.push_back(24); adj_faces.push_back(39);
-	nodes.push_back(Node(30, "dW", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(1); adj_faces.push_back(23); adj_faces.push_back(24);
-	nodes.push_back(Node(31, "cW", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(1); adj_faces.push_back(4); adj_faces.push_back(12);
-	nodes.push_back(Node(32, "bW", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(0); adj_faces.push_back(1); adj_faces.push_back(4);
-	nodes.push_back(Node(33, "aW", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(0);
-	nodes.push_back(Node(34, "0", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(0); adj_faces.push_back(2); adj_faces.push_back(3);
-	nodes.push_back(Node(35, "aE", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(2); adj_faces.push_back(3); adj_faces.push_back(8);
-	nodes.push_back(Node(36, "bE", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(8); adj_faces.push_back(17); adj_faces.push_back(18);
-	nodes.push_back(Node(37, "cE", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(17); adj_faces.push_back(18); adj_faces.push_back(31);
-	nodes.push_back(Node(38, "dE", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(0); adj_faces.push_back(1); adj_faces.push_back(2);
-	nodes.push_back(Node(39, "aN", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(24); adj_faces.push_back(39); adj_faces.push_back(40);
-	nodes.push_back(Node(40, "dW1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(5); adj_faces.push_back(12); adj_faces.push_back(24);
-	nodes.push_back(Node(41, "cW1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(1); adj_faces.push_back(5); adj_faces.push_back(12);
-	nodes.push_back(Node(42, "bW1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(2); adj_faces.push_back(7); adj_faces.push_back(8);
-	nodes.push_back(Node(43, "bE1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(7); adj_faces.push_back(8); adj_faces.push_back(17);
-	nodes.push_back(Node(44, "cE1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(17); adj_faces.push_back(30); adj_faces.push_back(31);
-	nodes.push_back(Node(45, "dE1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(1); adj_faces.push_back(5); adj_faces.push_back(6);
-	nodes.push_back(Node(46, "bN-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(1); adj_faces.push_back(2); adj_faces.push_back(6);
-	nodes.push_back(Node(47, "bN", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(2); adj_faces.push_back(6); adj_faces.push_back(7);
-	nodes.push_back(Node(48, "bN1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(13); adj_faces.push_back(24); adj_faces.push_back(40);
-	nodes.push_back(Node(49, "dW2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(5); adj_faces.push_back(13); adj_faces.push_back(24);
-	nodes.push_back(Node(50, "cW2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(7); adj_faces.push_back(16); adj_faces.push_back(17);
-	nodes.push_back(Node(51, "cE2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(16); adj_faces.push_back(17); adj_faces.push_back(30);
-	nodes.push_back(Node(52, "dE2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(5); adj_faces.push_back(13); adj_faces.push_back(14);
-	nodes.push_back(Node(53, "cN-2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(5); adj_faces.push_back(6); adj_faces.push_back(14);
-	nodes.push_back(Node(54, "cN-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(6); adj_faces.push_back(14); adj_faces.push_back(15);
-	nodes.push_back(Node(55, "cN", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(6); adj_faces.push_back(7); adj_faces.push_back(15);
-	nodes.push_back(Node(56, "cN1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(7); adj_faces.push_back(15); adj_faces.push_back(16);
-	nodes.push_back(Node(57, "cN2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(13); adj_faces.push_back(25); adj_faces.push_back(40);
-	nodes.push_back(Node(58, "dW3", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(16); adj_faces.push_back(29); adj_faces.push_back(30);
-	nodes.push_back(Node(59, "dE3", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(13); adj_faces.push_back(25); adj_faces.push_back(26);
-	nodes.push_back(Node(60, "dN-3", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(13); adj_faces.push_back(14); adj_faces.push_back(26);
-	nodes.push_back(Node(61, "dN-2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(14); adj_faces.push_back(26); adj_faces.push_back(27);
-	nodes.push_back(Node(62, "dN-1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(14); adj_faces.push_back(15); adj_faces.push_back(27);
-	nodes.push_back(Node(63, "dN", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(15); adj_faces.push_back(27); adj_faces.push_back(28);
-	nodes.push_back(Node(64, "dN1", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(15); adj_faces.push_back(16); adj_faces.push_back(28);
-	nodes.push_back(Node(65, "dN2", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(16); adj_faces.push_back(28); adj_faces.push_back(29);
-	nodes.push_back(Node(66, "dN3", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(25);
-	nodes.push_back(Node(67, "eNW", adj_faces));
-	adj_faces.clear(); adj_faces.push_back(29);
-	nodes.push_back(Node(68, "eNE", adj_faces));
-
-	std::vector<NodeID> adj_nodes; adj_nodes.push_back(29); adj_nodes.push_back(33); adj_nodes.push_back(34); adj_nodes.push_back(35); adj_nodes.push_back(39);
-	adj_faces.clear(); adj_faces.push_back(1); adj_faces.push_back(2); adj_faces.push_back(3); adj_faces.push_back(4);
-	faces.push_back(Face(0, "A", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(32); adj_nodes.push_back(33); adj_nodes.push_back(39); adj_nodes.push_back(42); adj_nodes.push_back(46); adj_nodes.push_back(47);
-	adj_faces.clear(); adj_faces.push_back(0); adj_faces.push_back(2); adj_faces.push_back(4); adj_faces.push_back(5); adj_faces.push_back(6); adj_faces.push_back(12);
-    faces.push_back(Face(1, "BNW", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(35); adj_nodes.push_back(36); adj_nodes.push_back(39); adj_nodes.push_back(43); adj_nodes.push_back(47); adj_nodes.push_back(48);
-	adj_faces.clear(); adj_faces.push_back(0); adj_faces.push_back(1); adj_faces.push_back(3); adj_faces.push_back(6); adj_faces.push_back(7); adj_faces.push_back(8);
-    faces.push_back(Face(2, "BNE", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(21); adj_nodes.push_back(22); adj_nodes.push_back(26); adj_nodes.push_back(29); adj_nodes.push_back(35); adj_nodes.push_back(36);
-	adj_faces.clear(); adj_faces.push_back(0); adj_faces.push_back(2); adj_faces.push_back(4); adj_faces.push_back(8); adj_faces.push_back(9); adj_faces.push_back(10);
-    faces.push_back(Face(3, "BSE", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(20); adj_nodes.push_back(21); adj_nodes.push_back(25); adj_nodes.push_back(29); adj_nodes.push_back(32); adj_nodes.push_back(33);
-	adj_faces.clear(); adj_faces.push_back(0); adj_faces.push_back(1); adj_faces.push_back(3); adj_faces.push_back(10); adj_faces.push_back(11); adj_faces.push_back(12);
-    faces.push_back(Face(4, "BSW", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(41); adj_nodes.push_back(42); adj_nodes.push_back(46); adj_nodes.push_back(50); adj_nodes.push_back(53); adj_nodes.push_back(54);
-	adj_faces.clear(); adj_faces.push_back(1); adj_faces.push_back(6); adj_faces.push_back(12); adj_faces.push_back(13); adj_faces.push_back(14); adj_faces.push_back(24);
-    faces.push_back(Face(5, "CNW", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(46); adj_nodes.push_back(47); adj_nodes.push_back(48); adj_nodes.push_back(54); adj_nodes.push_back(55); adj_nodes.push_back(56);
-	adj_faces.clear(); adj_faces.push_back(1); adj_faces.push_back(2); adj_faces.push_back(5); adj_faces.push_back(7); adj_faces.push_back(14); adj_faces.push_back(15);
-    faces.push_back(Face(6, "CN", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(43); adj_nodes.push_back(44); adj_nodes.push_back(48); adj_nodes.push_back(51); adj_nodes.push_back(56); adj_nodes.push_back(57);
-	adj_faces.clear(); adj_faces.push_back(2); adj_faces.push_back(6); adj_faces.push_back(8); adj_faces.push_back(15); adj_faces.push_back(16); adj_faces.push_back(17);
-    faces.push_back(Face(7, "CNE", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(26); adj_nodes.push_back(27); adj_nodes.push_back(36); adj_nodes.push_back(37); adj_nodes.push_back(43); adj_nodes.push_back(44);
-	adj_faces.clear(); adj_faces.push_back(2); adj_faces.push_back(3); adj_faces.push_back(7); adj_faces.push_back(9); adj_faces.push_back(17); adj_faces.push_back(18);
-    faces.push_back(Face(8, "CE", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(14); adj_nodes.push_back(15); adj_nodes.push_back(18); adj_nodes.push_back(22); adj_nodes.push_back(26); adj_nodes.push_back(27);
-	adj_faces.clear(); adj_faces.push_back(3); adj_faces.push_back(8); adj_faces.push_back(10); adj_faces.push_back(18); adj_faces.push_back(19); adj_faces.push_back(20);
-    faces.push_back(Face(9, "CSE", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(12); adj_nodes.push_back(13); adj_nodes.push_back(14); adj_nodes.push_back(20); adj_nodes.push_back(21); adj_nodes.push_back(22);
-	adj_faces.clear(); adj_faces.push_back(3); adj_faces.push_back(4); adj_faces.push_back(9); adj_faces.push_back(11); adj_faces.push_back(20); adj_faces.push_back(21);
-    faces.push_back(Face(10, "CS", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(11); adj_nodes.push_back(12); adj_nodes.push_back(17); adj_nodes.push_back(20); adj_nodes.push_back(24); adj_nodes.push_back(25);
-	adj_faces.clear(); adj_faces.push_back(4); adj_faces.push_back(10); adj_faces.push_back(12); adj_faces.push_back(21); adj_faces.push_back(22); adj_faces.push_back(23);
-    faces.push_back(Face(11, "CSW", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(24); adj_nodes.push_back(25); adj_nodes.push_back(31); adj_nodes.push_back(32); adj_nodes.push_back(41); adj_nodes.push_back(42);
-	adj_faces.clear(); adj_faces.push_back(1); adj_faces.push_back(4); adj_faces.push_back(5); adj_faces.push_back(11); adj_faces.push_back(23); adj_faces.push_back(24);
-    faces.push_back(Face(12, "CW", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(49); adj_nodes.push_back(50); adj_nodes.push_back(53); adj_nodes.push_back(58); adj_nodes.push_back(60); adj_nodes.push_back(61);
-	adj_faces.clear(); adj_faces.push_back(5); adj_faces.push_back(14); adj_faces.push_back(24); adj_faces.push_back(25); adj_faces.push_back(26); adj_faces.push_back(40);
-    faces.push_back(Face(13, "DNW", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(53); adj_nodes.push_back(54); adj_nodes.push_back(55); adj_nodes.push_back(61); adj_nodes.push_back(62); adj_nodes.push_back(63);
-	adj_faces.clear(); adj_faces.push_back(5); adj_faces.push_back(6); adj_faces.push_back(13); adj_faces.push_back(15); adj_faces.push_back(26); adj_faces.push_back(27);
-    faces.push_back(Face(14, "DN-1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(55); adj_nodes.push_back(56); adj_nodes.push_back(57); adj_nodes.push_back(63); adj_nodes.push_back(64); adj_nodes.push_back(65);
-	adj_faces.clear(); adj_faces.push_back(6); adj_faces.push_back(7); adj_faces.push_back(14); adj_faces.push_back(16); adj_faces.push_back(27); adj_faces.push_back(28);
-    faces.push_back(Face(15, "DN1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(51); adj_nodes.push_back(52); adj_nodes.push_back(57); adj_nodes.push_back(59); adj_nodes.push_back(65); adj_nodes.push_back(66);
-	adj_faces.clear(); adj_faces.push_back(7); adj_faces.push_back(15); adj_faces.push_back(17); adj_faces.push_back(28); adj_faces.push_back(29); adj_faces.push_back(30);
-    faces.push_back(Face(16, "DNE", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(37); adj_nodes.push_back(38); adj_nodes.push_back(44); adj_nodes.push_back(45); adj_nodes.push_back(51); adj_nodes.push_back(52);
-	adj_faces.clear(); adj_faces.push_back(7); adj_faces.push_back(8); adj_faces.push_back(16); adj_faces.push_back(18); adj_faces.push_back(30); adj_faces.push_back(31);
-    faces.push_back(Face(17, "DE1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(18); adj_nodes.push_back(19); adj_nodes.push_back(27); adj_nodes.push_back(28); adj_nodes.push_back(37); adj_nodes.push_back(38);
-	adj_faces.clear(); adj_faces.push_back(8); adj_faces.push_back(9); adj_faces.push_back(17); adj_faces.push_back(19); adj_faces.push_back(31); adj_faces.push_back(32);
-    faces.push_back(Face(18, "DE-1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(7); adj_nodes.push_back(8); adj_nodes.push_back(10); adj_nodes.push_back(15); adj_nodes.push_back(18); adj_nodes.push_back(19);
-	adj_faces.clear(); adj_faces.push_back(9); adj_faces.push_back(18); adj_faces.push_back(20); adj_faces.push_back(32); adj_faces.push_back(33); adj_faces.push_back(34);
-    faces.push_back(Face(19, "DSE", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(5); adj_nodes.push_back(6); adj_nodes.push_back(7); adj_nodes.push_back(13); adj_nodes.push_back(14); adj_nodes.push_back(15);
-	adj_faces.clear(); adj_faces.push_back(9); adj_faces.push_back(10); adj_faces.push_back(19); adj_faces.push_back(21); adj_faces.push_back(34); adj_faces.push_back(35);
-    faces.push_back(Face(20, "DS1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(3); adj_nodes.push_back(4); adj_nodes.push_back(5); adj_nodes.push_back(11); adj_nodes.push_back(12); adj_nodes.push_back(13);
-	adj_faces.clear(); adj_faces.push_back(10); adj_faces.push_back(11); adj_faces.push_back(20); adj_faces.push_back(22); adj_faces.push_back(35); adj_faces.push_back(36);
-    faces.push_back(Face(21, "DS-1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(2); adj_nodes.push_back(3); adj_nodes.push_back(9); adj_nodes.push_back(11); adj_nodes.push_back(16); adj_nodes.push_back(17);
-	adj_faces.clear(); adj_faces.push_back(11); adj_faces.push_back(21); adj_faces.push_back(23); adj_faces.push_back(36); adj_faces.push_back(37); adj_faces.push_back(38);
-    faces.push_back(Face(22, "DSW", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(16); adj_nodes.push_back(17); adj_nodes.push_back(23); adj_nodes.push_back(24); adj_nodes.push_back(30); adj_nodes.push_back(31);
-	adj_faces.clear(); adj_faces.push_back(11); adj_faces.push_back(12); adj_faces.push_back(22); adj_faces.push_back(24); adj_faces.push_back(38); adj_faces.push_back(39);
-    faces.push_back(Face(23, "DW-1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(30); adj_nodes.push_back(31); adj_nodes.push_back(40); adj_nodes.push_back(41); adj_nodes.push_back(49); adj_nodes.push_back(50);
-	adj_faces.clear(); adj_faces.push_back(5); adj_faces.push_back(12); adj_faces.push_back(13); adj_faces.push_back(23); adj_faces.push_back(39); adj_faces.push_back(40);
-    faces.push_back(Face(24, "DW1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(58); adj_nodes.push_back(60); adj_nodes.push_back(67);
-	adj_faces.clear(); adj_faces.push_back(13); adj_faces.push_back(26); adj_faces.push_back(40);
-    faces.push_back(Face(25, "ENW", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(60); adj_nodes.push_back(61); adj_nodes.push_back(62);
-	adj_faces.clear(); adj_faces.push_back(13); adj_faces.push_back(14); adj_faces.push_back(25); adj_faces.push_back(27);
-    faces.push_back(Face(26, "EN-1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(62); adj_nodes.push_back(63); adj_nodes.push_back(64);
-	adj_faces.clear(); adj_faces.push_back(14); adj_faces.push_back(15); adj_faces.push_back(26); adj_faces.push_back(28);
-    faces.push_back(Face(27, "EN", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(64); adj_nodes.push_back(65); adj_nodes.push_back(66);
-	adj_faces.clear(); adj_faces.push_back(15); adj_faces.push_back(16); adj_faces.push_back(27); adj_faces.push_back(29);
-    faces.push_back(Face(28, "EN1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(59); adj_nodes.push_back(66); adj_nodes.push_back(68);
-	adj_faces.clear(); adj_faces.push_back(16); adj_faces.push_back(28); adj_faces.push_back(30);
-    faces.push_back(Face(29, "ENE", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(45); adj_nodes.push_back(52); adj_nodes.push_back(59);
-	adj_faces.clear(); adj_faces.push_back(16); adj_faces.push_back(17); adj_faces.push_back(29); adj_faces.push_back(31);
-    faces.push_back(Face(30, "EE1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(28); adj_nodes.push_back(38); adj_nodes.push_back(45);
-	adj_faces.clear(); adj_faces.push_back(17); adj_faces.push_back(18); adj_faces.push_back(30); adj_faces.push_back(32);
-    faces.push_back(Face(31, "EE", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(10); adj_nodes.push_back(19); adj_nodes.push_back(28);
-	adj_faces.clear(); adj_faces.push_back(18); adj_faces.push_back(19); adj_faces.push_back(31); adj_faces.push_back(33);
-    faces.push_back(Face(32, "EE-1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(1); adj_nodes.push_back(8); adj_nodes.push_back(10);
-	adj_faces.clear(); adj_faces.push_back(19); adj_faces.push_back(32); adj_faces.push_back(34);
-    faces.push_back(Face(33, "ESE", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(6); adj_nodes.push_back(7); adj_nodes.push_back(8);
-	adj_faces.clear(); adj_faces.push_back(19); adj_faces.push_back(20); adj_faces.push_back(33); adj_faces.push_back(35);
-    faces.push_back(Face(34, "ES1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(4); adj_nodes.push_back(5); adj_nodes.push_back(6);
-	adj_faces.clear(); adj_faces.push_back(20); adj_faces.push_back(21); adj_faces.push_back(34); adj_faces.push_back(36);
-    faces.push_back(Face(35, "ES", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(2); adj_nodes.push_back(3); adj_nodes.push_back(4);
-	adj_faces.clear(); adj_faces.push_back(21); adj_faces.push_back(22); adj_faces.push_back(35); adj_faces.push_back(37);
-    faces.push_back(Face(36, "ES-1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(0); adj_nodes.push_back(2); adj_nodes.push_back(9);
-	adj_faces.clear(); adj_faces.push_back(22); adj_faces.push_back(36); adj_faces.push_back(38);
-    faces.push_back(Face(37, "ESW", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(9); adj_nodes.push_back(16); adj_nodes.push_back(23);
-	adj_faces.clear(); adj_faces.push_back(22); adj_faces.push_back(23); adj_faces.push_back(37); adj_faces.push_back(39);
-    faces.push_back(Face(38, "EW-1", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(23); adj_nodes.push_back(30); adj_nodes.push_back(40);
-	adj_faces.clear(); adj_faces.push_back(23); adj_faces.push_back(24); adj_faces.push_back(38); adj_faces.push_back(40);
-    faces.push_back(Face(39, "EW", adj_nodes, adj_faces));
-	adj_nodes.clear(); adj_nodes.push_back(40); adj_nodes.push_back(49); adj_nodes.push_back(58);
-	adj_faces.clear(); adj_faces.push_back(13); adj_faces.push_back(24); adj_faces.push_back(25); adj_faces.push_back(39);
-    faces.push_back(Face(40, "EW1", adj_nodes, adj_faces));
-
 	initMaps();
 
 	/* Init free nodes. */
@@ -530,32 +265,12 @@ bool Board::checkVictoryCondition(PlayerID player_id) const
 	vector<FaceID> end_faces;
 
 	if(player_id){
-		//start_faces = {25, 37, 38, 39, 40};
-		//end_faces = {29, 30, 31, 32, 33};
-		start_faces.push_back(25);
-		start_faces.push_back(37);
-		start_faces.push_back(38);
-		start_faces.push_back(39);
-		start_faces.push_back(40);
-		end_faces.push_back(29);
-		end_faces.push_back(30);
-		end_faces.push_back(31);
-		end_faces.push_back(32);
-		end_faces.push_back(33);
+		start_faces = {25, 37, 38, 39, 40};
+		end_faces = {29, 30, 31, 32, 33};
 	}
 	else{
-		//start_faces = {33, 34, 35, 36, 37};
-		//end_faces = {25, 26, 27, 28, 29};
-		start_faces.push_back(33);
-		start_faces.push_back(34);
-		start_faces.push_back(35);
-		start_faces.push_back(36);
-		start_faces.push_back(37);
-		end_faces.push_back(25);
-		end_faces.push_back(26);
-		end_faces.push_back(27);
-		end_faces.push_back(28);
-		end_faces.push_back(29);
+		start_faces = {33, 34, 35, 36, 37};
+		end_faces = {25, 26, 27, 28, 29};
 	}
 
 	return existsPathBetween(start_faces, end_faces, player_id);
