@@ -49,7 +49,7 @@ bool FramebufferObject::createColorAttachment(GLenum internalFormat, GLenum form
 		return false;
 	}
 
-	unsigned long bufsSize = m_colorbuffers.size();
+	unsigned int bufsSize = static_cast<unsigned int>(m_colorbuffers.size());
 	std::shared_ptr<Texture2D> new_color_atttachment(new Texture2D( "fbo_"+std::to_string(m_handle)+"_color_attachment_"+std::to_string(bufsSize) ));
 	m_colorbuffers.push_back(new_color_atttachment);
 	
@@ -79,7 +79,7 @@ void FramebufferObject::bind()
 	}
 	else
 	{
-		unsigned int bufsSize = m_colorbuffers.size();
+		unsigned int bufsSize = static_cast<unsigned int>(m_colorbuffers.size());
 		GLenum* drawBufs = new GLenum[bufsSize];
 		for(GLuint i=0; i < bufsSize; i++)
 		{

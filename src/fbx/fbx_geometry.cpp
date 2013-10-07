@@ -86,9 +86,9 @@ namespace FBX {
 			case ByVertice:
 				return _getIndex(cpNdx);
 			case ByPolygon:
-				return _getIndex(polyNdx / 3); /* only triangles... */
+				return _getIndex(static_cast<uint32_t>(polyNdx) / 3); /* only triangles... */
 			case ByPolygonVertex:
-				return _getIndex(polyNdx);
+				return _getIndex(static_cast<uint32_t>(polyNdx));
 			}
 			throw new Exception("internal error");
 		}
@@ -135,7 +135,7 @@ namespace FBX {
 			for (uint32_t ndx: cp_variants_ndx.at(cpNdx)) {
 				if (geometry.vertices[ndx] == v) return ndx;
 			}
-			uint32_t ndx = geometry.vertices.size();
+			uint32_t ndx = static_cast <uint32_t>(geometry.vertices.size());
 			cp_variants_ndx[cpNdx].push_back(ndx);
 			geometry.vertices.push_back(v);
 			return ndx;

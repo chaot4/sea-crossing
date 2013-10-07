@@ -63,7 +63,7 @@ namespace FBX {
 		strm.avail_in = (unsigned int) data.size();
 		strm.next_in = const_cast<unsigned char*>(data.data());
 
-		strm.avail_out = result.size();
+		strm.avail_out = static_cast<unsigned int>(result.size());
 		strm.next_out = result.data();
 
 		for (;;) {
