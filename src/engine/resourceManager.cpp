@@ -356,7 +356,7 @@ bool ResourceManager::createTexture2D(const std::string path, std::shared_ptr<Te
 	}
 
 	char* imageData;
-	long dataBegin;
+	unsigned long dataBegin;
 	int imgDimX;
 	int imgDimY;
 
@@ -571,7 +571,7 @@ const std::string ResourceManager::readShaderFile(const char* const path)
 	return source.str();
 }
 
-bool ResourceManager::readPpmHeader(const char* filename, long& headerEndPos, int& imgDimX, int& imgDimY)
+bool ResourceManager::readPpmHeader(const char* filename, unsigned long& headerEndPos, int& imgDimX, int& imgDimY)
 {
 	int currentComponent = 0;
 	bool firstline = false;
@@ -634,7 +634,7 @@ bool ResourceManager::readPpmHeader(const char* filename, long& headerEndPos, in
 	*/
 	if(firstline)
 	{
-		headerEndPos = file.tellg();
+		headerEndPos = static_cast<long>(file.tellg());
 		file.close();
 		return true;
 	}
@@ -680,12 +680,12 @@ bool ResourceManager::readPpmHeader(const char* filename, long& headerEndPos, in
 	/	Note down the position after this line and exit with return true after closing the file.
 	*/
 	std::getline(file,buffer,'\n');
-	headerEndPos = file.tellg();
+	headerEndPos = static_cast<unsigned long>(file.tellg());
 	file.close();
 	return true;
 }
 
-bool ResourceManager::readPpmData(const char* filename, char* imageData, long dataBegin, int imgDimX, int imgDimY)
+bool ResourceManager::readPpmData(const char* filename, char* imageData, unsigned long dataBegin, int imgDimX, int imgDimY)
 {
 	std::ifstream file (filename,std::ios::in | std::ios::binary);
 
@@ -698,7 +698,7 @@ bool ResourceManager::readPpmData(const char* filename, char* imageData, long da
 	/	Determine the length from the beginning of the image data to the end of the file.
 	*/
 	file.seekg(0, file.end);
-	long length = file.tellg();
+	unsigned long length = static_cast<unsigned long>(file.tellg());
 	length = length - dataBegin;
 	char* buffer = new char[length];
 

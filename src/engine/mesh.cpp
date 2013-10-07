@@ -94,10 +94,13 @@ std::shared_ptr<Mesh> Mesh::loadFromFBX(const std::string &filename, FBX::OpenGL
 	serialize.serialize(memory, memory_size, geometry->vertices);
 
 	if (sizeof(unsigned int) == sizeof(GLuint)) {
-		mesh->bufferDataFromArray(reinterpret_cast<Vertex_p*>(memory), reinterpret_cast<const GLuint*>(geometry->triangle_indices.data()), memory_size, geometry->triangle_indices.size() * sizeof(GLuint), GL_TRIANGLES);
+		mesh->bufferDataFromArray(reinterpret_cast<Vertex_p*>(memory),
+									reinterpret_cast<const GLuint*>(geometry->triangle_indices.data()),
+									static_cast<GLsizei>(memory_size),
+									static_cast<GLsizei>(geometry->triangle_indices.size()) * sizeof(GLuint), GL_TRIANGLES);
 	} else {
 		std::vector<GLuint> gluint_indices(geometry->triangle_indices.begin(), geometry->triangle_indices.end());
-		mesh->bufferDataFromArray(reinterpret_cast<Vertex_p*>(memory), gluint_indices.data(), memory_size, geometry->triangle_indices.size() * sizeof(GLuint), GL_TRIANGLES);
+		mesh->bufferDataFromArray(reinterpret_cast<Vertex_p*>(memory), gluint_indices.data(), static_cast<GLsizei>(memory_size), static_cast<GLsizei>(geometry->triangle_indices.size()) * sizeof(GLuint), GL_TRIANGLES);
 	}
 
 	delete[] memory;
@@ -105,16 +108,16 @@ std::shared_ptr<Mesh> Mesh::loadFromFBX(const std::string &filename, FBX::OpenGL
 	const FBX::OpenGL::GeometrySerialize::Settings &s(serialize.settings());
 
 	if (locations.ndx_position >= 0) {
-		mesh->setVertexAttribPointer(locations.ndx_position, 3, GL_FLOAT        , GL_FALSE, s.stride, (void*) s.offset_position);
+		mesh->setVertexAttribPointer(locations.ndx_position, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(s.stride), (void*) s.offset_position);
 	}
 	if (s.features & FBX::Geometry::NORMAL && locations.ndx_normal >= 0) {
-		mesh->setVertexAttribPointer(locations.ndx_normal  , 3, GL_FLOAT        , GL_FALSE, s.stride, (void*) s.offset_normal);
+		mesh->setVertexAttribPointer(locations.ndx_normal, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(s.stride), (void*) s.offset_normal);
 	}
 	if (s.features & FBX::Geometry::TANGENT && locations.ndx_tangent >= 0) {
-		mesh->setVertexAttribPointer(locations.ndx_tangent , 3, GL_FLOAT        , GL_FALSE, s.stride, (void*) s.offset_tangent);
+		mesh->setVertexAttribPointer(locations.ndx_tangent, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(s.stride), (void*) s.offset_tangent);
 	}
 	if (s.features & FBX::Geometry::COLOR && locations.ndx_color >= 0) {
-		mesh->setVertexAttribPointer(locations.ndx_color   , 4, GL_UNSIGNED_BYTE, GL_TRUE , s.stride, (void*) s.offset_color);
+		mesh->setVertexAttribPointer(locations.ndx_color, 4, GL_UNSIGNED_BYTE, GL_TRUE, static_cast<GLsizei>(s.stride), (void*) s.offset_color);
 		// no static color support in Mesh
 		// ndx_static_color = -1;
 	} else {
@@ -122,10 +125,10 @@ std::shared_ptr<Mesh> Mesh::loadFromFBX(const std::string &filename, FBX::OpenGL
 		// ndx_static_color = locations.ndx_color;
 	}
 	if (s.features & FBX::Geometry::UVCOORD && locations.ndx_uvcoord >= 0) {
-		mesh->setVertexAttribPointer(locations.ndx_uvcoord , 2, GL_FLOAT        , GL_FALSE, s.stride, (void*) s.offset_uvcoord);
+		mesh->setVertexAttribPointer(locations.ndx_uvcoord, 2, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(s.stride), (void*) s.offset_uvcoord);
 	}
 	if (s.features & FBX::Geometry::BINORMAL && locations.ndx_binormal >= 0) {
-		mesh->setVertexAttribPointer(locations.ndx_binormal, 3, GL_FLOAT        , GL_FALSE, s.stride, (void*) s.offset_binormal);
+		mesh->setVertexAttribPointer(locations.ndx_binormal, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(s.stride), (void*) s.offset_binormal);
 	}
 
 	return mesh;
