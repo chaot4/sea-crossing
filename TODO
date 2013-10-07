@@ -1,5 +1,5 @@
 * game: Implement the first-move-switching rule.
-* game: Fix 'Floating point exception (core dumped)' error.
+* game and engine: Use the config files values.
 * engine: Implement picking for user input.
 * engine: Rewrite render method in Scene class.
 * engine: Implement full render pipeline
