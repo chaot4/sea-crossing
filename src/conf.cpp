@@ -119,6 +119,24 @@ bool Conf::parseLine(stringstream& ss)
 			return false;
 		}
 	}
+	else if(keyword == "p1_name"){
+		if(parameters.size() == 1){
+			game_conf.p1_name = parameters[0];
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
+	else if(keyword == "p2_name"){
+		if(parameters.size() == 1){
+			game_conf.p2_name = parameters[0];
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
 	else{
 		errorUnknownKeyword(keyword);
 		return false;
@@ -181,4 +199,14 @@ bool Conf::setValue(std::string const& keyword, std::vector<std::string> const& 
 	}
 
 	return true;
+}
+
+GameConf const& Conf::getGameConf()
+{
+	return game_conf;
+}
+
+GraphicsConf const& Conf::getGraphicsConf()
+{
+	return graphics_conf;
 }

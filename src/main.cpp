@@ -10,10 +10,7 @@ using namespace std;
 int main(){
 
 	Conf conf("config");
-	vector<string> vec;
-	vec.push_back("true");
 	conf.readFromFile();
-	conf.setValue("use_switch_rule", vec);
 
 	MessageReceiver *testReceiver;
 	RenderHub testRenderer(testReceiver);
@@ -28,10 +25,10 @@ int main(){
 	testReceiver->pushLoadSceneMessages();
 	
 	Board board;
-	RandomAIPlayer player1("Spongebob", board);
-	RandomAIPlayer player2("Patrick", board);
+	RandomAIPlayer player1(conf.getGameConf().p1_name, board);
+	RandomAIPlayer player2(conf.getGameConf().p2_name, board);
 	
-	SimpleGUIGame g(&player1, &player2, board, conf, testReceiver);
+	SimpleGUIGame g(&player1, &player2, board, conf.getGameConf(), testReceiver);
 	std::thread gameThread(&SimpleGUIGame::start,&g);
 
 	gameThread.join();

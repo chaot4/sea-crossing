@@ -51,12 +51,15 @@ class Game{
 	protected:
 		Player** player;
 		Board& board;
+		GameConf conf;
 
 		bool makeMove(PlayerID player_id);
 		virtual void placeGem(PlayerID player_id, NodeLabel label) = 0;
 
 	public:
-		Game(Player* player1, Player* player2, Board& board, Conf const& conf);
+		Game(Player* player1, Player* player2, Board& board, GameConf const& conf);
+		~Game();
+
 		void start();
 };
 
@@ -66,7 +69,7 @@ class ConsoleGame : public Game{
 
 	public:
 		ConsoleGame(Player* player1, Player* player2, Board& board,
-				Conf const& conf);
+				GameConf const& conf);
 };
 
 class SimpleGUIGame : public Game{
@@ -77,7 +80,7 @@ class SimpleGUIGame : public Game{
 
 	public:
 		SimpleGUIGame(Player* player1, Player* player2, Board& board,
-				Conf const& conf, MessageReceiver* receiver);
+				GameConf const& conf, MessageReceiver* receiver);
 };
 
 #endif

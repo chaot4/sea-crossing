@@ -8,6 +8,8 @@
 #include <sstream>
 
 struct GameConf{
+	std::string p1_name;
+	std::string p2_name;
 	bool use_switch_rule;
 
 	GameConf()
@@ -37,6 +39,9 @@ class Conf{
 		bool readFromFile();
 		bool setValue(std::string const& keyword,
 				std::vector<std::string> const& parameters);
+
+		GameConf const& getGameConf();
+		GraphicsConf const& getGraphicsConf();
 };
 
 #endif
