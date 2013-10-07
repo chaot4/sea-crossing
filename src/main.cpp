@@ -31,7 +31,7 @@ int main(){
 	RandomAIPlayer player1("Spongebob", board);
 	RandomAIPlayer player2("Patrick", board);
 	
-	SimpleGUIGame g(&player1, &player2, board, testReceiver);
+	SimpleGUIGame g(&player1, &player2, board, conf, testReceiver);
 	std::thread gameThread(&SimpleGUIGame::start,&g);
 
 	gameThread.join();
