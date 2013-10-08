@@ -220,7 +220,7 @@ void DebugGame::command_forward()
 
 
 Game::Game(Player* player1, Player* player2, Board& board, GameConf const& conf)
-	: player{player1, player2}, board(board), conf(conf) {}
+	: player({player1, player2}), board(board), conf(conf) {}
 
 void Game::start()
 {
