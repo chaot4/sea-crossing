@@ -41,6 +41,9 @@ class Board{
 		bool faceHasOwner(FaceLabel const& label) const;
 		bool checkVictoryCondition(PlayerID player_id) const;
 
+		template <class Cost>
+		std::vector<FaceLabel const&> calcShortestPath(PlayerID);
+
 		Node const& getNode(NodeID node_id) const;
 		Face const& getFace(FaceID face_id) const;
 		std::unordered_set<NodeID> const& getFreeNodes() const;

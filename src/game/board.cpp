@@ -353,3 +353,9 @@ bool Board::isEndFace(FaceID id, vector<FaceID> const& end_faces) const
 
 	return false;
 }
+
+template <class Cost>
+std::vector<FaceLabel const&> Board::calcShortestPath(PlayerID)
+{
+	// TODO
+}

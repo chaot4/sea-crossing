@@ -19,4 +19,14 @@ class RandomAIPlayer : public Player
 		void getNextMove(NodeLabel& label);
 };
 
+template <class Cost>
+class ShortestPathAIPlayer : public Player
+{
+	private:
+		Board const& board;
+	public:
+		ShortestPathAIPlayer(std::string const& name, Board const& board);
+		void getNextMove(NodeLabel& label);
+};
+
 #endif
