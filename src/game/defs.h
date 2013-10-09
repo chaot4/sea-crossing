@@ -15,8 +15,8 @@ typedef std::string NodeLabel;
 typedef std::string FaceLabel;
 
 struct Node{
-	NodeID const id;
-	NodeLabel const label;
+	NodeID id;
+	NodeLabel label;
 
 	std::vector<FaceID> adj_faces;
 
@@ -27,8 +27,8 @@ struct Node{
 };
 
 struct Face{
-	FaceID const id;
-	FaceLabel const label;
+	FaceID id;
+	FaceLabel label;
 
 	std::vector<NodeID> adj_nodes;
 	std::vector<FaceID> adj_faces;
