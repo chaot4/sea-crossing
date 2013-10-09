@@ -14,6 +14,11 @@ class Board{
 		std::vector<Node> nodes;
 		std::vector<Face> faces;
 
+		std::vector<FaceID> start_faces_p1;
+		std::vector<FaceID> end_faces_p1;
+		std::vector<FaceID> start_faces_p2;
+		std::vector<FaceID> end_faces_p2;
+
 		std::map<NodeLabel, NodeID> node_map;
 		std::map<FaceLabel, FaceID> face_map;
 

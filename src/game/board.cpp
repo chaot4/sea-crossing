@@ -118,6 +118,11 @@ Board::Board()
 		Face(39, "EW", { 23, 30, 40 }, { 23, 24, 38, 40 }),
 		Face(40, "EW1", { 40, 49, 58 }, { 13, 24, 25, 39 }) };
 
+	start_faces_p1 = {33, 34, 35, 36, 37};
+	end_faces_p1 = {25, 26, 27, 28, 29};
+	start_faces_p2 = {25, 37, 38, 39, 40};
+	end_faces_p2 = {29, 30, 31, 32, 33};
+
 	initMaps();
 
 	/* Init free nodes. */
@@ -262,19 +267,12 @@ bool Board::faceHasOwner(FaceLabel const& label) const
 
 bool Board::checkVictoryCondition(PlayerID player_id) const
 {
-	vector<FaceID> start_faces;
-	vector<FaceID> end_faces;
-
 	if(player_id){
-		start_faces = {25, 37, 38, 39, 40};
-		end_faces = {29, 30, 31, 32, 33};
+		return existsPathBetween(start_faces_p2, end_faces_p2, player_id);
 	}
 	else{
-		start_faces = {33, 34, 35, 36, 37};
-		end_faces = {25, 26, 27, 28, 29};
+		return existsPathBetween(start_faces_p1, end_faces_p1, player_id);
 	}
-
-	return existsPathBetween(start_faces, end_faces, player_id);
 }
 
 Node const& Board::getNode(NodeID node_id) const
