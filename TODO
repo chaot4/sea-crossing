@@ -5,4 +5,10 @@
 * engine: Implement full render pipeline
 			(shadowmap-pass,geometry-pass,tone-mapping,gamma,fxaa).
 * engine: Think about turning RenderHub into a singleton...
-* engine: Proper clean-up of graphics resources
+
+
+message system and game-engine-interface:
+* Import messageGeneric class of stbuehler
+* Create something that handles a two way channel
+* Implement the game-engine-interface
+* Adapt the game as well as the engine
