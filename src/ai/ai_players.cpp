@@ -37,8 +37,8 @@ template <class Cost>
 void ShortestPathAIPlayer<Cost>::getNextMove(NodeLabel& label)
 {
 	// Calc both shortest paths
-	vector<FaceLabel const&> p1_shortest_path(board.calcShortestPath<Cost>(0));
-	vector<FaceLabel const&> p2_shortest_path(board.calcShortestPath<Cost>(1));
+	vector<FaceLabel const*> p1_shortest_path(board.calcShortestPath<Cost>(0));
+	vector<FaceLabel const*> p2_shortest_path(board.calcShortestPath<Cost>(1));
 	// Get the fields that they have in common TODO
 	vector<FaceLabel const&> shared_faces;
 	// Determine the best adjacent node TODO

@@ -42,11 +42,18 @@ class Board{
 		bool checkVictoryCondition(PlayerID player_id) const;
 
 		template <class Cost>
-		std::vector<FaceLabel const&> calcShortestPath(PlayerID);
+		std::vector<FaceLabel const*> calcShortestPath(PlayerID player_id);
 
 		Node const& getNode(NodeID node_id) const;
 		Face const& getFace(FaceID face_id) const;
 		std::unordered_set<NodeID> const& getFreeNodes() const;
 };
+
+template <class Cost>
+std::vector<FaceLabel const*> Board::calcShortestPath(PlayerID player_id)
+{
+	std::vector<FaceLabel const*> shortest_path;
+	return shortest_path;
+}
 
 #endif
