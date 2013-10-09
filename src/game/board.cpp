@@ -3,7 +3,7 @@
 using namespace std;
 
 
-Board::Board()
+Board::Board() : start_faces(2), end_faces(2)
 {
 	nodes = {
 		Node(0, "eSW", {37}),
@@ -118,10 +118,10 @@ Board::Board()
 		Face(39, "EW", { 23, 30, 40 }, { 23, 24, 38, 40 }),
 		Face(40, "EW1", { 40, 49, 58 }, { 13, 24, 25, 39 }) };
 
-	start_faces_p1 = {33, 34, 35, 36, 37};
-	end_faces_p1 = {25, 26, 27, 28, 29};
-	start_faces_p2 = {25, 37, 38, 39, 40};
-	end_faces_p2 = {29, 30, 31, 32, 33};
+	start_faces[0] = {33, 34, 35, 36, 37};
+	end_faces[0] = {25, 26, 27, 28, 29};
+	start_faces[1] = {25, 37, 38, 39, 40};
+	end_faces[1] = {29, 30, 31, 32, 33};
 
 	initMaps();
 
@@ -267,12 +267,39 @@ bool Board::faceHasOwner(FaceLabel const& label) const
 
 bool Board::checkVictoryCondition(PlayerID player_id) const
 {
-	if(player_id){
-		return existsPathBetween(start_faces_p2, end_faces_p2, player_id);
+	vector<FaceID> stack;
+	vector<bool> visited(faces.size(), false);
+
+	for(unsigned int i=0; i<start_faces[player_id].size(); i++){
+
+		FaceID face(start_faces[player_id][i]);
+		if(faces[face].owner == player_id + 1){
+			stack.push_back(face);
+			visited[face] = true;
+		}
 	}
-	else{
-		return existsPathBetween(start_faces_p1, end_faces_p1, player_id);
+
+	while(!stack.empty()){
+		
+		Face const& face(faces[stack.back()]);
+		stack.pop_back();
+
+		/* Add yet unvisited neighbours to the stack. */
+		vector<FaceID> const& adj_faces(face.adj_faces);
+		for(unsigned int i=0; i<adj_faces.size(); i++){
+
+			Face const& adj_face(faces[adj_faces[i]]);
+			if(adj_face.owner == player_id + 1 && !visited[adj_face.id]){
+				stack.push_back(adj_face.id);
+				visited[adj_face.id] = true;
+
+				if(isEndFace(adj_face.id, player_id))
+					return true;
+			}
+		}
 	}
+
+	return false;
 }
 
 Node const& Board::getNode(NodeID node_id) const
@@ -305,48 +332,10 @@ void Board::initMaps()
 	}
 }
 
-bool Board::existsPathBetween(vector<FaceID> const& start_faces,
-				vector<FaceID> const& end_faces, PlayerID player_id) const
-{
-	vector<FaceID> stack;
-	vector<bool> visited(faces.size(), false);
-
-	for(unsigned int i=0; i<start_faces.size(); i++){
-
-		FaceID face(start_faces[i]);
-		if(faces[face].owner == player_id + 1){
-			stack.push_back(face);
-			visited[face] = true;
-		}
-	}
-
-	while(!stack.empty()){
-		
-		Face const& face(faces[stack.back()]);
-		stack.pop_back();
-
-		/* Add yet unvisited neighbours to the stack. */
-		vector<FaceID> const& adj_faces(face.adj_faces);
-		for(unsigned int i=0; i<adj_faces.size(); i++){
-
-			Face const& adj_face(faces[adj_faces[i]]);
-			if(adj_face.owner == player_id + 1 && !visited[adj_face.id]){
-				stack.push_back(adj_face.id);
-				visited[adj_face.id] = true;
-
-				if(isEndFace(adj_face.id, end_faces))
-					return true;
-			}
-		}
-	}
-
-	return false;
-}
-
-bool Board::isEndFace(FaceID id, vector<FaceID> const& end_faces) const
+bool Board::isEndFace(FaceID id, PlayerID player_id) const
 {
 	for(unsigned int i=0; i<end_faces.size(); i++)
-		if(end_faces[i] == id)
+		if(end_faces[player_id][i] == id)
 			return true;
 
 	return false;

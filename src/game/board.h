@@ -8,16 +8,16 @@
 #include <vector>
 #include <unordered_set>
 #include <cassert>
+#include <limits>
+#include <queue>
 
 class Board{
 	private:
 		std::vector<Node> nodes;
 		std::vector<Face> faces;
 
-		std::vector<FaceID> start_faces_p1;
-		std::vector<FaceID> end_faces_p1;
-		std::vector<FaceID> start_faces_p2;
-		std::vector<FaceID> end_faces_p2;
+		std::vector<std::vector<FaceID> > start_faces;
+		std::vector<std::vector<FaceID> > end_faces;
 
 		std::map<NodeLabel, NodeID> node_map;
 		std::map<FaceLabel, FaceID> face_map;
@@ -26,9 +26,7 @@ class Board{
 
 		void initMaps();
 
-		bool existsPathBetween(std::vector<FaceID> const& start_faces,
-				std::vector<FaceID> const& end_faces, PlayerID player_id) const;
-		bool isEndFace(FaceID id, std::vector<FaceID> const& end_faces) const;
+		bool isEndFace(FaceID id, PlayerID player_id) const;
 	public:
 		Board();
 
@@ -47,7 +45,7 @@ class Board{
 		bool checkVictoryCondition(PlayerID player_id) const;
 
 		template <class Cost>
-		std::vector<FaceLabel const*> calcShortestPath(PlayerID player_id);
+		std::vector<FaceID> calcShortestPath(PlayerID player_id);
 
 		Node const& getNode(NodeID node_id) const;
 		Face const& getFace(FaceID face_id) const;
@@ -55,10 +53,53 @@ class Board{
 };
 
 template <class Cost>
-std::vector<FaceLabel const*> Board::calcShortestPath(PlayerID player_id)
+std::vector<FaceID> Board::calcShortestPath(PlayerID player_id)
 {
-	std::vector<FaceLabel const*> shortest_path;
-	return shortest_path;
+	std::vector<uint> dists(faces.size(), std::numeric_limits<uint>::max());
+	std::vector<FaceID> found_by(faces.size());
+	std::priority_queue<PQFace> pq;
+	Cost cost(*this, player_id);
+
+	for(uint i(0); i<start_faces[player_id].size(); i++){
+
+		FaceID face_id(start_faces[player_id][i]);
+		Face const& face(faces[face_id]);
+
+		uint dist(cost.get(face));
+		pq.push(PQFace(face, std::numeric_limits<FaceID>::max(), dist));
+		dists[face.id] = dist;
+	}
+
+	while(!isEndFace(pq.top().face.id, player_id)){
+
+		Face const& face(pq.top().face);
+		uint dist(pq.top().dist);
+
+		if(dist < dists[face.id]){
+
+			dists[face.id] = dist;
+			found_by[face.id] = pq.top().found_by;
+
+			for(uint i(0); i<face.adj_faces.size(); i++){
+				Face const& adj_face(faces[face.adj_faces[i]]);
+
+				uint adj_dist(dist + cost.get(adj_face));
+				if(adj_dist < dists[adj_face.id]){
+					pq.push(PQFace(adj_face, face.id, adj_dist));
+					dists[adj_face.id] = adj_dist;
+				}
+			}
+		}
+	}
+
+	FaceID face_id(pq.top().face.id);
+	std::vector<FaceID> path;
+	while(face_id != std::numeric_limits<FaceID>::max()){
+		path.push_back(face_id);
+		face_id = found_by[face_id];
+	}
+	
+	return path;
 }
 
 #endif

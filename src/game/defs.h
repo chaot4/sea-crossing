@@ -43,4 +43,17 @@ struct Face{
 		owner(owner), num_adj_nodes_player(2, 0){}
 };
 
+struct PQFace{
+	Face const& face;
+	FaceID found_by;
+	uint dist;
+
+	PQFace(Face const& face, FaceID found_by, uint dist)
+		:face(face), found_by(found_by), dist(dist){}
+
+	bool operator<(PQFace const& other){
+		return dist < other.dist;
+	}
+};
+
 #endif
