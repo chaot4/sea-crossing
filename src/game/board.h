@@ -55,17 +55,17 @@ class Board{
 template <class Cost>
 std::vector<FaceID> Board::calcShortestPath(PlayerID player_id) const
 {
-	std::vector<uint> dists(faces.size(), std::numeric_limits<uint>::max());
+	std::vector<unsigned int> dists(faces.size(), std::numeric_limits<unsigned int>::max());
 	std::vector<FaceID> found_by(faces.size());
 	std::priority_queue<PQFace, std::vector<PQFace>, std::greater<PQFace> > pq;
 	Cost cost(*this, player_id);
 
-	for(uint i(0); i<start_faces[player_id].size(); i++){
+	for(unsigned int i(0); i<start_faces[player_id].size(); i++){
 
 		FaceID face_id(start_faces[player_id][i]);
 		Face const& face(faces[face_id]);
 
-		uint dist(cost.get(face));
+		unsigned int dist(cost.get(face));
 		pq.push(PQFace(&face, std::numeric_limits<FaceID>::max(), dist));
 //		dists[face.id] = dist; TODO how to minimize the number of elements in pq?
 	}
@@ -73,17 +73,17 @@ std::vector<FaceID> Board::calcShortestPath(PlayerID player_id) const
 	while(!isEndFace(pq.top().face->id, player_id)){
 
 		Face const* face(pq.top().face);
-		uint dist(pq.top().dist);
+		unsigned int dist(pq.top().dist);
 
 		if(dist < dists[face->id]){
 
 			dists[face->id] = dist;
 			found_by[face->id] = pq.top().found_by;
 
-			for(uint i(0); i<face->adj_faces.size(); i++){
+			for(unsigned int i(0); i<face->adj_faces.size(); i++){
 				Face const& adj_face(faces[face->adj_faces[i]]);
 
-				uint adj_dist(dist + cost.get(adj_face));
+				unsigned int adj_dist(dist + cost.get(adj_face));
 				if(adj_dist < dists[adj_face.id]){
 					pq.push(PQFace(&adj_face, face->id, adj_dist));
 //					dists[adj_face.id] = adj_dist; TODO

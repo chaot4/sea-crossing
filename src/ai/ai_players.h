@@ -79,10 +79,10 @@ void ShortestPathAIPlayer<Cost>::getNextMove(NodeLabel& label)
 
 	// Determine the best adjacent node TODO improve!
 	NodeID best_node(0); // FIX
-	for(uint i(0); i<shared_faces.size(); i++){
+	for(unsigned int i(0); i<shared_faces.size(); i++){
 		std::vector<NodeID> const& adj_nodes(board.getFace(shared_faces[i]).adj_nodes);
 
-		for(uint j(0); j<adj_nodes.size(); j++){
+		for(unsigned int j(0); j<adj_nodes.size(); j++){
 			if(!board.getNode(adj_nodes[j]).owner){
 				best_node = adj_nodes[j];
 				break;

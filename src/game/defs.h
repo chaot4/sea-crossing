@@ -46,9 +46,9 @@ struct Face{
 struct PQFace{
 	Face const* face;
 	FaceID found_by;
-	uint dist;
+	unsigned int dist;
 
-	PQFace(Face const* face, FaceID found_by, uint dist)
+	PQFace(Face const* face, FaceID found_by, unsigned int dist)
 		:face(face), found_by(found_by), dist(dist){}
 	PQFace(PQFace const& other)
 		:face(other.face), found_by(other.found_by), dist(other.dist) {}

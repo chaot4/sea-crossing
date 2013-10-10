@@ -146,7 +146,6 @@
     <ClCompile Include="..\src\engine\GLSLProgram.cpp" />
     <ClCompile Include="..\src\engine\material.cpp" />
     <ClCompile Include="..\src\engine\mesh.cpp" />
-    <ClCompile Include="..\src\engine\messageGeneric.cpp" />
     <ClCompile Include="..\src\engine\messageReceiver.cpp" />
     <ClCompile Include="..\src\engine\postProcessor.cpp" />
     <ClCompile Include="..\src\engine\renderHub.cpp" />
@@ -170,6 +169,7 @@
     <ClCompile Include="..\src\game\human_players.cpp" />
     <ClCompile Include="..\src\game\player.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\messageChannel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ai\ai_players.h" />
@@ -179,7 +179,6 @@
     <ClInclude Include="..\src\engine\GLSLProgram.h" />
     <ClInclude Include="..\src\engine\material.h" />
     <ClInclude Include="..\src\engine\mesh.h" />
-    <ClInclude Include="..\src\engine\messageGeneric.h" />
     <ClInclude Include="..\src\engine\messageReceiver.h" />
     <ClInclude Include="..\src\engine\postProcessor.h" />
     <ClInclude Include="..\src\engine\renderHub.h" />
@@ -213,6 +212,8 @@
     <ClInclude Include="..\src\game\game.h" />
     <ClInclude Include="..\src\game\human_players.h" />
     <ClInclude Include="..\src\game\player.h" />
+    <ClInclude Include="..\src\macros.h" />
+    <ClInclude Include="..\src\messageChannel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

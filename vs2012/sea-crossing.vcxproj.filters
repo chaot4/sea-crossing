@@ -123,8 +123,8 @@
     <ClCompile Include="..\src\fbx\fbx_value.cpp">
       <Filter>Source Files\fbx</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\engine\messageGeneric.cpp">
-      <Filter>Source Files\engine</Filter>
+    <ClCompile Include="..\src\messageChannel.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -248,8 +248,11 @@
     <ClInclude Include="..\src\fbx\miniz.c">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\engine\messageGeneric.h">
-      <Filter>Header Files\engine</Filter>
+    <ClInclude Include="..\src\messageChannel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\macros.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
