@@ -45,7 +45,7 @@ class Board{
 		bool checkVictoryCondition(PlayerID player_id) const;
 
 		template <class Cost>
-		std::vector<FaceID> calcShortestPath(PlayerID player_id);
+		std::vector<FaceID> calcShortestPath(PlayerID player_id) const;
 
 		Node const& getNode(NodeID node_id) const;
 		Face const& getFace(FaceID face_id) const;
@@ -53,7 +53,7 @@ class Board{
 };
 
 template <class Cost>
-std::vector<FaceID> Board::calcShortestPath(PlayerID player_id)
+std::vector<FaceID> Board::calcShortestPath(PlayerID player_id) const
 {
 	std::vector<uint> dists(faces.size(), std::numeric_limits<uint>::max());
 	std::vector<FaceID> found_by(faces.size());
@@ -66,34 +66,38 @@ std::vector<FaceID> Board::calcShortestPath(PlayerID player_id)
 		Face const& face(faces[face_id]);
 
 		uint dist(cost.get(face));
-		pq.push(PQFace(face, std::numeric_limits<FaceID>::max(), dist));
-		dists[face.id] = dist;
+		pq.push(PQFace(&face, std::numeric_limits<FaceID>::max(), dist));
+//		dists[face.id] = dist;
 	}
 
-	while(!isEndFace(pq.top().face.id, player_id)){
+	while(!isEndFace(pq.top().face->id, player_id)){
 
-		Face const& face(pq.top().face);
+		Face const* face(pq.top().face);
 		uint dist(pq.top().dist);
 
-		if(dist < dists[face.id]){
+		if(dist < dists[face->id]){
 
-			dists[face.id] = dist;
-			found_by[face.id] = pq.top().found_by;
+			dists[face->id] = dist;
+			found_by[face->id] = pq.top().found_by;
 
-			for(uint i(0); i<face.adj_faces.size(); i++){
-				Face const& adj_face(faces[face.adj_faces[i]]);
+			for(uint i(0); i<face->adj_faces.size(); i++){
+				Face const& adj_face(faces[face->adj_faces[i]]);
 
 				uint adj_dist(dist + cost.get(adj_face));
 				if(adj_dist < dists[adj_face.id]){
-					pq.push(PQFace(adj_face, face.id, adj_dist));
-					dists[adj_face.id] = adj_dist;
+					pq.push(PQFace(&adj_face, face->id, adj_dist));
+//					dists[adj_face.id] = adj_dist;
 				}
 			}
 		}
+
+		pq.pop();
 	}
 
-	FaceID face_id(pq.top().face.id);
 	std::vector<FaceID> path;
+	FaceID face_id(pq.top().face->id);
+	found_by[face_id] = pq.top().found_by;
+
 	while(face_id != std::numeric_limits<FaceID>::max()){
 		path.push_back(face_id);
 		face_id = found_by[face_id];

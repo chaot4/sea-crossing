@@ -44,14 +44,16 @@ struct Face{
 };
 
 struct PQFace{
-	Face const& face;
+	Face const* face;
 	FaceID found_by;
 	uint dist;
 
-	PQFace(Face const& face, FaceID found_by, uint dist)
+	PQFace(Face const* face, FaceID found_by, uint dist)
 		:face(face), found_by(found_by), dist(dist){}
+	PQFace(PQFace const& other)
+		:face(other.face), found_by(other.found_by), dist(other.dist) {}
 
-	bool operator<(PQFace const& other){
+	bool operator<(PQFace const& other) const{
 		return dist < other.dist;
 	}
 };

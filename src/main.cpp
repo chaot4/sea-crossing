@@ -26,7 +26,7 @@ int main(){
 	
 	Board board;
 	RandomAIPlayer player1(conf.getGameConf().p1_name, board);
-	RandomAIPlayer player2(conf.getGameConf().p2_name, board);
+	ShortestPathAIPlayer<Cost> player2(conf.getGameConf().p2_name, board);
 	
 	SimpleGUIGame g(&player1, &player2, board, conf.getGameConf(), testReceiver);
 	std::thread gameThread(&SimpleGUIGame::start,&g);
