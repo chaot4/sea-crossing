@@ -146,6 +146,7 @@
     <ClCompile Include="..\src\engine\GLSLProgram.cpp" />
     <ClCompile Include="..\src\engine\material.cpp" />
     <ClCompile Include="..\src\engine\mesh.cpp" />
+    <ClCompile Include="..\src\engine\messageGeneric.cpp" />
     <ClCompile Include="..\src\engine\messageReceiver.cpp" />
     <ClCompile Include="..\src\engine\postProcessor.cpp" />
     <ClCompile Include="..\src\engine\renderHub.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="..\src\engine\GLSLProgram.h" />
     <ClInclude Include="..\src\engine\material.h" />
     <ClInclude Include="..\src\engine\mesh.h" />
+    <ClInclude Include="..\src\engine\messageGeneric.h" />
     <ClInclude Include="..\src\engine\messageReceiver.h" />
     <ClInclude Include="..\src\engine\postProcessor.h" />
     <ClInclude Include="..\src\engine\renderHub.h" />

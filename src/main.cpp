@@ -1,6 +1,7 @@
 #include "conf.h"
 #include "game/game.h"
 #include "engine/renderHub.h"
+#include "messageChannel.h"
 
 #include <thread>
 #include <vector>
@@ -11,6 +12,23 @@ int main(){
 
 	Conf conf("config");
 	conf.readFromFile();
+
+	// Test
+	TwoWayChannel c1;
+	TwoWayChannel c2;
+	TwoWayChannel::connect(c1, c2);
+	c1.send<int>(5);
+	c2.send(6);
+	c2.send(7);
+	int msg1;
+	int msg2;
+	c2.receive<int>(msg1);
+	cout << msg1 << endl;
+	c1.receive(msg2);
+	cout << msg2 << endl;
+	c1.receive(msg2);
+	cout << msg2 << endl;
+	// Ende Test
 
 	MessageReceiver *testReceiver;
 	RenderHub testRenderer(testReceiver);

@@ -1,4 +1,4 @@
-#include "messageGeneric.h"
+#include "messageChannel.h"
 
 #include <mutex>
 #include <queue>
@@ -74,4 +74,17 @@ namespace MessageChannel {
 		receiver = Queue::receiver(queue);
 		sender = Queue::sender(queue);
 	}
+}
+
+MessageChannel::MessageReceiver& TwoWayChannel::getReceiver(){
+	return receiver;
+}
+
+MessageChannel::MessageSender& TwoWayChannel::getSender(){
+	return sender;
+}
+
+void TwoWayChannel::connect(TwoWayChannel& one_side, TwoWayChannel& other_side){
+	initMessageChannel(one_side.getReceiver(), other_side.getSender());
+	initMessageChannel(other_side.getReceiver(), one_side.getSender());
 }

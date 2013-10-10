@@ -56,8 +56,7 @@ bool RenderHub::init()
 	setActiveInstance(this);
 	glfwSetWindowSizeCallback(activeWindow,windowSizeCallback);
 	glfwSetWindowCloseCallback(activeWindow,windowCloseCallback);
-	controlHandler.setActive(&controlHandler);
-	glfwSetScrollCallback(activeWindow, Controls::mouseScrollFeedback);
+	Controls::setControlCallbacks(activeWindow);
 
 	/*	Initialize glew */
 	//glewExperimental = GL_TRUE;
@@ -175,7 +174,7 @@ void RenderHub::run()
 	glEnable( GL_MULTISAMPLE );
 
 	/*  Test picking pass */
-	GLuint *data = new GLuint[1];
+	//GLuint *data = new GLuint[1];
 
 	while(running && !glfwWindowShouldClose(activeWindow))
 	//while(running)
@@ -187,7 +186,7 @@ void RenderHub::run()
 		}
 
 		/*	For now, I avoid using a glfw callback function for this */
-		controlHandler.updateCamera(activeWindow,activeScene);
+		Controls::updateCamera(activeWindow,activeScene->getActiveCamera());
 
 		/*  Test picking pass */
 		//picking_fbo.bind();

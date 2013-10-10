@@ -1,5 +1,5 @@
-#ifndef messageGeneric_h
-#define messageGeneric_h
+#ifndef MessageChannel_h
+#define MessageChannel_h
 
 #include <memory>
 
@@ -144,6 +144,32 @@ namespace MessageChannel {
 
 	/* create thread-safe message queue */
 	void initMessageChannel(MessageReceiver &receiver, MessageSender &sender);
+}
+
+class TwoWayChannel {
+	private:
+		MessageChannel::MessageSender sender;
+		MessageChannel::MessageReceiver receiver;
+
+	public:
+		template <typename T>
+		void send(T const& message);
+		template <typename T>
+		bool receive(T& message);
+		MessageChannel::MessageReceiver& getReceiver();
+		MessageChannel::MessageSender& getSender();
+
+		static void connect(TwoWayChannel& one_side, TwoWayChannel& other_side);
+};
+
+template <typename T>
+void TwoWayChannel::send(T const& message){
+	sender.send<T>(message);
+}
+
+template <typename T>
+bool TwoWayChannel::receive(T& message){
+	return receiver.tryGet<T>(message);
 }
 
 #endif
