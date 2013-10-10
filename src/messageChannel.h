@@ -1,5 +1,5 @@
-#ifndef messageGeneric_h
-#define messageGeneric_h
+#ifndef MessageChannel_h
+#define MessageChannel_h
 
 #include <memory>
 
