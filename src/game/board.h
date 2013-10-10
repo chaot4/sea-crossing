@@ -57,7 +57,7 @@ std::vector<FaceID> Board::calcShortestPath(PlayerID player_id) const
 {
 	std::vector<uint> dists(faces.size(), std::numeric_limits<uint>::max());
 	std::vector<FaceID> found_by(faces.size());
-	std::priority_queue<PQFace> pq;
+	std::priority_queue<PQFace, std::vector<PQFace>, std::greater<PQFace> > pq;
 	Cost cost(*this, player_id);
 
 	for(uint i(0); i<start_faces[player_id].size(); i++){
@@ -67,7 +67,7 @@ std::vector<FaceID> Board::calcShortestPath(PlayerID player_id) const
 
 		uint dist(cost.get(face));
 		pq.push(PQFace(&face, std::numeric_limits<FaceID>::max(), dist));
-//		dists[face.id] = dist;
+//		dists[face.id] = dist; TODO how to minimize the number of elements in pq?
 	}
 
 	while(!isEndFace(pq.top().face->id, player_id)){
@@ -86,7 +86,7 @@ std::vector<FaceID> Board::calcShortestPath(PlayerID player_id) const
 				uint adj_dist(dist + cost.get(adj_face));
 				if(adj_dist < dists[adj_face.id]){
 					pq.push(PQFace(&adj_face, face->id, adj_dist));
-//					dists[adj_face.id] = adj_dist;
+//					dists[adj_face.id] = adj_dist; TODO
 				}
 			}
 		}

@@ -43,7 +43,7 @@ class Cost{
 			if(face.owner == player_id+1){
 				return 0;
 			}
-			else if(face.owner == !player_id+1){
+			else if(face.owner){
 				return 1000;
 			}
 			else{
@@ -66,15 +66,15 @@ template <class Cost>
 void ShortestPathAIPlayer<Cost>::getNextMove(NodeLabel& label)
 {
 	// Calc both shortest paths
-	std::vector<FaceID> p1_shortest_path(board.calcShortestPath<Cost>(0));
-	std::vector<FaceID> p2_shortest_path(board.calcShortestPath<Cost>(1));
+	std::vector<FaceID> p0_shortest_path(board.calcShortestPath<Cost>(0));
+	std::vector<FaceID> p1_shortest_path(board.calcShortestPath<Cost>(1));
 
 	// Get the fields that they have in common
+	sort(p0_shortest_path.begin(), p0_shortest_path.end());
 	sort(p1_shortest_path.begin(), p1_shortest_path.end());
-	sort(p2_shortest_path.begin(), p2_shortest_path.end());
 	std::vector<FaceID> shared_faces;
-	set_intersection(p1_shortest_path.begin(), p1_shortest_path.end(),
-			p2_shortest_path.begin(), p2_shortest_path.end(),
+	set_intersection(p0_shortest_path.begin(), p0_shortest_path.end(),
+			p1_shortest_path.begin(), p1_shortest_path.end(),
 			std::back_inserter(shared_faces));
 
 	// Determine the best adjacent node TODO improve!

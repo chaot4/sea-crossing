@@ -53,8 +53,8 @@ struct PQFace{
 	PQFace(PQFace const& other)
 		:face(other.face), found_by(other.found_by), dist(other.dist) {}
 
-	bool operator<(PQFace const& other) const{
-		return dist < other.dist;
+	bool operator>(PQFace const& other) const{
+		return dist > other.dist;
 	}
 };
 

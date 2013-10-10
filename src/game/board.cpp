@@ -334,7 +334,7 @@ void Board::initMaps()
 
 bool Board::isEndFace(FaceID id, PlayerID player_id) const
 {
-	for(unsigned int i=0; i<end_faces.size(); i++)
+	for(unsigned int i=0; i<end_faces[player_id].size(); i++)
 		if(end_faces[player_id][i] == id)
 			return true;
 
