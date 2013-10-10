@@ -46,7 +46,6 @@ public:
 private:
 	ResourceManager resourceMngr;
 	MessageReceiver messageRcvr;
-	Controls controlHandler;
 
 	std::list<Scene> sceneList;
 
