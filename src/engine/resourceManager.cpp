@@ -245,7 +245,7 @@ bool ResourceManager::createShaderProgram(shaderType type, std::shared_ptr<GLSLP
 		}
 	}
 
-	std::shared_ptr<GLSLProgram> shaderPrg(new GLSLProgram());
+	std::shared_ptr<GLSLProgram> shaderPrg(new GLSLProgram(type));
 	shaderPrg->init();
 	std::string vertSource;
 	std::string fragSource;
@@ -369,7 +369,7 @@ bool ResourceManager::createTexture2D(const std::string path, std::shared_ptr<Te
 	inOutTexPtr = texture;
 	texture_list.push_back(std::move(texture));
 
-	delete imageData;
+	delete[] imageData;
 	return true;
 }
 
