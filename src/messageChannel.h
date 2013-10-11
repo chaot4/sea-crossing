@@ -152,12 +152,8 @@ class TwoWayChannel {
 		MessageChannel::MessageReceiver receiver;
 
 	public:
-		template <typename T>
-		void send(T const& message);
-		template <typename T>
-		bool receive(T& message);
-		MessageChannel::MessageReceiver& getReceiver();
-		MessageChannel::MessageSender& getSender();
+		template <typename T> void send(T const& message);
+		template <typename T> bool receive(T& message);
 
 		static void connect(TwoWayChannel& one_side, TwoWayChannel& other_side);
 };

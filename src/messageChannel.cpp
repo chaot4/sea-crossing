@@ -76,15 +76,7 @@ namespace MessageChannel {
 	}
 }
 
-MessageChannel::MessageReceiver& TwoWayChannel::getReceiver(){
-	return receiver;
-}
-
-MessageChannel::MessageSender& TwoWayChannel::getSender(){
-	return sender;
-}
-
 void TwoWayChannel::connect(TwoWayChannel& one_side, TwoWayChannel& other_side){
-	initMessageChannel(one_side.getReceiver(), other_side.getSender());
-	initMessageChannel(other_side.getReceiver(), one_side.getSender());
+	initMessageChannel(one_side.receiver, other_side.sender);
+	initMessageChannel(other_side.receiver, one_side.sender);
 }
