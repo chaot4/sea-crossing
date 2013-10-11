@@ -10,6 +10,8 @@
 #include <random>
 #include <algorithm>
 #include <iterator>
+#include <limits>
+#include <cassert>
 
 class RandomAIPlayer : public Player
 {
@@ -21,11 +23,16 @@ class RandomAIPlayer : public Player
 		void getNextMove(NodeLabel& label);
 };
 
-template <class Cost>
+template <class Cost, class Rating>
 class ShortestPathAIPlayer : public Player
 {
 	private:
 		Board const& board;
+
+		void intersect_paths(std::vector<FaceID>& path1,
+				std::vector<FaceID>& path2,
+				std::vector<FaceID>& intersection);
+		NodeID findBestAdjNode(std::vector<FaceID> const& faces);
 	public:
 		ShortestPathAIPlayer(std::string const& name, Board const& board);
 		void getNextMove(NodeLabel& label);
@@ -33,11 +40,12 @@ class ShortestPathAIPlayer : public Player
 
 class Cost{
 	private:
+		Board const& board;
 		PlayerID player_id;
 
 	public:
 		Cost(Board const& board, PlayerID player_id)
-			:player_id(player_id) {}
+			:board(board), player_id(player_id) {}
 
 		int get(Face const& face){
 			if(face.owner == player_id+1){
@@ -54,44 +62,75 @@ class Cost{
 		}
 };
 
+class Rating{
+	private:
+		Board const& board;
+		PlayerID player_id;
+
+	public:
+		Rating(Board const& board, PlayerID player_id)
+			:board(board), player_id(player_id) {}
+
+		double get(NodeID node_id){
+			return 0;
+		}
+};
+
 
 /* SHORTEST PATH AI PLAYER */
 
 
-template <class Cost>
-ShortestPathAIPlayer<Cost>::ShortestPathAIPlayer(std::string const& name, Board const& board)
+template <class Cost, class Rating>
+ShortestPathAIPlayer<Cost, Rating>::ShortestPathAIPlayer(std::string const& name, Board const& board)
 	:Player(name), board(board) {}
 
-template <class Cost>
-void ShortestPathAIPlayer<Cost>::getNextMove(NodeLabel& label)
+template <class Cost, class Rating>
+void ShortestPathAIPlayer<Cost, Rating>::getNextMove(NodeLabel& label)
 {
-	// Calc both shortest paths
 	std::vector<FaceID> p0_shortest_path(board.calcShortestPath<Cost>(0));
 	std::vector<FaceID> p1_shortest_path(board.calcShortestPath<Cost>(1));
 
-	// Get the fields that they have in common
-	sort(p0_shortest_path.begin(), p0_shortest_path.end());
-	sort(p1_shortest_path.begin(), p1_shortest_path.end());
 	std::vector<FaceID> shared_faces;
-	set_intersection(p0_shortest_path.begin(), p0_shortest_path.end(),
-			p1_shortest_path.begin(), p1_shortest_path.end(),
-			std::back_inserter(shared_faces));
+	intersect_paths(p0_shortest_path, p1_shortest_path, shared_faces);
 
-	// Determine the best adjacent node TODO improve!
-	NodeID best_node(0); // FIX
-	for(unsigned int i(0); i<shared_faces.size(); i++){
-		std::vector<NodeID> const& adj_nodes(board.getFace(shared_faces[i]).adj_nodes);
+	NodeID node(findBestAdjNode(shared_faces));
+	label = board.getNode(node).label;
+}
+
+template <class Cost, class Rating>
+NodeID ShortestPathAIPlayer<Cost, Rating>::findBestAdjNode(std::vector<FaceID> const& faces){
+
+	Rating rating(board, id);
+	double best_rating(-std::numeric_limits<double>::max());
+	NodeID best_node;
+
+	for(unsigned int i(0); i<faces.size(); i++){
+		std::vector<NodeID> const& adj_nodes(board.getFace(faces[i]).adj_nodes);
 
 		for(unsigned int j(0); j<adj_nodes.size(); j++){
-			if(!board.getNode(adj_nodes[j]).owner){
+
+			double current_rating(rating.get(adj_nodes[j]));
+			if(!board.getNode(adj_nodes[j]).owner
+					&& current_rating > best_rating){
+				best_rating = current_rating;
 				best_node = adj_nodes[j];
-				break;
 			}
 		}
 	}
 
-	// Write it into 'label'
-	label = board.getNode(best_node).label;
+	assert(best_rating != -std::numeric_limits<double>::max());
+	return best_node;
+}
+
+template <class Cost, class Rating>
+void ShortestPathAIPlayer<Cost, Rating>::intersect_paths(std::vector<FaceID>& path1,
+	std::vector<FaceID>& path2, std::vector<FaceID>& intersection){
+
+	sort(path1.begin(), path1.end());
+	sort(path2.begin(), path2.end());
+
+	set_intersection(path1.begin(), path1.end(), path2.begin(), path2.end(),
+			std::back_inserter(intersection));
 }
 
 #endif

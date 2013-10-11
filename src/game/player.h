@@ -8,12 +8,15 @@
 class Player{
 	protected:
 		std::string name;
+		PlayerID id;
 	public:
 		Player(std::string const& name):name(name){}
 		Player(Player const& player):name(player.getName()){}
 
 		virtual void getNextMove(NodeLabel& node_label) = 0;
 		std::string getName() const;
+
+		void setID(PlayerID id);
 };
 
 #endif
