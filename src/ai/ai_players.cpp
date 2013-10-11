@@ -2,6 +2,10 @@
 
 using namespace std;
 
+
+/* RANDOM AI PLAYER */
+
+
 RandomAIPlayer::RandomAIPlayer(string const& name, Board const& board)
 	:Player(name), board(board){}
 

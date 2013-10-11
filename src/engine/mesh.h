@@ -1,29 +1,29 @@
 #ifndef mesh_h
 #define mesh_h
 
-#include <string>
-#include "GL/glew.h"
+/*	Include space-lion files */
 #include "vertexStructs.h"
+#include "../fbx/fbx_opengl_geometry.hpp"
 
-//pragma seem to be only necessary in windows
-#ifdef _WIN32
-	#pragma comment(lib,"glew32.lib")
-#endif
+/*	Include system libraries */
+#include <string>
+#include <GL/glew.h>
+#include <iostream>
+
 
 class Mesh
 {
 private:
-	//Mesh(Mesh &) {}
+	const std::string m_filename;
+	GLuint m_num_vertices;
+	GLenum m_mesh_type;
 
-	const std::string filename;
-	GLuint vertexCount;
-
-	//vertex array
-	GLuint vaHandle;
-	//vertex buffer object
-	GLuint vboHandle;
-	//index buffer object
-	GLuint iboHandle;
+	/*	Handle of the vertex array on the GPU */
+	GLuint m_va_handle;
+	/*	Handle of the vertex buffer object on the GPU */
+	GLuint m_vbo_handle;
+	/*	Handle of the index buffer object  on the GPU */
+	GLuint m_ibo_handle;
 
 public:
 	Mesh();
@@ -31,19 +31,20 @@ public:
 
 	Mesh(const std::string fn);
 
-	bool bufferDataFromArray(const Vertex_p *vertexArray, const GLuint *indexArray, const GLsizei vaSize, const GLsizei viSize);
-	bool bufferDataFromFile(const char *path);
+	bool bufferDataFromArray(const Vertex_p *vertex_data, const GLuint *index_data, const GLsizei va_size, const GLsizei vi_size, GLenum mesh_type);
 
-	void bindVertexBuffer();
-	void bindVertexArray();
-	void bindIndexBuffer();
-	void draw(GLenum type, GLint count, int indexOffset);
+	void draw(int num_instances = 1);
 
 	void setVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer);
 	void setVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid* pointer);
 	void setVertexAttribLPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid* pointer);
 
-	const std::string getFilename() {return filename;}
+	const std::string getFilename() {return m_filename;}
+
+	//static std::shared_ptr<Mesh> loadFromFBX(const std::string &filename, FBX::OpenGL::BindAttribLocations locations = FBX::OpenGL::BindAttribLocations());
+
+private:
+	Mesh(Mesh &cpy) {}
 };
 
 #endif

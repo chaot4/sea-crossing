@@ -1,7 +1,7 @@
 #ifndef GLSLProgram_h
 #define GLSLProgram_h
 
-#include "GL/glew.h"
+#include <GL/glew.h>
 //	OpenGL Math Library
 #include <glm/glm.hpp>
 #include <glm/core/type_vec3.hpp>
@@ -11,16 +11,13 @@
 #include <string>
 #include <iostream>
 
-//pragmas seem to be only necessary in windows
-#ifdef _WIN32
-	#pragma comment(lib,"glew32.lib")
-#endif
-
-enum shaderType	{ SURFACE_LIGHTING,FLAT,FXAA,IDLE,STAMP,DISTANCEMAPPING,VOLUME_RAYCASTING,GAUSSIAN,GRADIENT,STRUCTURE_TENSOR,COHERENCE,HESSE};
+enum shaderType	{ SURFACE_LIGHTING,PICKING,FLAT, FXAA, IDLE, VOLUME_RAYCASTING, GAUSSIAN, GRADIENT, STRUCTURE_TENSOR, HESSE };
 
 class GLSLProgram
 {
 private:
+	GLSLProgram(GLSLProgram &cpy) {}
+
 	shaderType type;
 	GLuint handle;
 	bool linkStatus;
@@ -29,6 +26,7 @@ private:
 	GLuint getUniformLocation(const char *name);
 public:
 	GLSLProgram();
+	GLSLProgram(shaderType shader_type);
 	~GLSLProgram();
 
 	shaderType getType() {return type;}

@@ -7,13 +7,15 @@
 #include "human_players.h"
 #include "../ai/ai_players.h"
 #include "../engine/renderHub.h"
+#include "../conf.h"
 
 #include <string>
 #include <vector>
 
 class DebugGame{
 	private:
-		struct Move{
+		struct Move
+		{
 			std::string label;
 			bool owner_id;
 			bool is_gem;
@@ -45,32 +47,39 @@ class DebugGame{
 		void start();
 };
 
-class ConsoleGame{
-	private:
-		Player** player;
+class Game{
+	protected:
+		std::vector<Player*> player;
 		Board& board;
+		GameConf conf;
 
 		bool makeMove(PlayerID player_id);
-		void placeGem(PlayerID player_id, NodeLabel label);
+		virtual void placeGem(PlayerID player_id, NodeLabel label) = 0;
 
 	public:
-		ConsoleGame(Player* player1, Player* player2, Board& board);
+		Game(Player* player1, Player* player2, Board& board, GameConf const& conf);
+
 		void start();
 };
 
-class SimpleGUIGame{
+class ConsoleGame : public Game{
 	private:
-		Player** player;
-		Board& board;
-		MessageReceiver* receiver;
-
-		bool makeMove(PlayerID player_id);
 		void placeGem(PlayerID player_id, NodeLabel label);
 
 	public:
-		SimpleGUIGame(Player* player1, Player* player2,
-				Board& board, MessageReceiver* receiver);
-		void start();
+		ConsoleGame(Player* player1, Player* player2, Board& board,
+				GameConf const& conf);
+};
+
+class SimpleGUIGame : public Game{
+	private:
+		MessageReceiver* receiver;
+
+		void placeGem(PlayerID player_id, NodeLabel label);
+
+	public:
+		SimpleGUIGame(Player* player1, Player* player2, Board& board,
+				GameConf const& conf, MessageReceiver* receiver);
 };
 
 #endif

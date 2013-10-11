@@ -1,3 +1,5 @@
 # This activates the rule that the first move can be taken by the second player.
 # Possible values are: true, false
+p1_name Spongebob
+p2_name Patrick
 use_switch_rule true

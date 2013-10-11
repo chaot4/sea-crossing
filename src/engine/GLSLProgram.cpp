@@ -4,8 +4,13 @@ GLSLProgram::GLSLProgram() : linkStatus(false)
 {
 }
 
+GLSLProgram::GLSLProgram(shaderType shader_type) : type(shader_type), linkStatus(false)
+{
+}
+
 GLSLProgram::~GLSLProgram()
 {
+	glDeleteProgram(handle);
 }
 
 

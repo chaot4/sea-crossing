@@ -2,17 +2,13 @@
 #define scene_h
 
 #include <list>
+#include <map>
 
 #include "sceneEntity.h"
 #include "staticSceneObject.h"
 #include "sceneCamera.h"
 #include "sceneLightSource.h"
 #include "volumetricSceneObject.h"
-
-//pragmas seem to be only necessary in windows
-#ifdef _WIN32
-	#pragma comment(lib,"opengl32.lib")
-#endif
 
 class Scene
 {
@@ -23,8 +19,14 @@ protected:
 	*/
 	std::list<SceneLightSource> lightSourceList;
 	std::list<SceneCamera> cameraList;
-	std::list<StaticSceneObject> scenegraph;
+	std::list<StaticSceneObject> static_entity_list;
 	std::list<VolumetricSceneObject> volumetricObjectList;
+
+	/*	Static scene entities (objects) sorted for optimzed drawing in a tree-like structure*/
+	typedef std::map< std::shared_ptr<Mesh>, std::list<StaticSceneObject> > MeshMap;
+	typedef std::map< std::shared_ptr<Material>, MeshMap > MaterialMap;
+	typedef std::map< std::shared_ptr<GLSLProgram>, MaterialMap > ShaderMap;
+	ShaderMap render_graph;
 
 	SceneCamera* activeCamera;
 
@@ -32,24 +34,31 @@ public:
 	Scene();
 	~Scene();
 
-	//	create a scene entity with default geometry and default material
-	bool createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, Mesh* geomPtr, Material* mtlPtr);
+	/* */
+	bool createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling,
+									std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Material> mtlPtr);
 	
 	/* create a volumetric scene entity */
-	bool createVolumetricSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling, Mesh* geomPtr, Texture3D* volPtr, GLSLProgram* prgmPtr);
+	bool createVolumetricSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling,
+										std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Texture3D> volPtr, std::shared_ptr<GLSLProgram> prgmPtr);
 	
 	//	create a scene light source
-	bool createSceneLight(const int id, const glm::vec3 position, glm::vec4 lightColour);
+	bool createSceneLight(const int id, const glm::vec3 position, glm::vec3 lightColour);
 	//	create a scene camera
 	bool createSceneCamera(const int id, const glm::vec3 position, const glm::quat orientations, float aspect, float fov);
+	//	create a scene camera
+	bool createSceneCamera(const int id, const glm::vec3 position, const glm::vec3 lookAt, float aspect, float fov);
 
 	void setActiveCamera(const int);
 	SceneCamera* getActiveCamera();
 
 	void testing();
 
-	/* render the scene */
-	void render();
+	/*	draw the scene for a forward render pass */
+	void drawFroward();
+	
+	/*	 draw the scene for a picking pass */
+	void drawPicking(std::shared_ptr<GLSLProgram> prgm);
 
 	/*
 	/	Render the volumetric objects of the scene.

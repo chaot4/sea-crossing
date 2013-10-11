@@ -9,7 +9,7 @@
 * 
 * \author Michael Becher
 * 
-* \date 7th June 2013
+* \date 10th September 2013
 */
 
 #ifndef resourceManager_h
@@ -21,19 +21,13 @@
 #include <list>
 #include <fstream>
 #include <sstream>
-
-/*	Include non-std dependencies */ 
-#include <fbxsdk.h>
+#include <memory>
 
 /*	Include space-lion headers */
 #include "material.h"
 #include "texture2D.h"
 #include "texture3D.h"
 #include "mesh.h"
-
-#ifdef _WIN32
-	#pragma comment(lib,"libfbxsdk.lib")
-#endif
 
 #define DEBUG_OUTPUT 0
 
@@ -47,18 +41,23 @@ public:
 	const std::string& getLog() {return resourcelog;}
 
 	/**
+	* \brief Clear lists containing graphics resources
+	*/
+	void clearLists();
+
+	/**
 	 * \brief Creates a triangle for debugging purposes
 	 * \param inOutGeomPtr A pointer set to the newly created vertex geometry via in-out parameter
 	 * \return Returns true if the triangle was succesfully created, false otherwise
 	 */
-	bool createTriangle(Mesh*& inOutGeomPtr);
+	bool createTriangle(std::shared_ptr<Mesh> &inOutGeomPtr);
 
 	/**
 	 * \brief Creates a simple box object for debugging purposes
 	 * \param inOutGeomPtr A pointer set to the newly created vertex geometry via in-out parameter
 	 * \return Returns true if box was succesfully created, false otherwise
 	 */
-	bool createBox(Mesh*& inOutGeomPtr);
+	bool createBox(std::shared_ptr<Mesh> &inOutGeomPtr);
 
 	/**
 	 * \brief Creates a Mesh object from a local file.
@@ -67,14 +66,14 @@ public:
 	 * \param inOutGeomPtr A pointer set to the newly created vertex geometry via in-out parameter
 	 * \return Returns true if Mesh was succesfully created, false otherwise
 	 */
-	bool createMesh(const std::string path, Mesh*& inOutGeomPtr);
+	bool createMesh(const std::string path, std::shared_ptr<Mesh> &inOutGeomPtr);
 
 	/**
 	 * \brief Creates default material object for debugging purposes
 	 * \param inOutMtlPtr A pointer set to the newly created material via in-out parameter
 	 * \return Returns true if material was succesfully created, false otherwise
 	 */
-	bool createMaterial(Material*& inOutMtlPtr);
+	bool createMaterial(std::shared_ptr<Material> &inOutMtlPtr);
 
 	/**
 	 * \brief Creates a material object from a local file
@@ -82,7 +81,7 @@ public:
 	 * \param inOutMtlPtr A pointer set to the newly created material via in-out parameter
 	 * \return Returns true if material was succesfully created, false otherwise
 	 */
-	bool createMaterial(const char * const path, Material*& inOutMtlPtr);
+	bool createMaterial(const char * const path, std::shared_ptr<Material> &inOutMtlPtr);
 
 	/**
 	 * \brief Reload a material object from file
@@ -97,7 +96,7 @@ public:
 	 * \param inOutPrgPtr A pointer set to the newly created shader program via in-out parameter
 	 * \retrun Returns true if GLSLprogram was succesfully created, false otherwise
 	 */
-	bool createShaderProgram(shaderType type, GLSLProgram*& inOutPrgPtr);
+	bool createShaderProgram(shaderType type, std::shared_ptr<GLSLProgram> &inOutPrgPtr);
 
 	/**
 	 * \brief Creates a 2D texture from a given float array
@@ -111,7 +110,7 @@ public:
 	 * \param inOutTexPtr A pointer set to the newly created texture via in-out parameter
 	 * \return Returns true if texture was succesfully created, false otherwise
 	 */
-	bool createTexture2D(int dimX, int dimY, float* data, Texture*& inOutTexPtr);
+	bool createTexture2D(int dimX, int dimY, float* data, std::shared_ptr<Texture> &inOutTexPtr);
 
 	/**
 	 * \brief Creates a 2D texture from a file
@@ -119,7 +118,7 @@ public:
 	 * \param inOutTexPtr A pointer set to the newly created texture via in-out parameter
 	 * \return Returns true if texture was succesfully created, false otherwise
 	 */
-	bool createTexture2D(const std::string path, Texture*& inOutTexPtr);
+	bool createTexture2D(const std::string path, std::shared_ptr<Texture> &inOutTexPtr);
 
 	/**
 	 * \brief Reloads a texture in case a texture file is changed during runtime
@@ -135,7 +134,7 @@ public:
 	 * \param inOutTexPtr A pointer set to the newly created
 	 * \return Returns true if volume texture was succesfully created, false otherwise
 	 */
-	bool createTexture3D(const std::string path, glm::ivec3 textureRes, Texture3D*& inOutTexPtr);
+	bool createTexture3D(const std::string path, glm::ivec3 textureRes, std::shared_ptr<Texture3D> &inOutTexPtr);
 
 	/**
 	 * \brief Creates a 3D texture for volume rendering from a given float array
@@ -146,29 +145,29 @@ public:
 	 * \param inOutTexPtr A pointer set to the newly created
 	 * \return Returns true if volume texture was succesfully created, false otherwise
 	 */
-	bool createTexture3D(float* volumeData, glm::ivec3 textureRes, GLenum internalFormat, GLenum format, Texture3D*& inOutTexPtr);
+	bool createTexture3D(float* volumeData, glm::ivec3 textureRes, GLenum internalFormat, GLenum format, std::shared_ptr<Texture3D> &inOutTexPtr);
 
-private:
+protected:
 	/** Log string */
 	std::string resourcelog;
 
 	/*
 	/	The following lists contain all resources that are managed by an instance of this class.
-	/	There is only a single "instance" of any (uniquely identifiable) resouce kept in these lists.
+	/	There is only a single "instance" of any (uniquely identifiable) resouce kept/referenced in these lists.
 	/	Different scene entities making use of the same resource, will both be refering to the single
-	/	instance kept within one of these lists.
+	/	instance kept/referenced within one of these lists.
 	*/
 
 	/** List containing all Mesh objects */
-	std::list<Mesh> geometryList;
+	std::list<std::shared_ptr<Mesh>> geometry_list;
 	/** List containing all materials */
-	std::list<Material> materialList;
+	std::list<std::shared_ptr<Material>> material_list;
 	/** List containing all 2D textures */
-	std::list<Texture2D> textureList;
+	std::list<std::shared_ptr<Texture2D>> texture_list;
 	/** List containing all 3D textures */
-	std::list<Texture3D> volumeList;
+	std::list<std::shared_ptr<Texture3D>> volume_list;
 	/** List containing all shader programs */
-	std::list<GLSLProgram> shaderProgramList;
+	std::list<std::shared_ptr<GLSLProgram>> shader_program_list;
 
 	/**
 	 * \brief Load geometry information from an fbx file
@@ -176,7 +175,7 @@ private:
 	 * \param goemPtr Pointer to the Mesh object where the loaded geometry will be stored
 	 * \return Returns true if the geometry was succesfully loaded, false otherwise
 	 */
-	bool loadFbxGeometry(const char* const path, Mesh* goemPtr);
+	bool loadFbxGeometry(const std::string &path, std::shared_ptr<Mesh> &geomPtr);
 
 	/**
 	 * \brief Load geometry information from a binary file
@@ -185,7 +184,7 @@ private:
 	 * \param goemPtr Pointer to the Mesh object where the loaded geometry will be stored
 	 * \return Returns true if the geometry was succesfully loaded, false otherwise
 	 */
-	bool loadBinaryGeometry(const std::string path, Mesh* goemPtr);
+	bool loadBinaryGeometry(const std::string &path, std::shared_ptr<Mesh> &geomPtr);
 
 	/**
 	 * \brief Parses a material file
@@ -210,7 +209,7 @@ private:
 	 * \param imgDimY Out parameter, containing the dimension of the image in Y direction in pixels
 	 * \return Returns true if the ppm header was succesfully read, false otherwise
 	 */
-	bool readPpmHeader(const char* filename, long& headerEndPos, int& imgDimX, int& imgDimY);
+	bool readPpmHeader(const char* filename, unsigned long& headerEndPos, int& imgDimX, int& imgDimY);
 
 	/**
 	 * \brief Read a the data of a ppm image file. Courtesy to the computer vision lecture I attended.
@@ -221,7 +220,7 @@ private:
 	 * \param imgDimY Dimension of the image in Y direction in pixels
 	 * \return Returns true if the ppm header was succesfully read, false otherwise
 	 */
-	bool readPpmData(const char* filename, char* imageData, long dataBegin, int imgDimX, int imgDimY);
+	bool readPpmData(const char* filename, char* imageData, unsigned long dataBegin, int imgDimX, int imgDimY);
 };
 
 #endif

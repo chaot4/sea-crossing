@@ -25,6 +25,12 @@
     <Filter Include="Source Files\engine">
       <UniqueIdentifier>{78d8e9f5-f252-428a-a7e1-5bae32451995}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\fbx">
+      <UniqueIdentifier>{72c06560-cd19-41b4-a06b-60e05836df82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fbx">
+      <UniqueIdentifier>{6bc92ed0-5ae7-4483-ba7e-c2fc87631c10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -35,9 +41,6 @@
     </ClCompile>
     <ClCompile Include="..\src\game\game.cpp">
       <Filter>Source Files\game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\volumetricSceneObject.cpp">
-      <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\engine\framebufferObject.cpp">
       <Filter>Source Files\engine</Filter>
@@ -66,9 +69,6 @@
     <ClCompile Include="..\src\engine\sceneCamera.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\engine\sceneEntity.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\engine\sceneLightSource.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
@@ -94,6 +94,36 @@
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\conf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fbx\fbx_geometry.cpp">
+      <Filter>Source Files\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fbx\fbx_node_name.cpp">
+      <Filter>Source Files\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fbx\fbx_opengl_geometry.cpp">
+      <Filter>Source Files\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fbx\fbx_parser.cpp">
+      <Filter>Source Files\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fbx\fbx_print.cpp">
+      <Filter>Source Files\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fbx\fbx_property.cpp">
+      <Filter>Source Files\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fbx\fbx_reader.cpp">
+      <Filter>Source Files\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fbx\fbx_unzip.cpp">
+      <Filter>Source Files\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\fbx\fbx_value.cpp">
+      <Filter>Source Files\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\messageChannel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -174,6 +204,54 @@
       <Filter>Header Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\conf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_value.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_exceptions.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_generic_parser.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_geometry.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_node_name.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_node_property.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_opengl_geometry.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_parser.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_print.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_property.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_reader.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_types.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\fbx_unzip.hpp">
+      <Filter>Header Files\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\fbx\miniz.c">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messageChannel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

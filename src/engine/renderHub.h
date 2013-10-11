@@ -16,7 +16,7 @@
 #include "messageReceiver.h"
 #include "controls.h"
 #include "framebufferObject.h"
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 class RenderHub
 {
@@ -46,7 +46,6 @@ public:
 private:
 	ResourceManager resourceMngr;
 	MessageReceiver messageRcvr;
-	Controls controlHandler;
 
 	std::list<Scene> sceneList;
 

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -26,26 +26,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -87,7 +87,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -100,7 +100,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,7 +117,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -128,13 +128,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -151,16 +152,24 @@
     <ClCompile Include="..\src\engine\resourceManager.cpp" />
     <ClCompile Include="..\src\engine\scene.cpp" />
     <ClCompile Include="..\src\engine\sceneCamera.cpp" />
-    <ClCompile Include="..\src\engine\sceneEntity.cpp" />
     <ClCompile Include="..\src\engine\sceneLightSource.cpp" />
     <ClCompile Include="..\src\engine\texture2D.cpp" />
     <ClCompile Include="..\src\engine\texture3D.cpp" />
-    <ClCompile Include="..\src\engine\volumetricSceneObject.cpp" />
+    <ClCompile Include="..\src\fbx\fbx_geometry.cpp" />
+    <ClCompile Include="..\src\fbx\fbx_node_name.cpp" />
+    <ClCompile Include="..\src\fbx\fbx_opengl_geometry.cpp" />
+    <ClCompile Include="..\src\fbx\fbx_parser.cpp" />
+    <ClCompile Include="..\src\fbx\fbx_print.cpp" />
+    <ClCompile Include="..\src\fbx\fbx_property.cpp" />
+    <ClCompile Include="..\src\fbx\fbx_reader.cpp" />
+    <ClCompile Include="..\src\fbx\fbx_unzip.cpp" />
+    <ClCompile Include="..\src\fbx\fbx_value.cpp" />
     <ClCompile Include="..\src\game\board.cpp" />
     <ClCompile Include="..\src\game\game.cpp" />
     <ClCompile Include="..\src\game\human_players.cpp" />
     <ClCompile Include="..\src\game\player.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\messageChannel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ai\ai_players.h" />
@@ -184,11 +193,27 @@
     <ClInclude Include="..\src\engine\texture3D.h" />
     <ClInclude Include="..\src\engine\vertexStructs.h" />
     <ClInclude Include="..\src\engine\volumetricSceneObject.h" />
+    <ClInclude Include="..\src\fbx\fbx_exceptions.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_generic_parser.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_geometry.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_node_name.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_node_property.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_opengl_geometry.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_parser.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_print.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_property.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_reader.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_types.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_unzip.hpp" />
+    <ClInclude Include="..\src\fbx\fbx_value.hpp" />
+    <ClInclude Include="..\src\fbx\miniz.c" />
     <ClInclude Include="..\src\game\board.h" />
     <ClInclude Include="..\src\game\defs.h" />
     <ClInclude Include="..\src\game\game.h" />
     <ClInclude Include="..\src\game\human_players.h" />
     <ClInclude Include="..\src\game\player.h" />
+    <ClInclude Include="..\src\macros.h" />
+    <ClInclude Include="..\src\messageChannel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,25 +1,35 @@
 #include "framebufferObject.h"
 
-FramebufferObject::FramebufferObject()
+FramebufferObject::FramebufferObject() : m_handle(0), m_depthbuffer(0), m_stencilbuffer(0), m_width(0), m_height(0)
 {
 }
 
 FramebufferObject::~FramebufferObject()
 {
+	/*	Delete framebuffer resources. Texture delete themselves when the vector is destroyed. */	
+	if (m_depthbuffer != 0) glDeleteRenderbuffers(1, &m_depthbuffer);
+
+	/*	Delete framebuffer object */
+	glBindFramebuffer(GL_FRAMEBUFFER, m_handle);
+	glDeleteFramebuffers(1, &m_handle);
 }
 
-FramebufferObject::FramebufferObject(int w, int h, bool hasDepth, bool hasStencil) : width(w), height(h)
+FramebufferObject::FramebufferObject(int width, int height, bool has_depth, bool has_stencil) : m_width(width), m_height(height)
 {
-	glGenFramebuffers(1, &handle);
-	glBindFramebuffer(GL_FRAMEBUFFER, handle);
+	glGenFramebuffers(1, &m_handle);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_handle);
 
-	if(hasDepth)
+	if(has_depth)
 	{
-		glGenRenderbuffers(1, &depthbuffer);
-		glBindRenderbuffer(GL_RENDERBUFFER, depthbuffer);
+		glGenRenderbuffers(1, &m_depthbuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, m_depthbuffer);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthbuffer);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthbuffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	}
+	else
+	{
+		m_depthbuffer = 0;
 	}
 	/*
 	/	TODO: stencilbuffer
@@ -33,37 +43,35 @@ bool FramebufferObject::createColorAttachment(GLenum internalFormat, GLenum form
 	GLint maxAttachments;
 	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxAttachments);
 
-	if(colorbuffer.size() == (GLuint) maxAttachments) 
+	if(m_colorbuffers.size() == (GLuint) maxAttachments) 
 	{
 		std::cout<<"Maximum amount of color attachments reached.\n";
 		return false;
 	}
 
-	int bufsSize = colorbuffer.size();
-	colorbuffer.push_back(GLuint());
-	std::vector<GLuint>::iterator lastElement = (--(colorbuffer.end()));
-
-	glBindFramebuffer(GL_FRAMEBUFFER, handle);
+	unsigned int bufsSize = static_cast<unsigned int>(m_colorbuffers.size());
+	std::shared_ptr<Texture2D> new_color_atttachment(new Texture2D( "fbo_"+std::to_string(m_handle)+"_color_attachment_"+std::to_string(bufsSize) ));
+	m_colorbuffers.push_back(new_color_atttachment);
 	
-	glGenTextures(1, &*lastElement);
-	glActiveTexture(GL_TEXTURE0+bufsSize);
-	glBindTexture(GL_TEXTURE_2D, *lastElement);
-	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, NULL);
+	new_color_atttachment->load(internalFormat, m_width, m_height, format, type, NULL);
+	new_color_atttachment->bindTexture();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+bufsSize, GL_TEXTURE_2D, *lastElement, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_handle);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+bufsSize, GL_TEXTURE_2D, new_color_atttachment->getHandle(), 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
 
 	return true;
 }
 
 void FramebufferObject::bind()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, handle);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_handle);
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
 		std::cout<<"Tried to use incomplete FBO. Fallback to default FBO.\n";
@@ -71,9 +79,9 @@ void FramebufferObject::bind()
 	}
 	else
 	{
-		int bufsSize = colorbuffer.size();
+		unsigned int bufsSize = static_cast<unsigned int>(m_colorbuffers.size());
 		GLenum* drawBufs = new GLenum[bufsSize];
-		for(GLint i=0; i < bufsSize; i++)
+		for(GLuint i=0; i < bufsSize; i++)
 		{
 			drawBufs[i] = (GL_COLOR_ATTACHMENT0+i);
 		}
@@ -81,27 +89,31 @@ void FramebufferObject::bind()
 	}
 }
 
-void FramebufferObject::bindColorbuffer(int index)
+void FramebufferObject::bindColorbuffer(unsigned int index)
 {
-	//std::vector<GLuint>::iterator itr = colorbuffer.begin();
-	//for(int i = 0; i < index; i++) ++itr;
-
-	//glBindTexture(GL_TEXTURE_2D, *itr);
-	glBindTexture(GL_TEXTURE_2D, colorbuffer[index]);
+	if (index < m_colorbuffers.size()) m_colorbuffers[index]->bindTexture();
 }
 
 void FramebufferObject::bindDepthbuffer()
 {
-	glBindTexture(GL_TEXTURE_2D, depthbuffer);
+	glBindTexture(GL_TEXTURE_2D, m_depthbuffer);
 }
 
 void FramebufferObject::bindStencilbuffer()
 {
-	glBindTexture(GL_TEXTURE_2D, stencilbuffer);
+	glBindTexture(GL_TEXTURE_2D, m_stencilbuffer);
 }
 
 bool FramebufferObject::checkStatus()
 {
-	if(glCheckFramebufferStatus(handle) == GL_FRAMEBUFFER_COMPLETE) return true;
+	if(glCheckFramebufferStatus(m_handle) == GL_FRAMEBUFFER_COMPLETE) return true;
 	return false;
+}
+
+void FramebufferObject::resize(int new_width, int new_height)
+{
+	for (std::vector<std::shared_ptr<Texture2D>>::iterator itr = m_colorbuffers.begin(); itr != m_colorbuffers.end(); ++itr)
+	{
+		(*itr)->reload(new_width, new_height, NULL);
+	}
 }

@@ -216,28 +216,24 @@ void DebugGame::command_forward()
 }
 
 
-/* CONSOLE GAME */
+/* GAME */
 
 
-//ConsoleGame::ConsoleGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
-//	:player{player1, player2}{}
-ConsoleGame::ConsoleGame(Player* player1, Player* player2, Board& board)
-	:player(new Player*[2]), board(board)
-{
-	player[0] = player1;
-	player[1] = player2;
+Game::Game(Player* player1, Player* player2, Board& board, GameConf const& conf)
+	: player({player1, player2}), board(board), conf(conf) {
+
+	player1->setID(0);
+	player2->setID(1);
 }
 
-void ConsoleGame::start()
+void Game::start()
 {
 	bool current_player(0);
 	bool valid_move(false);
 
-	cout << "==- START CONSOLE GAME -==" << endl;
+	cout << "==- START GAME -==" << endl;
 
 	while(!board.checkVictoryCondition(current_player)){
-
-		cout << endl;
 
 		if(valid_move){
 			current_player = !current_player;
@@ -247,10 +243,10 @@ void ConsoleGame::start()
 	}
 
 	cout << player[current_player]->getName() << " wins!" << endl;
-	cout << endl << "==- END CONSOLE GAME -==" << endl;
+	cout << "==- END GAME -==" << endl;
 }
 
-bool ConsoleGame::makeMove(PlayerID player_id)
+bool Game::makeMove(PlayerID player_id)
 {
 	NodeLabel label;
 
@@ -273,6 +269,15 @@ bool ConsoleGame::makeMove(PlayerID player_id)
 	return true;
 }
 
+
+/* CONSOLE GAME */
+
+
+ConsoleGame::ConsoleGame(Player* player1, Player* player2, Board& board,
+		GameConf const& conf)
+	: Game(player1, player2, board, conf) {}
+
+
 void ConsoleGame::placeGem(PlayerID player_id, NodeLabel label)
 {
 	vector<FaceLabel> new_markers;
@@ -287,57 +292,13 @@ void ConsoleGame::placeGem(PlayerID player_id, NodeLabel label)
 	}
 }
 
-//SimpleGUIGame::SimpleGUIGame(ConsolePlayer const& player1, ConsolePlayer const& player2)
-//	:player{player1, player2}{}
+
+/* SIMPLE GUI GAME */
+
+
 SimpleGUIGame::SimpleGUIGame(Player* player1, Player* player2, Board& board,
-		MessageReceiver* receiver)
-	:player(new Player*[2]), board(board), receiver(receiver)
-{
-	player[0] = player1;
-	player[1] = player2;
-}
-
-void SimpleGUIGame::start()
-{
-	bool current_player(0);
-	bool valid_move(false);
-
-	std::cout << "==- START SIMPLE GUI GAME -==" << std::endl;
-
-	while(!board.checkVictoryCondition(current_player)){
-		if(valid_move){
-			current_player = !current_player;
-		}
-
-		valid_move = makeMove(current_player);
-	}
-
-	std::cout << player[current_player]->getName() << " wins!";
-	std::cout << std::endl << "==- END SIMPLE GUI GAME -==" << std::endl;
-}
-
-bool SimpleGUIGame::makeMove(PlayerID player_id)
-{
-	NodeLabel label;
-
-	player[player_id]->getNextMove(label);
-
-	if(board.isNodeLabel(label)){
-		if(!board.nodeHasOwner(label)){
-			placeGem(player_id, label);
-		}
-		else{
-			std::cout << "ERROR: This node is already taken." << std::endl;
-			return false;
-		}
-	}
-	else{
-		std::cout << "ERROR: The passed string is not a node label." << std::endl;
-		return false;
-	}
-
-	return true;
-}
+		GameConf const& conf, MessageReceiver* receiver)
+	: Game(player1, player2, board, conf), receiver(receiver) {}
 
 void SimpleGUIGame::placeGem(PlayerID player_id, NodeLabel label)
 {

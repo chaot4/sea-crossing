@@ -1,0 +1,5 @@
+4
+td ../resources/textures/debugging/copper_rough_tiled_diffuse_albedo.ppm
+ts ../resources/textures/debugging/copper_rough_tiled_specular_colour.ppm
+tr ../resources/textures/debugging/copper_rough_tiled_roughness.ppm
+tn ../resources/textures/debugging/copper_rough_tiled_normal.ppm

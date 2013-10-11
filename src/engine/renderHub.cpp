@@ -56,8 +56,7 @@ bool RenderHub::init()
 	setActiveInstance(this);
 	glfwSetWindowSizeCallback(activeWindow,windowSizeCallback);
 	glfwSetWindowCloseCallback(activeWindow,windowCloseCallback);
-	controlHandler.setActive(&controlHandler);
-	glfwSetScrollCallback(activeWindow, Controls::mouseScrollFeedback);
+	Controls::setControlCallbacks(activeWindow);
 
 	/*	Initialize glew */
 	//glewExperimental = GL_TRUE;
@@ -119,19 +118,54 @@ void RenderHub::setActiveScene(const int index)
 
 void RenderHub::run()
 {
+	/*	
+	/	Create resource needed for additional render passes, e.g. shader programs not related to object materials
+	/	and framebuffer objects.
+	/	Framebuffers are created and stored locally in the context of this method.
+	*/
+	//std::shared_ptr<GLSLProgram> picking_prgm;
+	//resourceMngr.createShaderProgram(PICKING, picking_prgm);
+	//
+	//FramebufferObject picking_fbo(800,450,true,false);
+	//picking_fbo.createColorAttachment(GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_INT);
+	//
+	//PostProcessor post_proc(800,450);
+	//post_proc.init(&resourceMngr);
+
+
 	/*
 	/	Support for adding cameras and lights via message system will follow later on
 	*/
 
-	if(!(activeScene->createSceneCamera(0,glm::vec3(0.0,0.0,20.0),glm::quat(),16.0f/9.0f,(9.0f/16.0f)*60.0f)))
+	/*	TEMPORARY SHADER TESTING */
+	//std::shared_ptr<Mesh> geomPtr;
+	//std::shared_ptr<Material> matPtr;
+	//resourceMngr.createBox(geomPtr);
+	//resourceMngr.createMesh("../resources/meshes/board_round.fbx",geomPtr);
+	//if(!(resourceMngr.createMaterial("../resources/materials/debugging.slmtl",matPtr)))
+	//	std::cout<<"Failed to create material."<<std::endl;
+	//if(!(activeScene->createStaticSceneObject(0,glm::vec3(0.0,0.0,0.0),glm::quat(),glm::vec3(1.0),geomPtr,matPtr)))
+	//	std::cout<<"Failed to create scene object."<<std::endl;
+	//
+	//geomPtr.reset();
+	//matPtr.reset();
+	
+	//resourceMngr.createMesh("../resources/meshes/performance_test/terrain.fbx", geomPtr);
+	//if (!(resourceMngr.createMaterial("../resources/materials/default.slmtl", matPtr)))
+	//	std::cout << "Failed to create material." << std::endl;
+	//if (!(activeScene->createStaticSceneObject(1, glm::vec3(0.0,0.0, 0.0), glm::quat(),glm::vec3(5000.0), geomPtr, matPtr)))
+	//	std::cout << "Failed to create scene object." << std::endl;
+	//
+	//geomPtr.reset();
+	//matPtr.reset();
+
+	if(!(activeScene->createSceneCamera(0,glm::vec3(25.0,25.0,25.0),glm::vec3(0.0,0.0,0.0),16.0f/9.0f,(9.0f/16.0f)*60.0f)))
 		std::cout<<"Failed to create camera"<<"\n";
 
-	if(!(activeScene->createSceneLight(0,glm::vec3(0.0,25.0,0.0),glm::vec4(1.0,1.0,1.0,1.0))))
+	if(!(activeScene->createSceneLight(0,glm::vec3(3000.0,5000.0,1500.0),glm::vec3(150000.0))))
 		std::cout<<"Failed to create light"<<"\n";
 
 	activeScene->setActiveCamera(0);
-	
-	//activeScene->testing();
 
 	running = true;
 	glClearColor(0.2f,0.2f,0.2f,1.0f);
@@ -139,7 +173,11 @@ void RenderHub::run()
 	glEnable(GL_CULL_FACE);
 	glEnable( GL_MULTISAMPLE );
 
+	/*  Test picking pass */
+	//GLuint *data = new GLuint[1];
+
 	while(running && !glfwWindowShouldClose(activeWindow))
+	//while(running)
 	{
 		while(messageRcvr.checkQueue())
 		{
@@ -147,29 +185,44 @@ void RenderHub::run()
 			processMessage(&msg);
 		}
 
-		/*	For now, I avoid using glfw callback functions */
-		controlHandler.updateCamera(activeWindow,activeScene);
+		/*	For now, I avoid using a glfw callback function for this */
+		Controls::updateCamera(activeWindow,activeScene->getActiveCamera());
+
+		/*  Test picking pass */
+		//picking_fbo.bind();
+		//glClearColor(0, 0, 0, 0);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glViewport(0, 0, picking_fbo.getWidth(), picking_fbo.getHeight());
+		//activeScene->drawPicking(picking_prgm);
+		//glReadBuffer(GL_COLOR_ATTACHMENT0);
+		//glReadPixels(400, 225, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, data);
+		//std::cout << data[0] << std::endl;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		int width, height;
 		glfwGetFramebufferSize(activeWindow, &width, &height);
 		glViewport(0, 0, width, height);
 
-		activeScene->render();
+		activeScene->drawFroward();
 
 		glfwSwapBuffers(activeWindow);
 		glfwPollEvents();
 	}
+
+	/*	Make sure to delete all OpenGL resources while the context is still active */
+	sceneList.clear();
+	resourceMngr.clearLists();
 
 	glfwDestroyWindow(activeWindow);
 }
 
 void RenderHub::runVolumeTest()
 {
-	Mesh* geomPtr;
-	Texture3D* volPtr;
-	GLSLProgram* prgmPtr;
+	std::shared_ptr<Mesh> geomPtr;
+	std::shared_ptr<Texture3D> volPtr;
+	std::shared_ptr<GLSLProgram> prgmPtr;
 	resourceMngr.createBox(geomPtr);
 	resourceMngr.createTexture3D("../resources/volumeData/f.raw",glm::ivec3(67,67,67),volPtr);
 	resourceMngr.createShaderProgram(VOLUME_RAYCASTING,prgmPtr);
@@ -198,11 +251,13 @@ void RenderHub::runVolumeTest()
 		std::cout<<"Failed to create camera"
 				<<"\n";
 	}
-	if(!(activeScene->createSceneLight(0,glm::vec3(0.0,2.0,0.0),glm::vec4(1.0,1.0,1.0,1.0))))
+	if(!(activeScene->createSceneLight(0,glm::vec3(0.0,2.0,0.0),glm::vec3(1.0,1.0,1.0))))
 	{
 		std::cout<<"Failed to create light"
 				<<"\n";
 	}
+
+	//	TODO: RESET LOCAL SHARED_PTR
 
 	activeScene->setActiveCamera(0);
 
@@ -229,11 +284,11 @@ void RenderHub::runVolumeTest()
 void RenderHub::processMessage(Message *msg)
 {
 	messageType msgType = (msg->type);
-	switch (msgType)
-	{
+	switch (msgType){
 	case CREATE:
-		Mesh* geomPtr;
-		Material* materialPtr;
+	{
+		std::shared_ptr<Mesh> geomPtr;
+		std::shared_ptr<Material> materialPtr;
 		if(!(resourceMngr.createMaterial((msg->material_path).c_str(),materialPtr)))
 		{
 			std::cout<<"Failed to create material: "<<msg->material_path<<std::endl;
@@ -245,10 +300,13 @@ void RenderHub::processMessage(Message *msg)
 			break;
 		}
 
-		if(!(activeScene->createStaticSceneObject((msg->id),(msg->position),(msg->orientation),geomPtr,materialPtr)))
+		if(!(activeScene->createStaticSceneObject((msg->id),(msg->position),(msg->orientation),(msg->scaling),geomPtr,materialPtr)))
 			std::cout<<"Failed to create scene object."<<std::endl;
 
+		geomPtr.reset();
+		materialPtr.reset();
 		break;
+	}
 	case DELETE:
 		break;
 	case EXIT:
@@ -269,6 +327,7 @@ void RenderHub::windowSizeCallback(GLFWwindow *window, int width, int height)
 
 void RenderHub::windowCloseCallback(GLFWwindow *window)
 {
+	
 }
 
 void RenderHub::setActiveInstance(RenderHub *instance)

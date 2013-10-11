@@ -9,19 +9,43 @@ Scene::~Scene()
 {
 }
 
-bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, Mesh* geomPtr, Material* mtlPtr)
+bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling,
+										std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Material> mtlPtr)
 {
-	scenegraph.push_back(StaticSceneObject(id,position,orientation,geomPtr,mtlPtr));
+	std::shared_ptr<GLSLProgram> prgmPtr = mtlPtr->getShaderProgram();
+
+	/*
+	/	Push the new scene entity into the datastructure.
+	/
+	/	The used iterators will either point to a newly created list/map or
+	/	an already existing one. In both cases the retrieved iterator can be used to insert
+	/	a new map (or push the new entity into the list) or find an already existing one
+	/	to continue on to the bottom of the datastructure.
+	*/
+
+	std::pair<ShaderMap::iterator, bool> itr_firstlevel =
+		render_graph.insert(std::pair<std::shared_ptr<GLSLProgram>, MaterialMap>(prgmPtr,MaterialMap()));
+
+	std::pair<MaterialMap::iterator, bool> itr_secondlevel =
+		itr_firstlevel.first->second.insert(std::pair<std::shared_ptr<Material>, MeshMap>(mtlPtr, MeshMap()));
+		
+	std::pair<MeshMap::iterator, bool> itr_thirdlevel =
+		itr_secondlevel.first->second.insert(std::pair<std::shared_ptr<Mesh>,std::list<StaticSceneObject>>(geomPtr,std::list<StaticSceneObject>()));
+
+	itr_thirdlevel.first->second.push_back(StaticSceneObject(id,position,orientation,scaling,geomPtr,mtlPtr));
+
+	//static_entity_list.push_back(StaticSceneObject(id,position,orientation,scaling,geomPtr,mtlPtr));
 	return true;
 }
 
-bool Scene::createVolumetricSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling, Mesh* geomPtr, Texture3D* volPtr, GLSLProgram* prgmPtr)
+bool Scene::createVolumetricSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling,
+											std::shared_ptr<Mesh> geomPtr, std::shared_ptr<Texture3D> volPtr, std::shared_ptr<GLSLProgram> prgmPtr)
 {
 	volumetricObjectList.push_back(VolumetricSceneObject(id,position,orientation,scaling,geomPtr,volPtr,prgmPtr));
 	return true;
 }
 
-bool Scene::createSceneLight(const int id, const glm::vec3 position, glm::vec4 colour)
+bool Scene::createSceneLight(const int id, const glm::vec3 position, glm::vec3 colour)
 {
 	lightSourceList.push_back(SceneLightSource(id, position, colour));
 	return true;
@@ -30,6 +54,12 @@ bool Scene::createSceneLight(const int id, const glm::vec3 position, glm::vec4 c
 bool Scene::createSceneCamera(const int id, const glm::vec3 position, const glm::quat orientation, float aspect, float fov)
 {
 	cameraList.push_back(SceneCamera(id, position, orientation, aspect, fov));
+	return true;
+}
+
+bool Scene::createSceneCamera(const int id, const glm::vec3 position, const glm::vec3 lookAt, float aspect, float fov)
+{
+	cameraList.push_back(SceneCamera(id, position, lookAt, aspect, fov));
 	return true;
 }
 
@@ -80,63 +110,156 @@ void Scene::testing()
 /*
 /	Temporary render method
 */
-void Scene::render()
+void Scene::drawFroward()
 {
-	/*	obtain transformation matrices */
-	glm::mat4 modelViewMx;
-	glm::mat4 modelViewProjectionMx;
-	glm::mat3 normalMx;
-
 	glm::mat4 modelMx;
-	glm::mat4 viewMx(activeCamera->computeViewMatrix());
-	glm::mat4 projectionMx(activeCamera->computeProjectionMatrix(0.01f,5000.0f));
-
-	////
-	//	access each entity of the Scene and draw it
-	////
-	//	if(materialList.size() > 0)
-	//	{
-	//	GLSLProgram* currentPrgm(&(*shaderProgramList.begin()));
-	//	material* currentMtl(&(*materialList.begin()));
-	//	currentPrgm->use();
-	//	
-	//	glEnable(GL_TEXTURE_2D);
-	//	glActiveTexture(GL_TEXTURE0);
-	//	currentPrgm->setUniform("diffuseMap",0);
-	//	currentMtl->getDiffuseMap()->bindTexture();
-	//	glActiveTexture(GL_TEXTURE1);
-	//	currentPrgm->setUniform("specularMap",1);
-	//	currentMtl->getSpecularMap()->bindTexture();
-	//	glActiveTexture(GL_TEXTURE2);
-	//	currentPrgm->setUniform("normalMap",2);
-	//	currentMtl->getNormalMap()->bindTexture();
-
-	GLSLProgram* currentPrgm;
-	Material* currentMtl;
-
-	for(std::list<StaticSceneObject>::iterator i = scenegraph.begin(); i != scenegraph.end(); ++i)
+	glm::mat4 viewMx;
+	glm::mat4 modelViewMx;
+	glm::mat4 projectionMx;
+	
+	/*	Iterate through all levels of the rendergraph */
+	for (ShaderMap::iterator shader_itr = render_graph.begin(); shader_itr != render_graph.end(); ++shader_itr)
 	{
-		modelMx = i->computeModelMatrix();
-		modelViewMx = viewMx * modelMx;
-		normalMx = glm::transpose(glm::inverse(glm::mat3(modelViewMx)));
-		modelViewProjectionMx = projectionMx * viewMx * modelMx;
+		shader_itr->first->use();
+		
+		/*	Set "per program" uniforms */
+		viewMx = activeCamera->computeViewMatrix();
+		projectionMx = activeCamera->computeProjectionMatrix(1.0f,500000.0f);
+		shader_itr->first->setUniform("view_matrix", viewMx);
+		shader_itr->first->setUniform("projection_matrix", projectionMx);
+	
+		int light_counter = 0;
+		shader_itr->first->setUniform("lights.position", lightSourceList.begin()->getPosition());
+		shader_itr->first->setUniform("lights.intensity", lightSourceList.begin()->getColour());
+		shader_itr->first->setUniform("num_lights", light_counter);
+	
+		for (MaterialMap::iterator material_itr = shader_itr->second.begin(); material_itr != shader_itr->second.end(); ++material_itr)
+		{
+			material_itr->first->use();
+	
+			for (MeshMap::iterator mesh_itr = material_itr->second.begin(); mesh_itr != material_itr->second.end(); ++mesh_itr)
+			{
+				/*	Draw all entities instanced */
+				int instance_counter = 0;
+				std::string uniform_name;
+				
+				for (std::list<StaticSceneObject>::iterator entity_itr = mesh_itr->second.begin(); entity_itr != mesh_itr->second.end(); ++entity_itr)
+				{
+					/*	Set transformation matrix for each instance */
+					modelMx = entity_itr->computeModelMatrix();
+					modelViewMx = viewMx*modelMx;
+					uniform_name = "model_view_matrix[" + std::to_string(instance_counter) + "]";
+					shader_itr->first->setUniform(uniform_name.c_str(), modelViewMx);
 
-		currentPrgm = (i->getMaterial())->getShaderProgram();
-		currentMtl = i->getMaterial();
+					instance_counter++;
+				}
 
-		currentPrgm->use();
+				mesh_itr->first->draw(instance_counter);
 
-		currentPrgm->setUniform("normal_matrix",normalMx);
-		currentPrgm->setUniform("view_matrix", viewMx);
-		currentPrgm->setUniform("model_view_matrix",modelViewMx);
-		currentPrgm->setUniform("model_view_projection_matrix",modelViewProjectionMx);
-		currentPrgm->setUniform("light_position",(lightSourceList.begin())->getPosition());
-		currentPrgm->setUniform("light_colour",(lightSourceList.begin())->getColour());
+				//for (std::list<StaticSceneObject>::iterator entity_itr = mesh_itr->second.begin(); entity_itr != mesh_itr->second.end(); ++entity_itr)
+				//{
+				//	modelMx = entity_itr->computeModelMatrix();
+				//	modelViewMx = viewMx*modelMx;
+				//	shader_itr->first->setUniform("model_view_matrix[0]", modelViewMx);
+				//	mesh_itr->first->draw();
+				//}
+			}
+		}
+	}
 
-		currentMtl->use();
+	///*	obtain transformation matrices */
+	//glm::mat4 modelMx;
+	//glm::mat4 modelViewMx;
+	//glm::mat4 viewMx(activeCamera->computeViewMatrix());
+	//glm::mat4 projectionMx(activeCamera->computeProjectionMatrix(1.0f,500000.0f));
+	//glm::mat4 viewProjectionMx = projectionMx * viewMx;
+	//
+	//std::shared_ptr<GLSLProgram> currentPrgm;
+	//std::shared_ptr<Material> currentMtl;
+	//
+	//for(std::list<StaticSceneObject>::iterator i = scenegraph.begin(); i != scenegraph.end(); ++i)
+	//{
+	//	modelMx = i->computeModelMatrix();
+	//	modelViewMx = viewMx * modelMx;
+	//
+	//	currentMtl = i->getMaterial();
+	//	currentPrgm = currentMtl->getShaderProgram();
+	//	
+	//	currentPrgm->use();
+	//
+	//	currentPrgm->setUniform("model_view_matrix[0]", modelViewMx);
+	//	currentPrgm->setUniform("view_matrix", viewMx);
+	//	currentPrgm->setUniform("projection_matrix", projectionMx);
+	//
+	//	int light_counter = 0;
+	//	std::string uniform_name;
+	//	//for(std::list<SceneLightSource>::iterator light_itr = lightSourceList.begin(); light_itr != lightSourceList.end(); ++light_itr)
+	//	//{
+	//	//	uniform_name = "lights.position["+ std::to_string(light_counter);
+	//	//	uniform_name.append("]");
+	//	//	currentPrgm->setUniform(uniform_name.c_str(),light_itr->getPosition());
+	//	//	
+	//	//	uniform_name = "lights.intensity["+ std::to_string(light_counter);
+	//	//	uniform_name.append("]");
+	//	//	currentPrgm->setUniform(uniform_name.c_str(),light_itr->getColour());
+	//	//
+	//	//   
+	//	//	//currentPrgm->setUniform("lights.position[0]",light_itr->getPosition());
+	//	//	//currentPrgm->setUniform("lights.intensity[0]",light_itr->getColour());
+	//	//
+	//	//	light_counter++;
+	//	//	if(light_counter>=20) break;
+	//	//}
+	//
+	//	currentPrgm->setUniform("lights.position", lightSourceList.begin()->getPosition());
+	//	currentPrgm->setUniform("lights.intensity", lightSourceList.begin()->getColour());
+	//
+	//	currentPrgm->setUniform("num_lights",light_counter);
+	//
+	//	currentMtl->use();
+	//
+	//	(i->getGeometry())->draw();
+	//	//i->rotate(0.1f,glm::vec3(0.0f,1.0f,0.0f));
+	//}
+}
 
-		(i->getGeometry())->draw(GL_TRIANGLES,2000,0);
-		//i->rotate(0.1f,glm::vec3(0.0f,1.0f,0.0f));
+void Scene::drawPicking(std::shared_ptr<GLSLProgram> prgm)
+{
+	prgm->use();
+
+	glm::mat4 model_mx;
+	glm::mat4 view_mx = activeCamera->computeViewMatrix();
+	glm::mat4 projection_mx = activeCamera->computeProjectionMatrix(1.0f, 500000.0f);
+	glm::mat4 model_view_projection_mx;
+
+	/*	Iterate through all levels of the rendergraph */
+	for (ShaderMap::iterator shader_itr = render_graph.begin(); shader_itr != render_graph.end(); ++shader_itr)
+	{	
+		for (MaterialMap::iterator material_itr = shader_itr->second.begin(); material_itr != shader_itr->second.end(); ++material_itr)
+		{
+			for (MeshMap::iterator mesh_itr = material_itr->second.begin(); mesh_itr != material_itr->second.end(); ++mesh_itr)
+			{
+				/*	Draw all entities instanced */
+				int instance_counter = 0;
+				std::string uniform_name;
+
+				for (std::list<StaticSceneObject>::iterator entity_itr = mesh_itr->second.begin(); entity_itr != mesh_itr->second.end(); ++entity_itr)
+				{
+					/*	Set transformation matrix for each instance */
+					model_mx = entity_itr->computeModelMatrix();
+					model_view_projection_mx = projection_mx*view_mx*model_mx;
+					uniform_name = "model_view_projection_matrix[" + std::to_string(instance_counter) + "]";
+					prgm->setUniform(uniform_name.c_str(), model_view_projection_mx);
+
+					uniform_name = "entity_id[" + std::to_string(instance_counter) + "]";
+					prgm->setUniform(uniform_name.c_str(), entity_itr->getId());
+
+					instance_counter++;
+				}
+
+				mesh_itr->first->draw(instance_counter);
+			}
+		}
 	}
 }
 
@@ -151,7 +274,7 @@ void Scene::renderVolumetricObjects()
 	glm::mat4 viewMx(activeCamera->computeViewMatrix());
 	glm::mat4 projectionMx(activeCamera->computeProjectionMatrix(0.01f,100.0f));
 
-	GLSLProgram* currentPrgm(volumetricObjectList.begin()->getShaderProgram());
+	std::shared_ptr<GLSLProgram> currentPrgm(volumetricObjectList.begin()->getShaderProgram());
 	currentPrgm->use();
 
 	for(std::list<VolumetricSceneObject>::iterator i = volumetricObjectList.begin(); i != volumetricObjectList.end(); ++i)
@@ -176,7 +299,7 @@ void Scene::renderVolumetricObjects()
 		currentPrgm->setUniform("textureMatrix",textureMatrix);
 		currentPrgm->setUniform("cameraPosition",activeCamera->getPosition());
 
-		(i->getGeometry())->draw(GL_TRIANGLES,36,0);
+		(i->getGeometry())->draw();
 		i->rotate(0.1f,glm::vec3(0.0f,1.0f,0.0f));
 	}
 }

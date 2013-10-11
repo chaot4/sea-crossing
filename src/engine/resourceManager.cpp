@@ -4,7 +4,17 @@ ResourceManager::ResourceManager(){}
 
 ResourceManager::~ResourceManager(){}
 
-bool ResourceManager::createTriangle(Mesh*& inOutGeomPtr)
+
+void ResourceManager::clearLists()
+{
+	geometry_list.clear();
+	material_list.clear();
+	texture_list.clear();
+	volume_list.clear();
+	shader_program_list.clear();
+}
+
+bool ResourceManager::createTriangle(std::shared_ptr<Mesh> &inOutGeomPtr)
 {
 	Vertex_pn *vertexArray = new Vertex_pn[3];
 	GLuint *indexArray = new GLuint[3];
@@ -15,23 +25,25 @@ bool ResourceManager::createTriangle(Mesh*& inOutGeomPtr)
 
 	indexArray[0]=0;indexArray[1]=1;indexArray[2]=2;
 
-	geometryList.push_back(Mesh("0"));
-	std::list<Mesh>::iterator lastElement = --(geometryList.end());
-	if(!(lastElement->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pn)*3,sizeof(GLuint)*3))) return false;
-	lastElement->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pn),0);
-	lastElement->setVertexAttribPointer(3,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pn),(GLvoid*) sizeof(Vertex_p));
+	std::shared_ptr<Mesh> triangle_mesh(new Mesh("0"));
+	
+	if(!(triangle_mesh->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pn)*3,sizeof(GLuint)*3,GL_TRIANGLES))) return false;
+	triangle_mesh->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pn),0);
+	triangle_mesh->setVertexAttribPointer(3,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pn),(GLvoid*) sizeof(Vertex_p));
 
-	inOutGeomPtr = &(*lastElement);
+	inOutGeomPtr = triangle_mesh;
+	geometry_list.push_back(std::move(triangle_mesh));
+
 	return true;
 }
 
-bool ResourceManager::createBox(Mesh*& inOutGeomPtr)
+bool ResourceManager::createBox(std::shared_ptr<Mesh> &inOutGeomPtr)
 {
 	/*	Check list of vertexBufferObjects for default box object(filename="0") */
-	for(std::list<Mesh>::iterator i = geometryList.begin(); i != geometryList.end(); ++i)
+	for(std::list<std::shared_ptr<Mesh>>::iterator i = geometry_list.begin(); i != geometry_list.end(); ++i)
 	{
-		if(i->getFilename() == "0"){
-			inOutGeomPtr = &(*i);
+		if((*i)->getFilename() == "0"){
+			inOutGeomPtr = (*i);
 			return true;
 		}
 	}
@@ -84,56 +96,48 @@ bool ResourceManager::createBox(Mesh*& inOutGeomPtr)
 	indexArray[30]=20;indexArray[31]=22;indexArray[32]=21;
 	indexArray[33]=22;indexArray[34]=20;indexArray[35]=23;
 
-	geometryList.push_back(Mesh("0"));
-	std::list<Mesh>::iterator lastElement = --(geometryList.end());
-	if(!(lastElement->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pntcu)*24,sizeof(GLuint)*36))) return false;
-	lastElement->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),0);
-	lastElement->setVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_p));
-	lastElement->setVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pn));
-	lastElement->setVertexAttribPointer(3,4,GL_UNSIGNED_BYTE,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pnt));
-	lastElement->setVertexAttribPointer(4,2,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pntc));
+	std::shared_ptr<Mesh> box_mesh(new Mesh("0"));
+	if(!(box_mesh->bufferDataFromArray(vertexArray,indexArray,sizeof(Vertex_pntcu)*24,sizeof(GLuint)*36,GL_TRIANGLES))) return false;
+	box_mesh->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),0);
+	box_mesh->setVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_p));
+	box_mesh->setVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pn));
+	box_mesh->setVertexAttribPointer(3,4,GL_UNSIGNED_BYTE,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pnt));
+	box_mesh->setVertexAttribPointer(4,2,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcu),(GLvoid*) sizeof(Vertex_pntc));
 
-	inOutGeomPtr = &(*lastElement);
+	inOutGeomPtr = box_mesh;
+	geometry_list.push_back(std::move(box_mesh));
 	return true;
 }
 
-bool ResourceManager::createMesh(const std::string path, Mesh*& inOutGeomPtr)
+bool ResourceManager::createMesh(const std::string path, std::shared_ptr<Mesh> &inOutGeomPtr)
 {
 	/*	Check list of vertexBufferObjects for filename */
-	for(std::list<Mesh>::iterator i = geometryList.begin(); i != geometryList.end(); ++i)
+	for(std::list<std::shared_ptr<Mesh>>::iterator i = geometry_list.begin(); i != geometry_list.end(); ++i)
 	{
-		if(i->getFilename() == path){
-			inOutGeomPtr = &(*i);
+		if((*i)->getFilename() == path){
+			inOutGeomPtr = (*i);
 			return true;
 		}
 	}
 
 	/*	Check file type before trying to load it */
 	std::string file_type;
-	std::string::const_iterator itr0 = path.end();
-	std::string::const_iterator itr1;
-	for(itr1 = path.end(); *itr1 != '.'; --itr1);
-	file_type.assign(++itr1,itr0);
+	std::size_t found = path.rfind('.');
+	if (found != std::string::npos) file_type = path.substr(found + 1);
 
 	if(file_type == "fbx")
 	{
-		geometryList.push_back(Mesh(path));
-		std::list<Mesh>::iterator lastElement = --(geometryList.end());
-
 		/* Just some testing */
-		if( !loadFbxGeometry(path.c_str(),&(*lastElement)) ) {return false;}
+		if( !loadFbxGeometry(path, inOutGeomPtr) ) {return false;}
 
-		inOutGeomPtr = &(*lastElement);
+		geometry_list.push_back(inOutGeomPtr);
 	}
 	else if(file_type == "slraw")
 	{
-		geometryList.push_back(Mesh(path));
-		std::list<Mesh>::iterator lastElement = --(geometryList.end());
-
 		/* Just some testing */
-		if( !loadBinaryGeometry(path.c_str(),&(*lastElement)) ) {return false;}
+		if( !loadBinaryGeometry(path, inOutGeomPtr) ) {return false;}
 
-		inOutGeomPtr = &(*lastElement);
+		geometry_list.push_back(inOutGeomPtr);
 	}
 	else
 	{
@@ -143,14 +147,14 @@ bool ResourceManager::createMesh(const std::string path, Mesh*& inOutGeomPtr)
 	return true;
 }
 
-bool ResourceManager::createMaterial(Material*& inOutMtlPtr)
+bool ResourceManager::createMaterial(std::shared_ptr<Material> &inOutMtlPtr)
 {
 	/*	Check list of materials for default material(id=0) */
-	for(std::list<Material>::iterator i = materialList.begin(); i != materialList.end(); ++i)
+	for(std::list<std::shared_ptr<Material>>::iterator i = material_list.begin(); i != material_list.end(); ++i)
 	{
-		if((i->getId())==0)
+		if( (*i)->getId() == 0 )
 		{
-			inOutMtlPtr = &*i;
+			inOutMtlPtr = (*i);
 			return true;
 		}
 	}
@@ -170,67 +174,79 @@ bool ResourceManager::createMaterial(Material*& inOutMtlPtr)
 	/*	normal pointing upwards */
 	normalData[0]=0.5f; normalData[1]=0.5f; normalData[2]=1.0f; normalData[3]=0.0f;
 	
-	GLSLProgram* prgPtr;
-	Texture* texPtr1;
-	Texture* texPtr2;
-	Texture* texPtr3;
-	Texture* texPtr4;
+	std::shared_ptr<GLSLProgram> prgPtr;
+	std::shared_ptr<Texture> texPtr1;
+	std::shared_ptr<Texture> texPtr2;
+	std::shared_ptr<Texture> texPtr3;
+	std::shared_ptr<Texture> texPtr4;
 	if(!createShaderProgram(SURFACE_LIGHTING,prgPtr)) return false;
 	if(!createTexture2D(1,1,diffuseData,texPtr1)) return false;
 	if(!createTexture2D(1,1,specularData,texPtr2)) return false;
 	if(!createTexture2D(1,1,roughnessData,texPtr3)) return false;
 	if(!createTexture2D(1,1,normalData,texPtr4)) return false;
-	materialList.push_back(Material(0,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
 
-	std::list<Material>::iterator lastElement = --(materialList.end());
-	inOutMtlPtr = &(*lastElement);
+	std::shared_ptr<Material> material(new Material(0,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
+	inOutMtlPtr = material;
+	material_list.push_back(std::move(material));
+
+	prgPtr.reset();
+	texPtr1.reset();
+	texPtr2.reset();
+	texPtr3.reset();
+	texPtr4.reset();
 	return true;
 }
 
-bool ResourceManager::createMaterial(const char * const path, Material*& inOutMtlPtr)
+bool ResourceManager::createMaterial(const char * const path, std::shared_ptr<Material> &inOutMtlPtr)
 {
 	MaterialInfo inOutMtlInfo;
 	if(!parseMaterial(path,inOutMtlInfo))return false;
 
-	for(std::list<Material>::iterator i = materialList.begin(); i != materialList.end(); ++i)
+	for(std::list<std::shared_ptr<Material>>::iterator i = material_list.begin(); i != material_list.end(); ++i)
 	{
-		if((i->getId())==inOutMtlInfo.id)
+		if( (*i)->getId() == inOutMtlInfo.id )
 		{
-			inOutMtlPtr = &*i;
+			inOutMtlPtr = (*i);
 			return true;
 		}
 	}
 
-	GLSLProgram* prgPtr;
-	Texture* texPtr1;
-	Texture* texPtr2;
-	Texture* texPtr3;
-	Texture* texPtr4;
+	std::shared_ptr<GLSLProgram> prgPtr;
+	std::shared_ptr<Texture> texPtr1;
+	std::shared_ptr<Texture> texPtr2;
+	std::shared_ptr<Texture> texPtr3;
+	std::shared_ptr<Texture> texPtr4;
 	if(!createShaderProgram(SURFACE_LIGHTING,prgPtr)) return false;
 	if(!createTexture2D(inOutMtlInfo.diff_path,texPtr1)) return false;
 	if(!createTexture2D(inOutMtlInfo.spec_path,texPtr2)) return false;
 	if(!createTexture2D(inOutMtlInfo.roughness_path,texPtr3)) return false;
 	if(!createTexture2D(inOutMtlInfo.normal_path,texPtr4)) return false;
-	materialList.push_back(Material(inOutMtlInfo.id,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
 
-	std::list<Material>::iterator lastElement = --(materialList.end());
-	inOutMtlPtr = &(*lastElement);
+	std::shared_ptr<Material> material(new Material(inOutMtlInfo.id,prgPtr,texPtr1,texPtr2,texPtr3,texPtr4));
+	inOutMtlPtr = material;
+	material_list.push_back(std::move(material));
+
+	prgPtr.reset();
+	texPtr1.reset();
+	texPtr2.reset();
+	texPtr3.reset();
+	texPtr4.reset();
 	return true;
 }
 
-bool ResourceManager::createShaderProgram(shaderType type, GLSLProgram*& inOutPrgPtr)
+bool ResourceManager::createShaderProgram(shaderType type, std::shared_ptr<GLSLProgram> &inOutPrgPtr)
 {
 	/*	Check list of shader programs for the shader type */
-	for(std::list<GLSLProgram>::iterator i = shaderProgramList.begin(); i != shaderProgramList.end(); ++i)
+	for(std::list<std::shared_ptr<GLSLProgram>>::iterator i = shader_program_list.begin(); i != shader_program_list.end(); ++i)
 	{
-		if((i->getType())==type){
-			inOutPrgPtr = &*i;
+		if(((*i)->getType())==type){
+			inOutPrgPtr = (*i);
 			return true;
 		}
 	}
 
-	GLSLProgram shaderPrg;
-	shaderPrg.init();
+	std::shared_ptr<GLSLProgram> shaderPrg(new GLSLProgram(type));
+	shaderPrg->init();
 	std::string vertSource;
 	std::string fragSource;
 
@@ -239,102 +255,108 @@ bool ResourceManager::createShaderProgram(shaderType type, GLSLProgram*& inOutPr
 	case SURFACE_LIGHTING : {
 		vertSource = readShaderFile("../resources/shaders/surface_lighting_v.glsl");
 		fragSource = readShaderFile("../resources/shaders/surface_lighting_f.glsl");
-		shaderPrg.bindAttribLocation(0,"v_position");
-		shaderPrg.bindAttribLocation(1,"v_normal");
-		shaderPrg.bindAttribLocation(2,"v_tangent");
-		shaderPrg.bindAttribLocation(3,"v_colour");
-		shaderPrg.bindAttribLocation(4,"v_uv_coord");
-		shaderPrg.bindAttribLocation(5,"v_bitangent");
+		shaderPrg->bindAttribLocation(0,"v_position");
+		shaderPrg->bindAttribLocation(1,"v_normal");
+		shaderPrg->bindAttribLocation(2,"v_tangent");
+		shaderPrg->bindAttribLocation(3,"v_colour");
+		shaderPrg->bindAttribLocation(4,"v_uv_coord");
+		shaderPrg->bindAttribLocation(5,"v_bitangent");
+		break; }
+	case PICKING: {
+		vertSource = readShaderFile("../resources/shaders/picking_v.glsl");
+		fragSource = readShaderFile("../resources/shaders/picking_f.glsl");
+		shaderPrg->bindAttribLocation(0, "v_position");
+		shaderPrg->bindFragDataLocation(0, "frag_colour");
 		break; }
 	case FLAT : {
 		vertSource = readShaderFile("../resources/shaders/v_flat.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_flat.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vNormal");
-		shaderPrg.bindAttribLocation(2,"vTangent");
-		shaderPrg.bindAttribLocation(3,"vColour");
-		shaderPrg.bindAttribLocation(4,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vNormal");
+		shaderPrg->bindAttribLocation(2,"vTangent");
+		shaderPrg->bindAttribLocation(3,"vColour");
+		shaderPrg->bindAttribLocation(4,"vUVCoord");
 		break; }
 	case FXAA : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_fxaa.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	case IDLE : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_idle.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	case VOLUME_RAYCASTING : {
 		vertSource = readShaderFile("../resources/shaders/v_volRen.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_volRen.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(3,"vColour");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(3,"vColour");
 		break; }
 	case GAUSSIAN : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_seperatedGaussian.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	case GRADIENT : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_gradient.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	case STRUCTURE_TENSOR : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_structureTensor.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	case HESSE : {
 		vertSource = readShaderFile("../resources/shaders/v_genericPostProc.glsl");
 		fragSource = readShaderFile("../resources/shaders/f_hesse.glsl");
-		shaderPrg.bindAttribLocation(0,"vPosition");
-		shaderPrg.bindAttribLocation(1,"vUVCoord");
+		shaderPrg->bindAttribLocation(0,"vPosition");
+		shaderPrg->bindAttribLocation(1,"vUVCoord");
 		break; }
 	default : {
 		return false;
 		break; }
 	}
 
-	if(!shaderPrg.compileShaderFromString(&vertSource,GL_VERTEX_SHADER)){ std::cout<<shaderPrg.getLog(); return false;}
-	if(!shaderPrg.compileShaderFromString(&fragSource,GL_FRAGMENT_SHADER)){ std::cout<<shaderPrg.getLog(); return false;}
-	if(!shaderPrg.link()){ std::cout<<shaderPrg.getLog(); return false;}
+	if(!shaderPrg->compileShaderFromString(&vertSource,GL_VERTEX_SHADER)){ std::cout<<shaderPrg->getLog(); return false;}
+	if(!shaderPrg->compileShaderFromString(&fragSource,GL_FRAGMENT_SHADER)){ std::cout<<shaderPrg->getLog(); return false;}
+	if(!shaderPrg->link()){ std::cout<<shaderPrg->getLog(); return false;}
 
-	shaderProgramList.push_back(shaderPrg);
-	std::list<GLSLProgram>::iterator lastElement = --(shaderProgramList.end());
-	inOutPrgPtr = &(*lastElement);
+	inOutPrgPtr = shaderPrg;
+	shader_program_list.push_back(std::move(shaderPrg));
+
 	return true;
 }
 
-bool ResourceManager::createTexture2D(int dimX, int dimY, float* data, Texture*& inOutTexPtr)
+bool ResourceManager::createTexture2D(int dimX, int dimY, float* data, std::shared_ptr<Texture> &inOutTexPtr)
 {
-	textureList.push_back(Texture2D());
-	std::list<Texture2D>::iterator lastElement = --(textureList.end());
-	if(!(lastElement->loadArrayF(dimX, dimY, data))) return false;
+	std::shared_ptr<Texture2D> texture(new Texture2D());
+	if(!(texture->load(GL_RGB,dimX, dimY,GL_RGB,GL_FLOAT,data))) return false;
+	inOutTexPtr = texture;
+	texture_list.push_back(std::move(texture));
 
-	inOutTexPtr = &(*lastElement);
 	return true;
 }
 
-bool ResourceManager::createTexture2D(const std::string path, Texture*& inOutTexPtr)
+bool ResourceManager::createTexture2D(const std::string path, std::shared_ptr<Texture> &inOutTexPtr)
 {
-	for(std::list<Texture2D>::iterator i = textureList.begin(); i != textureList.end(); ++i)
+	for(std::list<std::shared_ptr<Texture2D>>::iterator i = texture_list.begin(); i != texture_list.end(); ++i)
 	{
-		if((i->getFilename())==path)
+		if(((*i)->getFilename())==path)
 		{
-			inOutTexPtr = &*i;
+			inOutTexPtr = (*i);
 			return true;
 		}
 	}
 
 	char* imageData;
-	long dataBegin;
+	unsigned long dataBegin;
 	int imgDimX;
 	int imgDimY;
 
@@ -342,407 +364,114 @@ bool ResourceManager::createTexture2D(const std::string path, Texture*& inOutTex
 	imageData = new char[3*imgDimX*imgDimY];
 	if(!readPpmData(path.c_str(),imageData,dataBegin,imgDimX,imgDimY)) return false;
 
-	textureList.push_back(Texture2D());
-	std::list<Texture2D>::iterator lastElement = --(textureList.end());
-	if(!(lastElement->loadArrayC(imgDimX,imgDimY,imageData))) return false;
+	std::shared_ptr<Texture2D> texture(new Texture2D(path));
+	if (!(texture->load(GL_RGB, imgDimX, imgDimY, GL_RGB, GL_UNSIGNED_BYTE, imageData))) return false;
+	inOutTexPtr = texture;
+	texture_list.push_back(std::move(texture));
 
-	inOutTexPtr = &(*lastElement);
+	delete[] imageData;
 	return true;
 }
 
-bool ResourceManager::createTexture3D(const std::string path, glm::ivec3 textureRes, Texture3D*& inOutTexPtr)
+bool ResourceManager::createTexture3D(const std::string path, glm::ivec3 textureRes, std::shared_ptr<Texture3D> &inOutTexPtr)
 {
-	for(std::list<Texture3D>::iterator i = volumeList.begin(); i != volumeList.end(); ++i)
+	for(std::list<std::shared_ptr<Texture3D>>::iterator i = volume_list.begin(); i != volume_list.end(); ++i)
 	{
-		if((i->getFilename())==path)
+		if(((*i)->getFilename())==path)
 		{
-			inOutTexPtr = &*i;
+			inOutTexPtr = (*i);
 			return true;
 		}
 	}
 
-	volumeList.push_back(Texture3D());
-	std::list<Texture3D>::iterator lastElement = --(volumeList.end());
-	if(!(lastElement->loadTextureFile(path,textureRes))) return false;
+	std::shared_ptr<Texture3D> volume(new Texture3D(path));
+	if(!(volume->loadTextureFile(path,textureRes))) return false;
+	inOutTexPtr = volume;
+	volume_list.push_back(std::move(volume));
 
-	inOutTexPtr = &(*lastElement);
 	return true;
 }
 
-bool ResourceManager::createTexture3D(float* volumeData, glm::ivec3 textureRes, GLenum internalFormat, GLenum format, Texture3D*& inOutTexPtr)
+bool ResourceManager::createTexture3D(float* volumeData, glm::ivec3 textureRes, GLenum internalFormat, GLenum format, std::shared_ptr<Texture3D> &inOutTexPtr)
 {
-	volumeList.push_back(Texture3D());
-	std::list<Texture3D>::iterator lastElement = --(volumeList.end());
-	if(!(lastElement->loadArrayF(volumeData,textureRes,internalFormat,format))) return false;
+	std::shared_ptr<Texture3D> volume(new Texture3D());
+	if(!(volume->loadArrayF(volumeData,textureRes,internalFormat,format))) return false;
+	inOutTexPtr = volume;
+	volume_list.push_back(std::move(volume));
 
-	inOutTexPtr = &(*lastElement);
 	return true;
 }
 
-bool ResourceManager::loadFbxGeometry(const char* const path, Mesh* geomPtr)
+bool ResourceManager::loadFbxGeometry(const std::string &path, std::shared_ptr<Mesh> &geomPtr)
 {
-	/*	Initialize an fbx sdk manager. It handles memory management */
-	FbxManager *fbxMngr = FbxManager::Create();
-
-	/*	Create the IO settings object. */
-	FbxIOSettings *ios = FbxIOSettings::Create(fbxMngr, IOSROOT);
-	fbxMngr->SetIOSettings(ios);
-
-	/*	Create an importer */
-	FbxImporter *fbxImprtr = FbxImporter::Create(fbxMngr,""); 
-
-	/*	Intialize the importer with the path to the file */
-	if( !fbxImprtr->Initialize(path, -1, fbxMngr->GetIOSettings()) )
+	try
 	{
-		printf("Call to FbxImporter::Initialize() failed.\n"); 
-		printf("Error returned: %s\n\n", fbxImprtr->GetStatus().GetErrorString()); 
-        return false;
-	}
+		FBX::OpenGL::BindAttribLocations locations;
 
-	/*	Create an fbx scene to populate with the imported file */
-	FbxScene * fbxScn = FbxScene::Create(fbxMngr,"importScene");
-	fbxImprtr->Import(fbxScn);
-	fbxImprtr->Destroy();
+		std::shared_ptr<Mesh> mesh(new Mesh(path));
 
-	/*
-	/	Get the root node of the scene and its (first) child.
-	/	Should the scene contain more than a single object, I will propably
-	/	end up in hell for this...
-	*/
-	FbxNode* fbxRootNode = fbxScn->GetRootNode();
-	FbxNode* fbxChildNode = fbxRootNode->GetChild(0);
+		std::shared_ptr<FBX::Geometry> geometry = FBX::Geometry::fbxLoadFirstGeometry(path);
+		FBX::OpenGL::GeometrySerialize serialize(geometry->features);
 
-	/*
-	/	To offer at least some safety, check if the child is a mesh.
-	/	However, even then I should pray to someone that the mesh is
-	/	triangulated.
-	*/
-	if( !(fbxChildNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eMesh) ) return false;
-	
-	FbxMesh* fbxMesh = fbxChildNode->GetMesh();
+		uint8_t* memory;
+		size_t memory_size;
+		serialize.serialize(memory, memory_size, geometry->vertices);
 
-	const int fbxPolyCount = fbxMesh->GetPolygonCount();
-
-	bool hasNormal = fbxMesh->GetElementNormalCount() > 0;
-	bool hasTangent = fbxMesh->GetElementTangentCount() > 0;
-	bool hasBitangent = fbxMesh->GetElementBinormalCount() > 0;
-	bool hasColor = fbxMesh->GetElementVertexColorCount() > 0;
-	bool hasUV = fbxMesh->GetElementUVCount() > 0;
-
-	FbxGeometryElement::EMappingMode fbxNormalMappingMode = FbxGeometryElement::eNone;
-	FbxGeometryElement::EMappingMode fbxTangentMappingMode = FbxGeometryElement::eNone;
-	FbxGeometryElement::EMappingMode fbxVertexColorMappingMode = FbxGeometryElement::eNone;
-    FbxGeometryElement::EMappingMode fbxUVMappingMode = FbxGeometryElement::eNone;
-	
-	bool allByControlPoint;
-	if (hasNormal)
-    {
-		fbxNormalMappingMode = fbxMesh->GetElementNormal(0)->GetMappingMode();
-        if (fbxNormalMappingMode == FbxGeometryElement::eNone) hasNormal = false;
-        if (hasNormal && (fbxNormalMappingMode != FbxGeometryElement::eByControlPoint) ) allByControlPoint = false;
-    }
-	if (hasTangent)
-    {
-		fbxTangentMappingMode = fbxMesh->GetElementNormal(0)->GetMappingMode();
-        if (fbxTangentMappingMode == FbxGeometryElement::eNone) hasTangent = false;
-        if (hasTangent && (fbxTangentMappingMode != FbxGeometryElement::eByControlPoint) ) allByControlPoint = false;
-    }
-	if (hasColor)
-    {
-		fbxVertexColorMappingMode = fbxMesh->GetElementNormal(0)->GetMappingMode();
-        if (fbxVertexColorMappingMode == FbxGeometryElement::eNone) hasColor = false;
-        if (hasColor && (fbxVertexColorMappingMode != FbxGeometryElement::eByControlPoint) ) allByControlPoint = false;
-    }
-	if (hasUV)
-    {
-		fbxUVMappingMode = fbxMesh->GetElementNormal(0)->GetMappingMode();
-        if (fbxUVMappingMode == FbxGeometryElement::eNone) hasUV = false;
-        if (hasUV && (fbxUVMappingMode != FbxGeometryElement::eByControlPoint) ) allByControlPoint = false;
-    }
-
-	int vertexCount = fbxMesh->GetControlPointsCount();
-	/*	Triangles are assumed, meaning three vertices per polygon */
-	if(!allByControlPoint) vertexCount = fbxPolyCount * 3;
-	//std::cout<<"Vertex count: "<<vertexCount<<"\n";
-
-	/*	For reasons of simplicity I use the "full" vertex format in any case for now */
-	Vertex_pntcub *vertices = new Vertex_pntcub[vertexCount];
-	unsigned int *indices = new unsigned int[fbxPolyCount * 3];
-
-//	float *uvs = NULL;
-	FbxStringList uvNames;
-	fbxMesh->GetUVSetNames(uvNames);
-	const char *uvName = NULL;
-	if(hasUV && uvNames.GetCount())
-	{
-//		uvs = new float[vertexCount *2];
-		uvName = uvNames[0];
-	}
-
-	/*	Temporary storage for the vertex attributes */
-	const FbxVector4 * controlPoints = fbxMesh->GetControlPoints();
-	FbxVector4 currentVertex;
-	FbxVector4 currentNormal;
-	FbxVector4 currentTangent;
-	FbxVector4 currentBitangent;
-	FbxColor currentColor;
-	FbxVector2 currentUV;
-
-	/*	Now read the vertex attributes */
-	if (allByControlPoint)
-    {
-        const FbxGeometryElementNormal *fbxNormalElement = NULL;
-		const FbxGeometryElementTangent *fbxTangentElement = NULL;
-		const FbxGeometryElementVertexColor * fbxVertexColorElement = NULL;
-        const FbxGeometryElementUV *fbxUVElement = NULL;
-
-        if (hasNormal) fbxNormalElement = fbxMesh->GetElementNormal(0);
-		if (hasTangent) fbxTangentElement = fbxMesh->GetElementTangent(0);
-		if (hasColor) fbxVertexColorElement = fbxMesh->GetElementVertexColor(0);
-        if (hasUV) fbxUVElement = fbxMesh->GetElementUV(0);
-
-        for (int index = 0; index < vertexCount; ++index)
-        {
-            /* Save the vertex position */
-            currentVertex = controlPoints[index];
-
-			vertices[index].x = static_cast<float>(currentVertex[0]);
-            vertices[index].y = static_cast<float>(currentVertex[1]);
-            vertices[index].z = static_cast<float>(currentVertex[2]);
-
-			#if DEBUG_OUTPUT == 1
-				std::cout<<"----------------------------------------------------------------------\n";
-				std::cout<<"Vertex#"<<index<<" Position: "<<vertices[index].x<<" "<<vertices[index].y<<" "<<vertices[index].z<<"\n";
-			#endif
-
-            /* Save the normal */
-            if (hasNormal)
-            {
-                int normalIndex = index;
-                if (fbxNormalElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
-                {
-                    normalIndex = fbxNormalElement->GetIndexArray().GetAt(index);
-                }
-                currentNormal = fbxNormalElement->GetDirectArray().GetAt(normalIndex);
-				vertices[index].nx = static_cast<float>(currentNormal[0]);
-				vertices[index].ny = static_cast<float>(currentNormal[1]);
-				vertices[index].nz = static_cast<float>(currentNormal[2]);
-
-				#if DEBUG_OUTPUT == 1
-					std::cout<<"Vertex#"<<index<<" Normal: "<<vertices[index].nx<<" "<<vertices[index].ny<<" "<<vertices[index].nz<<"\n";
-				#endif
-            }
-
-			/* Save the tangent */
-			if (hasTangent)
-			{
-				int tangentIndex = index;
-				if (fbxTangentElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
-                {
-                    tangentIndex = fbxTangentElement->GetIndexArray().GetAt(index);
-                }
-				currentTangent = fbxTangentElement->GetDirectArray().GetAt(tangentIndex);
-				vertices[index].tx = static_cast<float>(currentTangent[0]);
-				vertices[index].ty = static_cast<float>(currentTangent[1]);
-				vertices[index].tz = static_cast<float>(currentTangent[2]);
-
-				#if DEBUG_OUTPUT == 1
-					std::cout<<"Vertex#"<<index<<" Tangent: "<<vertices[index].tx<<" "<<vertices[index].ty<<" "<<vertices[index].tz<<"\n";
-				#endif
-			}
-
-			/* Save the color */
-			if (hasColor)
-			{
-				int vertexColorIndex = index;
-				if (fbxVertexColorElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
-                {
-                    vertexColorIndex = fbxVertexColorElement->GetIndexArray().GetAt(index);
-                }
-				currentColor = fbxVertexColorElement->GetDirectArray().GetAt(vertexColorIndex);
-				vertices[index].r = static_cast<GLubyte>(currentColor[0]);
-				vertices[index].g = static_cast<GLubyte>(currentColor[1]);
-				vertices[index].b = static_cast<GLubyte>(currentColor[2]);
-				vertices[index].a = static_cast<GLubyte>(currentColor[3]);
-
-				#if DEBUG_OUTPUT == 1
-					std::cout<<"Vertex#"<<index<<" Color: "<<vertices[index].r<<" "<<vertices[index].g<<" "<<vertices[index].b<<vertices[index].a<<"\n";
-				#endif
-			}
-
-            /* Save the UV */
-            if (hasUV)
-            {
-                int uVIndex = index;
-                if (fbxUVElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
-                {
-                    uVIndex = fbxUVElement->GetIndexArray().GetAt(index);
-                }
-                currentUV = fbxUVElement->GetDirectArray().GetAt(uVIndex);
-				vertices[index].u = static_cast<float>(currentUV[0]);
-				vertices[index].v = static_cast<float>(currentUV[1]);
-				
-				#if DEBUG_OUTPUT == 1
-					std::cout<<"Vertex#"<<index<<" UV: "<<vertices[index].u<<" "<<vertices[index].v<<"\n";
-					std::cout<<"----------------------------------------------------------------------\n";
-				#endif
-            }
-        }
-    }
-
-	//std::cout<<"Filled vertex buffer.\n";
-
-	int vertexCounter = 0;
-
-	const FbxGeometryElementTangent *fbxTangentElement = NULL;
-	const FbxGeometryElementBinormal *fbxBitangentElement = NULL;
-	const FbxGeometryElementVertexColor * fbxVertexColorElement = NULL;
-
-	if (hasTangent) fbxTangentElement = fbxMesh->GetElementTangent(0);
-	fbxBitangentElement = fbxMesh->GetElementBinormal(0);
-	if (hasColor) fbxVertexColorElement = fbxMesh->GetElementVertexColor(0);
-
-	for(int polyIndex = 0; polyIndex < fbxPolyCount; ++polyIndex)
-	{
-		int indexOffset = polyIndex * 3;
-
-		#if DEBUG_OUTPUT == 1
-					std::cout<<"****************\n";
-					std::cout<<"Polygon#"<<polyIndex<<"\n"; 
-					std::cout<<"****************\n";
-		#endif
-
-		for(int vertIndex = 0; vertIndex < 3; ++vertIndex)
-		{
-			const int controlPointIndex = fbxMesh->GetPolygonVertex(polyIndex, vertIndex);
-
-			if(allByControlPoint)
-			{
-				indices[indexOffset+vertIndex] = static_cast<unsigned int>(controlPointIndex);
-			}
-			else
-			{
-				indices[indexOffset+vertIndex] = static_cast<unsigned int>(vertexCounter);
-
-				currentVertex = controlPoints[controlPointIndex];
-				vertices[vertexCounter].x = static_cast<float>(currentVertex[0]);
-				vertices[vertexCounter].y = static_cast<float>(currentVertex[1]);
-				vertices[vertexCounter].z = static_cast<float>(currentVertex[2]);
-
-				#if DEBUG_OUTPUT == 1
-					std::cout<<"----------------------------------------------------------------------\n";
-					std::cout<<"Vertex#"<<vertexCounter<<" Position: "<<vertices[vertexCounter].x<<" "<<vertices[vertexCounter].y<<" "<<vertices[vertexCounter].z<<"\n"; 
-				#endif
-
-				/* Save the normal */
-				if (hasNormal)
-				{
-					fbxMesh->GetPolygonVertexNormal(polyIndex,vertIndex,currentNormal);
-					vertices[vertexCounter].nx = static_cast<float>(currentNormal[0]);
-					vertices[vertexCounter].ny = static_cast<float>(currentNormal[1]);
-					vertices[vertexCounter].nz = static_cast<float>(currentNormal[2]);
-
-					#if DEBUG_OUTPUT == 1
-						std::cout<<"Vertex#"<<vertexCounter<<" Normal: "<<vertices[vertexCounter].nx<<" "<<vertices[vertexCounter].ny<<" "<<vertices[vertexCounter].nz<<"\n";
-					#endif
-				}
-
-				/* Save the tangent */
-				if (hasTangent)
-				{
-					int tangentIndex = vertexCounter;
-					if (fbxTangentElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
-				    {
-				      tangentIndex = fbxTangentElement->GetIndexArray().GetAt(vertexCounter);
-				    }
-					currentTangent = fbxTangentElement->GetDirectArray().GetAt(tangentIndex);
-					vertices[vertexCounter].tx = static_cast<float>(currentTangent[0]);
-					vertices[vertexCounter].ty = static_cast<float>(currentTangent[1]);
-					vertices[vertexCounter].tz = static_cast<float>(currentTangent[2]);
-
-					#if DEBUG_OUTPUT == 1
-						std::cout<<"Vertex#"<<vertexCounter<<" Tangent: "<<vertices[vertexCounter].tx<<" "<<vertices[vertexCounter].ty<<" "<<vertices[vertexCounter].tz<<"\n";
-					#endif
-				}
-
-				/* Save the bitangent/binormal */
-				if (hasBitangent)
-				{
-					int bitangentIndex = vertexCounter;
-					if (fbxBitangentElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
-				    {
-				      bitangentIndex = fbxBitangentElement->GetIndexArray().GetAt(vertexCounter);
-				    }
-					currentTangent = fbxBitangentElement->GetDirectArray().GetAt(bitangentIndex);
-					vertices[vertexCounter].bx = static_cast<float>(currentTangent[0]);
-					vertices[vertexCounter].by = static_cast<float>(currentTangent[1]);
-					vertices[vertexCounter].bz = static_cast<float>(currentTangent[2]);
-
-					#if DEBUG_OUTPUT == 1
-						std::cout<<"Vertex#"<<vertexCounter<<" Bitangent: "<<vertices[vertexCounter].bx<<" "<<vertices[vertexCounter].by<<" "<<vertices[vertexCounter].bz<<"\n";
-					#endif
-				}
-
-				/* Save the color */
-				if (hasColor)
-				{
-					int vertexColorIndex = vertexCounter;
-					if (fbxVertexColorElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
-				    {
-				        vertexColorIndex = fbxVertexColorElement->GetIndexArray().GetAt(vertexCounter);
-				    }
-					currentColor = fbxVertexColorElement->GetDirectArray().GetAt(vertexColorIndex);
-					vertices[vertexCounter].r = static_cast<GLubyte>(currentColor[0]);
-					vertices[vertexCounter].g = static_cast<GLubyte>(currentColor[1]);
-					vertices[vertexCounter].b = static_cast<GLubyte>(currentColor[2]);
-					vertices[vertexCounter].a = static_cast<GLubyte>(currentColor[3]);
-
-					#if DEBUG_OUTPUT == 1
-						std::cout<<"Vertex#"<<vertexCounter<<" Color: "<<vertices[vertexCounter].r<<" "<<vertices[vertexCounter].g<<" "<<vertices[vertexCounter].b<<vertices[vertexCounter].a<<"\n";
-					#endif
-				}
-				else
-				{
-					vertices[vertexCounter].r = static_cast<GLubyte>(1.0);
-					vertices[vertexCounter].g = static_cast<GLubyte>(1.0);
-					vertices[vertexCounter].b = static_cast<GLubyte>(1.0);
-					vertices[vertexCounter].a = static_cast<GLubyte>(1.0);
-				}
-
-				/* Save the UV */
-				if (hasUV)
-				{
-					bool unmappedUV;
-					fbxMesh->GetPolygonVertexUV(polyIndex,vertIndex,uvName,currentUV,unmappedUV);
-					vertices[vertexCounter].u = static_cast<float>(currentUV[0]);
-					vertices[vertexCounter].v = static_cast<float>(currentUV[1]);
-
-					#if DEBUG_OUTPUT == 1
-						std::cout<<"Vertex#"<<vertexCounter<<" UV: "<<vertices[vertexCounter].u<<" "<<vertices[vertexCounter].v<<"\n";
-						std::cout<<"----------------------------------------------------------------------\n";
-					#endif
-				}
-			}
-			++vertexCounter;
+		if (sizeof(unsigned int) == sizeof(GLuint)) {
+			mesh->bufferDataFromArray(reinterpret_cast<Vertex_p*>(memory),
+				reinterpret_cast<const GLuint*>(geometry->triangle_indices.data()),
+				static_cast<GLsizei>(memory_size),
+				static_cast<GLsizei>(geometry->triangle_indices.size()) * sizeof(GLuint), GL_TRIANGLES);
 		}
+		else {
+			std::vector<GLuint> gluint_indices(geometry->triangle_indices.begin(), geometry->triangle_indices.end());
+			mesh->bufferDataFromArray(reinterpret_cast<Vertex_p*>(memory), gluint_indices.data(), static_cast<GLsizei>(memory_size), static_cast<GLsizei>(geometry->triangle_indices.size()) * sizeof(GLuint), GL_TRIANGLES);
+		}
+
+		delete [] memory;
+
+		const FBX::OpenGL::GeometrySerialize::Settings &s(serialize.settings());
+
+		if (locations.ndx_position >= 0) {
+			mesh->setVertexAttribPointer(locations.ndx_position, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(s.stride), (void*) s.offset_position);
+		}
+		if (s.features & FBX::Geometry::NORMAL && locations.ndx_normal >= 0) {
+			mesh->setVertexAttribPointer(locations.ndx_normal, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(s.stride), (void*) s.offset_normal);
+		}
+		if (s.features & FBX::Geometry::TANGENT && locations.ndx_tangent >= 0) {
+			mesh->setVertexAttribPointer(locations.ndx_tangent, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(s.stride), (void*) s.offset_tangent);
+		}
+		if (s.features & FBX::Geometry::COLOR && locations.ndx_color >= 0) {
+			mesh->setVertexAttribPointer(locations.ndx_color, 4, GL_UNSIGNED_BYTE, GL_TRUE, static_cast<GLsizei>(s.stride), (void*) s.offset_color);
+			// no static color support in Mesh
+			// ndx_static_color = -1;
+		}
+		else {
+			// no static color support in Mesh
+			// ndx_static_color = locations.ndx_color;
+		}
+		if (s.features & FBX::Geometry::UVCOORD && locations.ndx_uvcoord >= 0) {
+			mesh->setVertexAttribPointer(locations.ndx_uvcoord, 2, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(s.stride), (void*) s.offset_uvcoord);
+		}
+		if (s.features & FBX::Geometry::BINORMAL && locations.ndx_binormal >= 0) {
+			mesh->setVertexAttribPointer(locations.ndx_binormal, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(s.stride), (void*) s.offset_binormal);
+		}
+
+		geomPtr =  mesh;
 	}
-
-	//std::cout<<"Filled index buffer.\n";
-
-	if( !geomPtr->bufferDataFromArray(vertices,indices,sizeof(Vertex_pntcub)*vertexCount,sizeof(unsigned int)*(fbxPolyCount * 3)) ) return false;
-
-	geomPtr->setVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcub),0);
-	geomPtr->setVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcub),(GLvoid*) sizeof(Vertex_p));
-	geomPtr->setVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcub),(GLvoid*) sizeof(Vertex_pn));
-	geomPtr->setVertexAttribPointer(3,4,GL_UNSIGNED_BYTE,GL_FALSE,sizeof(Vertex_pntcub),(GLvoid*) sizeof(Vertex_pnt));
-	geomPtr->setVertexAttribPointer(4,2,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcub),(GLvoid*) sizeof(Vertex_pntc));
-	geomPtr->setVertexAttribPointer(5,3,GL_FLOAT,GL_FALSE,sizeof(Vertex_pntcub),(GLvoid*) sizeof(Vertex_pntcu));
+	catch (FBX::BaseException e)
+	{
+		std::cerr << "Couldn't load " << path << ": " << e.what() << "\n";
+		return false;
+	}
 
 	return true;
 }
 
-bool ResourceManager::loadBinaryGeometry(const std::string path, Mesh* geomPtr)
+bool ResourceManager::loadBinaryGeometry(const std::string &path, std::shared_ptr<Mesh> &geomPtr)
 {
+	geomPtr.reset(new Mesh(path));
+
 	std::ifstream dat_file (path,std::ios::in | std::ios::binary);
 
 	/*	Check if the file could be opened */
@@ -794,7 +523,7 @@ bool ResourceManager::loadBinaryGeometry(const std::string path, Mesh* geomPtr)
 
 		fread(vertices,sizeof(Vertex_pntcub),num_vertices,vraw_file);
 
-		if( !geomPtr->bufferDataFromArray(vertices,indices,sizeof(Vertex_pntcub)*num_vertices,sizeof(unsigned int)*num_indices) ) return false;
+		if( !geomPtr->bufferDataFromArray(vertices,indices,sizeof(Vertex_pntcub)*num_vertices,sizeof(unsigned int)*num_indices,GL_TRIANGLES) ) return false;
 	}
 	else
 	{
@@ -896,7 +625,7 @@ const std::string ResourceManager::readShaderFile(const char* const path)
 	return source.str();
 }
 
-bool ResourceManager::readPpmHeader(const char* filename, long& headerEndPos, int& imgDimX, int& imgDimY)
+bool ResourceManager::readPpmHeader(const char* filename, unsigned long& headerEndPos, int& imgDimX, int& imgDimY)
 {
 	int currentComponent = 0;
 	bool firstline = false;
@@ -959,7 +688,7 @@ bool ResourceManager::readPpmHeader(const char* filename, long& headerEndPos, in
 	*/
 	if(firstline)
 	{
-		headerEndPos = file.tellg();
+		headerEndPos = static_cast<long>(file.tellg());
 		file.close();
 		return true;
 	}
@@ -1005,12 +734,12 @@ bool ResourceManager::readPpmHeader(const char* filename, long& headerEndPos, in
 	/	Note down the position after this line and exit with return true after closing the file.
 	*/
 	std::getline(file,buffer,'\n');
-	headerEndPos = file.tellg();
+	headerEndPos = static_cast<unsigned long>(file.tellg());
 	file.close();
 	return true;
 }
 
-bool ResourceManager::readPpmData(const char* filename, char* imageData, long dataBegin, int imgDimX, int imgDimY)
+bool ResourceManager::readPpmData(const char* filename, char* imageData, unsigned long dataBegin, int imgDimX, int imgDimY)
 {
 	std::ifstream file (filename,std::ios::in | std::ios::binary);
 
@@ -1023,7 +752,7 @@ bool ResourceManager::readPpmData(const char* filename, char* imageData, long da
 	/	Determine the length from the beginning of the image data to the end of the file.
 	*/
 	file.seekg(0, file.end);
-	long length = file.tellg();
+	unsigned long length = static_cast<unsigned long>(file.tellg());
 	length = length - dataBegin;
 	char* buffer = new char[length];
 
