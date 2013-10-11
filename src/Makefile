@@ -2,7 +2,7 @@ CC = g++
 CPPFLAGS = -Wall -g -std=c++11 -DUSE_ZLIB
 LFLAGS = -lGLEW -lGL -lglfw -lz
 BIN = ../bin/main
-OBJ = conf.o messageChannel.o \
+OBJ = conf.o messageChannel.o communicationHub.o \
 	game/game.o game/board.o game/player.o game/human_players.o \
 	ai/ai_players.o \
 	engine/renderHub.o engine/framebufferObject.o engine/messageReceiver.o \
