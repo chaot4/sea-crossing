@@ -5,11 +5,14 @@
 #include <string>
 #include <iostream>
 
+enum GameType { DEBUG_GAME, CONSOLE_GAME, GUI_GAME };
+enum PlayerType { CONSOLE_PLAYER, GUI_PLAYER, DEBUG_PLAYER, RANDOM_AI, SHORTEST_PATH_AI };
+
 struct Node;
 struct Face;
 
-typedef int NodeID;
-typedef int FaceID;
+typedef unsigned int NodeID;
+typedef unsigned int FaceID;
 typedef bool PlayerID;
 typedef std::string NodeLabel;
 typedef std::string FaceLabel;

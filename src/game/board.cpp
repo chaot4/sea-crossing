@@ -150,10 +150,10 @@ void Board::reset()
 	}
 }
 
-bool Board::placeGem(NodeLabel const& label, PlayerID player_id,
-		vector<FaceLabel>& new_markers)
+bool Board::placeGem(NodeID node_id, PlayerID player_id,
+		vector<FaceID>& new_markers)
 {
-	Node& node(nodes[node_map[label]]);
+	Node& node(nodes[node_id]);
 
 	if(!node.owner){
 		node.owner = player_id+1;
@@ -173,8 +173,8 @@ bool Board::placeGem(NodeLabel const& label, PlayerID player_id,
 
 			if(face.num_adj_nodes_player[player_id]*2 >= face.adj_nodes.size()
 					&& face.owner == 0){
-				placeMarker(face.label, player_id);
-				new_markers.push_back(face.label);
+				placeMarker(face.id, player_id);
+				new_markers.push_back(face.id);
 			}
 		}
 	}
@@ -185,9 +185,9 @@ bool Board::placeGem(NodeLabel const& label, PlayerID player_id,
 	return true;
 }
 
-bool Board::placeMarker(FaceLabel const& label, PlayerID player_id)
+bool Board::placeMarker(FaceID face_id, PlayerID player_id)
 {
-	Face& face(faces[face_map[label]]);
+	Face& face(faces[face_id]);
 
 	if(!face.owner)
 		face.owner = player_id+1;
@@ -255,14 +255,24 @@ bool Board::isFaceLabel(FaceLabel const& label) const
 	return face_map.count(label);
 }
 
-bool Board::nodeHasOwner(NodeLabel const& label) const
+bool Board::isNodeID(NodeID node_id) const
 {
-	return nodes[node_map.at(label)].owner;
+	return node_id >= 0 && node_id < nodes.size();
 }
 
-bool Board::faceHasOwner(FaceLabel const& label) const
+bool Board::isFaceID(FaceID face_id) const
 {
-	return faces[face_map.at(label)].owner;
+	return face_id >= 0 && face_id < faces.size();
+}
+
+bool Board::nodeHasOwner(NodeID node_id) const
+{
+	return nodes[node_id].owner;
+}
+
+bool Board::faceHasOwner(FaceID face_id) const
+{
+	return faces[face_id].owner;
 }
 
 bool Board::checkVictoryCondition(PlayerID player_id) const

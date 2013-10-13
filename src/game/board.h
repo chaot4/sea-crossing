@@ -32,16 +32,18 @@ class Board{
 
 		void reset();
 
-		bool placeGem(NodeLabel const& label, PlayerID player_id,
-				std::vector<FaceLabel>& new_markers);
-		bool placeMarker(FaceLabel const& label, PlayerID player_id);
+		bool placeGem(NodeID node_id, PlayerID player_id,
+				std::vector<FaceID>& new_markers);
+		bool placeMarker(FaceID face_id, PlayerID player_id);
 		bool removeGem(NodeLabel const& label, std::vector<FaceLabel>& removed_markers);
 		bool removeMarker(FaceLabel const& label);
 
 		bool isNodeLabel(NodeLabel const& label) const;
 		bool isFaceLabel(FaceLabel const& label) const;
-		bool nodeHasOwner(NodeLabel const& label) const;
-		bool faceHasOwner(FaceLabel const& label) const;
+		bool isNodeID(NodeID node_id) const;
+		bool isFaceID(FaceID face_id) const;
+		bool nodeHasOwner(NodeID node_id) const;
+		bool faceHasOwner(FaceID face_id) const;
 		bool checkVictoryCondition(PlayerID player_id) const;
 
 		template <class Cost>

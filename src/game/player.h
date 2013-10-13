@@ -2,21 +2,45 @@
 #define game_player_h
 
 #include "defs.h"
+#include "../messageChannel.h"
+#include "../messages.h"
 
 #include <string>
 
+#include <iostream>
+#ifdef WIN_32
+#include <windows.h>
+#define sleep(x) Sleep(x)
+#elif __linux__
+#include <unistd.h>
+#define sleep(x) usleep(x)
+#else
+#define sleep(x)
+#endif
+
 class Player{
 	protected:
+		bool run;
+		unsigned int sleep_time;
+		TwoWayChannel _player_center_channel;
+
+		void processMessage(TwoWayChannel& channel);
+		void process(std::shared_ptr<MsgGameRequestInput>);
+		void process(std::shared_ptr<MsgPlayerReturnInput>);
+		void process(std::shared_ptr<MsgPlayerQuit>);
+		void msgSendFinished();
+		void msgSendGemMove(NodeID node_id);
+
 		std::string name;
 		PlayerID id;
 	public:
-		Player(std::string const& name):name(name){}
-		Player(Player const& player):name(player.getName()){}
+		Player(std::string const& name);
+		virtual ~Player();
 
-		virtual void getNextMove(NodeLabel& node_label) = 0;
-		std::string getName() const;
+		void start();
+		TwoWayChannel& getPlayerCenterChannel();
 
-		void setID(PlayerID id);
+		virtual void initGemMove() = 0;
 };
 
 #endif

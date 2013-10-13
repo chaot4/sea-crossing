@@ -7,13 +7,21 @@
 #include <string>
 #include <iostream>
 
-class ConsolePlayer : public Player{
+class ConsolePlayer : public Player
+{
 	public:
 		ConsolePlayer(std::string const& name):Player(name){}
-		ConsolePlayer(ConsolePlayer const& player):Player(player){}
 
-		void getNextMove(NodeLabel& node_label);
-		void getMarkerMove(FaceLabel& face_label);
+		void initGemMove();
+};
+
+class DebugPlayer : public ConsolePlayer
+{
+	public:
+		DebugPlayer(std::string const& name):ConsolePlayer(name){}
+
+		// TODO implement the messaging of the marker move
+		void initMarkerMove();
 };
 
 #endif

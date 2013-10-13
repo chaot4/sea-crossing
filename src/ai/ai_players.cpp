@@ -9,7 +9,7 @@ using namespace std;
 RandomAIPlayer::RandomAIPlayer(string const& name, Board const& board)
 	:Player(name), board(board){}
 
-void RandomAIPlayer::getNextMove(NodeLabel& label)
+void RandomAIPlayer::initGemMove()
 {
 	unordered_set<NodeID> free_nodes(board.getFreeNodes());
 
@@ -22,5 +22,5 @@ void RandomAIPlayer::getNextMove(NodeLabel& label)
 		it++;
 	}
 
-	label = board.getNode(*it).label;
+	msgSendGemMove(*it);
 }

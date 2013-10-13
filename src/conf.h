@@ -1,6 +1,8 @@
 #ifndef conf_h
 #define conf_h
 
+#include "game/defs.h"
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -8,8 +10,12 @@
 #include <sstream>
 
 struct GameConf{
+	PlayerType p1_type;
+	PlayerType p2_type;
 	std::string p1_name;
 	std::string p2_name;
+
+	GameType game_type;
 	bool use_switch_rule;
 
 	GameConf()

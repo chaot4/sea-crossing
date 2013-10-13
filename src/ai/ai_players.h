@@ -20,7 +20,7 @@ class RandomAIPlayer : public Player
 		std::random_device rand;
 	public:
 		RandomAIPlayer(std::string const& name, Board const& board);
-		void getNextMove(NodeLabel& label);
+		void initGemMove();
 };
 
 template <class Cost, class Rating>
@@ -35,7 +35,7 @@ class ShortestPathAIPlayer : public Player
 		NodeID findBestAdjNode(std::vector<FaceID> const& faces);
 	public:
 		ShortestPathAIPlayer(std::string const& name, Board const& board);
-		void getNextMove(NodeLabel& label);
+		void initGemMove();
 };
 
 class Cost{
@@ -85,7 +85,7 @@ ShortestPathAIPlayer<Cost, Rating>::ShortestPathAIPlayer(std::string const& name
 	:Player(name), board(board) {}
 
 template <class Cost, class Rating>
-void ShortestPathAIPlayer<Cost, Rating>::getNextMove(NodeLabel& label)
+void ShortestPathAIPlayer<Cost, Rating>::initGemMove()
 {
 	std::vector<FaceID> p0_shortest_path(board.calcShortestPath<Cost>(0));
 	std::vector<FaceID> p1_shortest_path(board.calcShortestPath<Cost>(1));
@@ -93,8 +93,8 @@ void ShortestPathAIPlayer<Cost, Rating>::getNextMove(NodeLabel& label)
 	std::vector<FaceID> shared_faces;
 	intersect_paths(p0_shortest_path, p1_shortest_path, shared_faces);
 
-	NodeID node(findBestAdjNode(shared_faces));
-	label = board.getNode(node).label;
+	NodeID node_id(findBestAdjNode(shared_faces));
+	msgSendGemMove(node_id);
 }
 
 template <class Cost, class Rating>
