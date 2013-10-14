@@ -2,7 +2,8 @@
 
 using namespace std;
 
-CommunicationHub::CommunicationHub() {}
+CommunicationHub::CommunicationHub()
+	: run(true) {}
 
 void CommunicationHub::start()
 {
@@ -13,7 +14,14 @@ void CommunicationHub::start()
 		sleep(1);
 		processMessage(_game_channel);
 		sleep(1);
+		processMessage(_player_channel);
+		sleep(1);
 	}
+}
+
+void CommunicationHub::stop()
+{
+	run = false;
 }
 
 void CommunicationHub::processMessage(TwoWayChannel& channel)
@@ -36,8 +44,14 @@ void CommunicationHub::processMessage(TwoWayChannel& channel)
 		case GAME_CREATE_MARKER:
 			process(static_pointer_cast<MsgGameCreateMarker>(msg));
 			break;
+		case GAME_FINISHED:
+			process(static_pointer_cast<MsgGameFinished>(msg));
+			break;
 		case GAME_REQUEST_INPUT:
 			process(static_pointer_cast<MsgGameRequestInput>(msg));
+			break;
+		case PLAYER_RETURN_INPUT:
+			process(static_pointer_cast<MsgPlayerReturnInput>(msg));
 			break;
 		default:
 			cerr << "ERROR: Unexpected message type." << endl;
@@ -59,6 +73,11 @@ void CommunicationHub::process(std::shared_ptr<MsgGameCreateGem> msg)
 
 }
 
+void CommunicationHub::process(std::shared_ptr<MsgGameFinished> msg)
+{
+
+}
+
 void CommunicationHub::process(std::shared_ptr<MsgGameCreateMarker> msg)
 {
 
@@ -66,10 +85,11 @@ void CommunicationHub::process(std::shared_ptr<MsgGameCreateMarker> msg)
 
 void CommunicationHub::process(std::shared_ptr<MsgGameRequestInput> msg)
 {
-
+	std::shared_ptr<Message> new_msg(new MsgPlayerRequestInput(msg->player_id));
+	_player_channel.send(new_msg);
 }
 
-void process(MsgEngineCreateFeedback const& msg)
+void CommunicationHub::process(std::shared_ptr<MsgPlayerReturnInput> msg)
 {
 
 }
@@ -79,12 +99,17 @@ TwoWayChannel& CommunicationHub::getEngineChannel()
 	return _engine_channel;
 }
 
+TwoWayChannel& CommunicationHub::getMenuChannel()
+{
+	return _menu_channel;
+}
+
 TwoWayChannel& CommunicationHub::getGameChannel()
 {
 	return _game_channel;
 }
 
-TwoWayChannel& CommunicationHub::getMenuChannel()
+TwoWayChannel& CommunicationHub::getPlayerChannel()
 {
-	return _menu_channel;
+	return _player_channel;
 }

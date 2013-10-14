@@ -1,4 +1,5 @@
 * game: Implement the first-move-switching rule.
+* game: Implement an optional handycap of n (random or non-random) stones.
 * game and engine: Use the config files values.
 * engine: Implement picking for user input.
 * engine: Rewrite render method in Scene class.
