@@ -30,9 +30,13 @@ protected:
 
 	SceneCamera* activeCamera;
 
+	unsigned int latest_entity_id;
+
 public:
 	Scene();
 	~Scene();
+
+	unsigned int requestNewEntityId();
 
 	/* */
 	bool createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling,

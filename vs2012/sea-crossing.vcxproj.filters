@@ -126,6 +126,15 @@
     <ClCompile Include="..\src\messageChannel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\game\game_center.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game\player_center.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\communicationHub.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\game\board.h">
@@ -252,6 +261,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\game_center.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\player_center.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\communicationHub.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,10 +10,13 @@
 #define TIMER 0
 
 #include <vector>
+#include <memory>
+
 #include "scene.h"
 #include "postProcessor.h"
 #include "resourceManager.h"
-#include "messageReceiver.h"
+#include "../messages.h"
+#include "../messageChannel.h"
 #include "controls.h"
 #include "framebufferObject.h"
 #include <GLFW/glfw3.h>
@@ -24,10 +27,10 @@ public:
 	RenderHub();
 	~RenderHub();
 
-	RenderHub(MessageReceiver *&postbox) {postbox = &messageRcvr;}
-
 	/*	Initialize OpenGL context and create a window */
 	bool init();
+
+	TwoWayChannel& getChannelAccesPoint();
 
 	/*	Scene handling */
 	bool addScene();
@@ -45,7 +48,7 @@ public:
 
 private:
 	ResourceManager resourceMngr;
-	MessageReceiver messageRcvr;
+	TwoWayChannel messageRcvr;
 
 	std::list<Scene> sceneList;
 
@@ -55,7 +58,7 @@ private:
 	bool running;
 
 	/*	Message handling */
-	void processMessage(Message *msg);
+	void processMessage(std::shared_ptr<Message> msg);
 
 	/*	Callback handling */
 	static RenderHub *activeInstance;

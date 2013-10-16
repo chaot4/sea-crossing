@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ai\ai_players.cpp" />
+    <ClCompile Include="..\src\communicationHub.cpp" />
     <ClCompile Include="..\src\conf.cpp" />
     <ClCompile Include="..\src\engine\controls.cpp" />
     <ClCompile Include="..\src\engine\framebufferObject.cpp" />
@@ -166,13 +167,16 @@
     <ClCompile Include="..\src\fbx\fbx_value.cpp" />
     <ClCompile Include="..\src\game\board.cpp" />
     <ClCompile Include="..\src\game\game.cpp" />
+    <ClCompile Include="..\src\game\game_center.cpp" />
     <ClCompile Include="..\src\game\human_players.cpp" />
     <ClCompile Include="..\src\game\player.cpp" />
+    <ClCompile Include="..\src\game\player_center.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\messageChannel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ai\ai_players.h" />
+    <ClInclude Include="..\src\communicationHub.h" />
     <ClInclude Include="..\src\conf.h" />
     <ClInclude Include="..\src\engine\controls.h" />
     <ClInclude Include="..\src\engine\framebufferObject.h" />
@@ -210,10 +214,13 @@
     <ClInclude Include="..\src\game\board.h" />
     <ClInclude Include="..\src\game\defs.h" />
     <ClInclude Include="..\src\game\game.h" />
+    <ClInclude Include="..\src\game\game_center.h" />
     <ClInclude Include="..\src\game\human_players.h" />
     <ClInclude Include="..\src\game\player.h" />
+    <ClInclude Include="..\src\game\player_center.h" />
     <ClInclude Include="..\src\macros.h" />
     <ClInclude Include="..\src\messageChannel.h" />
+    <ClInclude Include="..\src\messages.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

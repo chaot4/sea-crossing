@@ -1,12 +1,18 @@
 #include "scene.h"
 
 
-Scene::Scene()
+Scene::Scene() : latest_entity_id(0)
 {
 }
 
 Scene::~Scene()
 {
+}
+
+unsigned int Scene::requestNewEntityId()
+{
+	latest_entity_id++;
+	return latest_entity_id;
 }
 
 bool Scene::createStaticSceneObject(const int id, const glm::vec3 position, const glm::quat orientation, const glm::vec3 scaling,

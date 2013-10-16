@@ -85,6 +85,11 @@ bool RenderHub::init()
 	return true;
 }
 
+TwoWayChannel& RenderHub::getChannelAccesPoint()
+{
+	return messageRcvr;
+}
+
 bool RenderHub::addScene()
 {
 	sceneList.push_back(Scene());
@@ -177,12 +182,11 @@ void RenderHub::run()
 	//GLuint *data = new GLuint[1];
 
 	while(running && !glfwWindowShouldClose(activeWindow))
-	//while(running)
 	{
-		while(messageRcvr.checkQueue())
+		std::shared_ptr<Message> msg;
+		while (messageRcvr.receive(msg))
 		{
-			Message msg(messageRcvr.popMessage());
-			processMessage(&msg);
+			processMessage(msg);
 		}
 
 		/*	For now, I avoid using a glfw callback function for this */
@@ -281,35 +285,42 @@ void RenderHub::runVolumeTest()
 	}
 }
 
-void RenderHub::processMessage(Message *msg)
+void RenderHub::processMessage(std::shared_ptr<Message> msg)
 {
-	messageType msgType = (msg->type);
+	MessageType msgType = (msg->type);
 	switch (msgType){
-	case CREATE:
+	case ENGINE_CREATE:
 	{
+		std::shared_ptr<MsgEngineCreate> c_msg = std::static_pointer_cast<MsgEngineCreate>(msg);
+
 		std::shared_ptr<Mesh> geomPtr;
 		std::shared_ptr<Material> materialPtr;
-		if(!(resourceMngr.createMaterial((msg->material_path).c_str(),materialPtr)))
+		if (!(resourceMngr.createMaterial((c_msg->material_path).c_str(), materialPtr)))
 		{
-			std::cout<<"Failed to create material: "<<msg->material_path<<std::endl;
+			std::cout << "Failed to create material: " << c_msg->material_path << std::endl;
 			break;
 		}
-		if(!(resourceMngr.createMesh((msg->geometry_path).c_str(),geomPtr)))
+		if (!(resourceMngr.createMesh((c_msg->geometry_path).c_str(), geomPtr)))
 		{
 			std::cout<<"Failed to create mesh."<<std::endl;
 			break;
 		}
 
-		if(!(activeScene->createStaticSceneObject((msg->id),(msg->position),(msg->orientation),(msg->scaling),geomPtr,materialPtr)))
+		unsigned int entity_id = activeScene->requestNewEntityId();
+
+		if (!(activeScene->createStaticSceneObject(entity_id, (c_msg->position), (c_msg->orientation), (c_msg->scaling), geomPtr, materialPtr)))
 			std::cout<<"Failed to create scene object."<<std::endl;
+
+		std::shared_ptr<Message> new_msg(new MsgEngineCreateFeedback(c_msg->msg_id, entity_id));
+		messageRcvr.send(new_msg);
 
 		geomPtr.reset();
 		materialPtr.reset();
 		break;
 	}
-	case DELETE:
+	case ENGINE_DELETE:
 		break;
-	case EXIT:
+	case ENGINE_QUIT:
 		running = false;
 		break;
 	default:

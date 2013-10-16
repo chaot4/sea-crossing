@@ -2,6 +2,7 @@
 #include "messageChannel.h"
 #include "communicationHub.h"
 #include "messages.h"
+#include "engine\renderHub.h"
 
 #include <thread>
 
@@ -36,6 +37,22 @@ int main(){
 
 	c_hub.stop();
 	c_hub_thread.join();
+
+	/*	Test renderHub channel */
+	RenderHub r_hub;
+	TwoWayChannel engine_channel;
+	TwoWayChannel::connect(engine_channel, r_hub.getChannelAccesPoint());
+	std::thread render_thread(&RenderHub::init, &r_hub);
+	std::shared_ptr<Message> new_engine_msg(
+		new MsgEngineCreate(42, glm::vec3(0.0, 0.0, 0.0), glm::quat(), glm::vec3(1.0),
+		"../resources/meshes/board.fbx","../resources/materials/debugging.slmtl") );
+	engine_channel.send(new_engine_msg);
+	while (!engine_channel.receive(rec_msg)) {}
+	std::shared_ptr<MsgEngineCreateFeedback> c_msg(
+		std::static_pointer_cast<MsgEngineCreateFeedback>(rec_msg));
+	cout << "Message id:" <<c_msg->msg_id <<"  Entity id:"<< c_msg->entity_id<< endl;
+
+	render_thread.join();
 
 	return 0;
 }

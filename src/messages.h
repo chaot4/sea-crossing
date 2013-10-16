@@ -1,7 +1,12 @@
 #ifndef messages_h
 #define messages_h
 
+/*	Include sea-crossing headers */
 #include "game/defs.h"
+
+/*	Include external headers */
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 enum MessageType { ENGINE_CREATE, ENGINE_DELETE, ENGINE_CREATE_FEEDBACK,
 	ENGINE_QUIT, ENGINE_USER_INPUT, GAME_CREATE_GEM, GAME_CREATE_MARKER, GAME_CREATE_PLAYER,
@@ -19,17 +24,35 @@ struct Message
 
 struct MsgEngineCreate : Message
 {
+	unsigned int msg_id;
+	glm::vec3 position;
+	glm::quat orientation;
+	glm::vec3 scaling;
+	std::string geometry_path;
+	std::string material_path;
 
+	MsgEngineCreate(unsigned int in_msg_id,glm::vec3 in_position,
+		glm::quat in_orientation,glm::vec3 in_scaling,
+		std::string in_geometry_path,std::string in_material_path)
+		: Message(ENGINE_CREATE), msg_id(in_msg_id), position(in_position), orientation(in_orientation),
+		scaling(in_scaling), geometry_path(in_geometry_path), material_path(in_material_path) {}
 };
 
 struct MsgEngineDelete : Message
 {
+	unsigned int entity_id;
 
+	MsgEngineDelete(unsigned int in_msg_id, unsigned int in_entity_id)
+		: Message(ENGINE_DELETE), entity_id(in_entity_id) {}
 };
 
 struct MsgEngineCreateFeedback : Message
 {
+	unsigned int msg_id;
+	unsigned int entity_id;
 
+	MsgEngineCreateFeedback(unsigned int in_msg_id, unsigned int in_entity_id)
+		: Message(ENGINE_CREATE_FEEDBACK), msg_id(in_msg_id), entity_id(in_entity_id) {}
 };
 
 struct MsgEngineQuit : Message
