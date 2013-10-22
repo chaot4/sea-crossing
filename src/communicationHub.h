@@ -28,11 +28,15 @@ class CommunicationHub
 		void processMessage(TwoWayChannel& channel);
 		void process(std::shared_ptr<MsgEngineCreateFeedback> msg);
 		void process(std::shared_ptr<MsgEngineUserInput> msg);
+		void process(std::shared_ptr<MsgGameCreate> msg);
 		void process(std::shared_ptr<MsgGameCreateGem> msg);
 		void process(std::shared_ptr<MsgGameFinished> msg);
 		void process(std::shared_ptr<MsgGameCreateMarker> msg);
+		void process(std::shared_ptr<MsgGameCreatePlayer> msg);
 		void process(std::shared_ptr<MsgGameRequestInput> msg);
-		void process(std::shared_ptr<MsgPlayerReturnInput> msg);
+		void process(std::shared_ptr<MsgGameReturnInput> msg);
+
+		void sendQuit(TwoWayChannel& channel);
 	
 	public:
 		CommunicationHub();

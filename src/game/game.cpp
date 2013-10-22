@@ -220,11 +220,7 @@ using namespace std;
 
 
 Game::Game(GameConf const& conf, Board& board)
-	: run(true), sleep_time(5), current_player(0), board(board), conf(conf)
-{
-	msgCreatePlayer(0, conf.p1_type);
-	msgCreatePlayer(1, conf.p2_type);
-}
+	: run(true), sleep_time(5), current_player(0), board(board), conf(conf) {}
 
 Game::~Game()
 {
@@ -234,6 +230,9 @@ Game::~Game()
 void Game::start()
 {
 	cout << "==- START GAME -==" << endl;
+
+	msgCreatePlayer(0, conf.p1_type, conf.p1_name);
+	msgCreatePlayer(1, conf.p2_type, conf.p2_name);
 
 	// Init the game by sending the first input request.
 	msgRequestInput(current_player);
@@ -299,9 +298,11 @@ void Game::msgRequestInput(PlayerID player_id)
 	_game_center_channel.send(msg);
 }
 
-void Game::msgCreatePlayer(PlayerID player_id, PlayerType player_type)
+void Game::msgCreatePlayer(PlayerID player_id, PlayerType player_type,
+		std::string const& player_name)
 {
-	std::shared_ptr<Message> msg(new MsgGameCreatePlayer(player_id, player_type));
+	std::shared_ptr<Message> msg(
+			new MsgGameCreatePlayer(player_id, player_type, player_name));
 	_game_center_channel.send(msg);
 }
 

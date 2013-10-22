@@ -33,20 +33,22 @@ class PlayerCenter
 		std::vector<TwoWayChannel*> _player_channels;
 		std::vector<Player*> _players;
 		std::vector<std::thread*> _player_threads;
-                void createPlayer(PlayerType player_type, std::string const& name);
+                void createPlayer(PlayerID player_id, PlayerType player_type,
+				std::string const& name);
 
                 void processMessage(TwoWayChannel& channel);
 		void process(std::shared_ptr<MsgGameRequestInput> msg);
 		void process(std::shared_ptr<MsgGameReturnInput> msg);
 		void process(std::shared_ptr<MsgPlayerRequestInput> msg);
 		void process(std::shared_ptr<MsgPlayerReturnInput> msg);
-		void process(std::shared_ptr<MsgPlayerCreate> msg);
+		void process(std::shared_ptr<MsgGameCreatePlayer> msg);
 		void process(std::shared_ptr<MsgPlayerQuit> msg);
 		void process(std::shared_ptr<MsgPlayerFinished> msg);
 
+//		void quit();
+
 	public:
 		PlayerCenter(Board const& board);
-		~PlayerCenter();
 		void start();
 
 		TwoWayChannel& getHubChannel();

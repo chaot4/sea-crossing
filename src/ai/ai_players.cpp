@@ -6,8 +6,8 @@ using namespace std;
 /* RANDOM AI PLAYER */
 
 
-RandomAIPlayer::RandomAIPlayer(string const& name, Board const& board)
-	:Player(name), board(board){}
+RandomAIPlayer::RandomAIPlayer(PlayerID id, string const& name, Board const& board)
+	: Player(id, name, board) {}
 
 void RandomAIPlayer::initGemMove()
 {

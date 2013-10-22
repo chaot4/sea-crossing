@@ -2,8 +2,8 @@
 
 using namespace std;
 
-Player::Player(std::string const& name)
-	: run(true), sleep_time(5), name(name)
+Player::Player(PlayerID id, std::string const& name, Board const& board)
+	: run(true), sleep_time(5), board(board), name(name), id(id)
 {
 
 }

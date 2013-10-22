@@ -10,17 +10,21 @@
 class ConsolePlayer : public Player
 {
 	public:
-		ConsolePlayer(std::string const& name):Player(name){}
+		ConsolePlayer(PlayerID id, std::string const& name, Board const& board)
+			: Player(id, name, board) {}
 
 		void initGemMove();
 };
 
 class DebugPlayer : public ConsolePlayer
 {
-	public:
-		DebugPlayer(std::string const& name):ConsolePlayer(name){}
+	private:
+		void msgSendMarkerMove(FaceID face_id);
 
-		// TODO implement the messaging of the marker move
+	public:
+		DebugPlayer(PlayerID id, std::string const& name, Board const& board)
+			: ConsolePlayer(id, name, board) {}
+
 		void initMarkerMove();
 };
 

@@ -72,7 +72,8 @@ class Game{
 		void msgRequestInput(PlayerID player_id);
 		void msgCreateGem(PlayerID player_id, NodeID node_id);
 		void msgCreateMarker(PlayerID player_id, FaceID face_id);
-		void msgCreatePlayer(PlayerID player_id, PlayerType player_type);
+		void msgCreatePlayer(PlayerID player_id, PlayerType player_type,
+				std::string const& player_name);
 		void msgSendWinner(PlayerID player_id);
 		void msgSendFinished();
 

@@ -3,7 +3,6 @@
 
 #include "../game/defs.h"
 #include "../game/player.h"
-#include "../game/board.h"
 
 #include <string>
 #include <unordered_set>
@@ -16,10 +15,9 @@
 class RandomAIPlayer : public Player
 {
 	private:
-		Board const& board;
 		std::random_device rand;
 	public:
-		RandomAIPlayer(std::string const& name, Board const& board);
+		RandomAIPlayer(PlayerID id, std::string const& name, Board const& board);
 		void initGemMove();
 };
 
@@ -27,14 +25,12 @@ template <class Cost, class Rating>
 class ShortestPathAIPlayer : public Player
 {
 	private:
-		Board const& board;
-
 		void intersect_paths(std::vector<FaceID>& path1,
 				std::vector<FaceID>& path2,
 				std::vector<FaceID>& intersection);
 		NodeID findBestAdjNode(std::vector<FaceID> const& faces);
 	public:
-		ShortestPathAIPlayer(std::string const& name, Board const& board);
+		ShortestPathAIPlayer(PlayerID id, std::string const& name, Board const& board);
 		void initGemMove();
 };
 
@@ -81,8 +77,9 @@ class Rating{
 
 
 template <class Cost, class Rating>
-ShortestPathAIPlayer<Cost, Rating>::ShortestPathAIPlayer(std::string const& name, Board const& board)
-	:Player(name), board(board) {}
+ShortestPathAIPlayer<Cost, Rating>::ShortestPathAIPlayer(PlayerID id,
+		std::string const& name, Board const& board)
+	:Player(id, name, board) {}
 
 template <class Cost, class Rating>
 void ShortestPathAIPlayer<Cost, Rating>::initGemMove()

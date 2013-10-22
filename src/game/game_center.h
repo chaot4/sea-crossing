@@ -36,6 +36,7 @@ class GameCenter
 		bool startGame(GameType game_type);
 
 		void processMessage(TwoWayChannel& channel);
+		void process(std::shared_ptr<MsgGameCreate> msg);
 		void process(std::shared_ptr<MsgGameCreateGem> msg);
 		void process(std::shared_ptr<MsgGameCreateMarker> msg);
 		void process(std::shared_ptr<MsgGameCreatePlayer> msg);
@@ -44,6 +45,8 @@ class GameCenter
 		void process(std::shared_ptr<MsgGameReturnInput> msg);
 		void process(std::shared_ptr<MsgGameRequestInput> msg);
 		void process(std::shared_ptr<MsgGameSendWinner> msg);
+
+//		void quit();
 
 	public:
 		GameCenter(GameConf const& game_conf, Board& board);

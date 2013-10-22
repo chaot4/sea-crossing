@@ -21,7 +21,10 @@ void CommunicationHub::start()
 
 void CommunicationHub::stop()
 {
-	run = false;
+//	sendQuit(_engine_channel);
+//	sendQuit(_menu_channel);
+//	sendQuit(_game_channel);
+//	sendQuit(_player_channel);
 }
 
 void CommunicationHub::processMessage(TwoWayChannel& channel)
@@ -38,11 +41,17 @@ void CommunicationHub::processMessage(TwoWayChannel& channel)
 		case ENGINE_USER_INPUT:
 			process(static_pointer_cast<MsgEngineUserInput>(msg));
 			break;
+		case GAME_CREATE:
+			process(static_pointer_cast<MsgGameCreate>(msg));
+			break;
 		case GAME_CREATE_GEM:
 			process(static_pointer_cast<MsgGameCreateGem>(msg));
 			break;
 		case GAME_CREATE_MARKER:
 			process(static_pointer_cast<MsgGameCreateMarker>(msg));
+			break;
+		case GAME_CREATE_PLAYER:
+			process(static_pointer_cast<MsgGameCreatePlayer>(msg));
 			break;
 		case GAME_FINISHED:
 			process(static_pointer_cast<MsgGameFinished>(msg));
@@ -50,8 +59,8 @@ void CommunicationHub::processMessage(TwoWayChannel& channel)
 		case GAME_REQUEST_INPUT:
 			process(static_pointer_cast<MsgGameRequestInput>(msg));
 			break;
-		case PLAYER_RETURN_INPUT:
-			process(static_pointer_cast<MsgPlayerReturnInput>(msg));
+		case GAME_RETURN_INPUT:
+			process(static_pointer_cast<MsgGameReturnInput>(msg));
 			break;
 		default:
 			cerr << "ERROR: Unexpected message type." << endl;
@@ -68,9 +77,18 @@ void CommunicationHub::process(std::shared_ptr<MsgEngineUserInput> msg)
 
 }
 
+void CommunicationHub::process(std::shared_ptr<MsgGameCreate> msg)
+{
+	_game_channel.send(static_pointer_cast<Message>(msg));
+}
+
 void CommunicationHub::process(std::shared_ptr<MsgGameCreateGem> msg)
 {
-
+	std::shared_ptr<Message> new_engine_msg(
+	new MsgEngineCreate(42, glm::vec3(0.0, 0.0, 0.0), glm::quat(), glm::vec3(1.0),
+	"../resources/meshes/board.fbx","../resources/materials/debugging.slmtl"));
+	_engine_channel.send(new_engine_msg);
+	// TODO place the right gem
 }
 
 void CommunicationHub::process(std::shared_ptr<MsgGameFinished> msg)
@@ -83,15 +101,19 @@ void CommunicationHub::process(std::shared_ptr<MsgGameCreateMarker> msg)
 
 }
 
-void CommunicationHub::process(std::shared_ptr<MsgGameRequestInput> msg)
+void CommunicationHub::process(std::shared_ptr<MsgGameCreatePlayer> msg)
 {
-	std::shared_ptr<Message> new_msg(new MsgPlayerRequestInput(msg->player_id));
-	_player_channel.send(new_msg);
+	_player_channel.send(static_pointer_cast<Message>(msg));
 }
 
-void CommunicationHub::process(std::shared_ptr<MsgPlayerReturnInput> msg)
+void CommunicationHub::process(std::shared_ptr<MsgGameRequestInput> msg)
 {
+	_player_channel.send(static_pointer_cast<Message>(msg));
+}
 
+void CommunicationHub::process(std::shared_ptr<MsgGameReturnInput> msg)
+{
+	_game_channel.send(static_pointer_cast<Message>(msg));
 }
 
 TwoWayChannel& CommunicationHub::getEngineChannel()
@@ -112,4 +134,10 @@ TwoWayChannel& CommunicationHub::getGameChannel()
 TwoWayChannel& CommunicationHub::getPlayerChannel()
 {
 	return _player_channel;
+}
+
+void CommunicationHub::sendQuit(TwoWayChannel& channel)
+{
+	std::shared_ptr<Message> msg(new MsgQuit());
+	channel.send(msg);
 }

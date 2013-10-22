@@ -51,6 +51,8 @@ class Board{
 
 		Node const& getNode(NodeID node_id) const;
 		Face const& getFace(FaceID face_id) const;
+		NodeID getNodeID(NodeLabel const& node_label) const;
+		FaceID getFaceID(FaceLabel const& face_label) const;
 		std::unordered_set<NodeID> const& getFreeNodes() const;
 };
 

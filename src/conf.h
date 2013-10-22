@@ -19,7 +19,7 @@ struct GameConf{
 	bool use_switch_rule;
 
 	GameConf()
-		:use_switch_rule(true){}
+		:p1_type(CONSOLE_PLAYER), p2_type(CONSOLE_PLAYER), use_switch_rule(true) {}
 };
 
 struct GraphicsConf{

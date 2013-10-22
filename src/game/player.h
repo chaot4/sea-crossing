@@ -2,6 +2,7 @@
 #define game_player_h
 
 #include "defs.h"
+#include "board.h"
 #include "../messageChannel.h"
 #include "../messages.h"
 
@@ -22,6 +23,7 @@ class Player{
 	protected:
 		bool run;
 		unsigned int sleep_time;
+		Board const& board;
 		TwoWayChannel _player_center_channel;
 
 		void processMessage(TwoWayChannel& channel);
@@ -34,7 +36,7 @@ class Player{
 		std::string name;
 		PlayerID id;
 	public:
-		Player(std::string const& name);
+		Player(PlayerID id, std::string const& name, Board const& board);
 		virtual ~Player();
 
 		void start();

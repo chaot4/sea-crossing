@@ -5,7 +5,7 @@ using namespace std;
 GameCenter::GameCenter(GameConf const& game_conf,
 		Board& board)
 	: run(true), sleep_time(5), _game_channel(0),
-	_current_game(0), board(board), game_conf(game_conf) {}
+	_current_game(0), _current_game_thread(0), board(board), game_conf(game_conf) {}
 
 GameCenter::~GameCenter()
 {
@@ -21,8 +21,11 @@ void GameCenter::start()
 	while(run) {
 		processMessage(_hub_channel);
 		sleep(sleep_time);
-		processMessage(*_game_channel);
-		sleep(sleep_time);
+
+		if (_game_channel) {
+			processMessage(*_game_channel);
+			sleep(sleep_time);
+		}
 	}
 }
 
@@ -34,6 +37,9 @@ void GameCenter::processMessage(TwoWayChannel& channel)
         }
 
 	switch (msg->type) {
+		case GAME_CREATE:
+			process(static_pointer_cast<MsgGameCreate>(msg));
+			break;
 		case GAME_CREATE_GEM:
 			process(static_pointer_cast<MsgGameCreateGem>(msg));
 			break;
@@ -58,30 +64,40 @@ void GameCenter::processMessage(TwoWayChannel& channel)
 		case GAME_SEND_WINNER:
 			process(static_pointer_cast<MsgGameSendWinner>(msg));
 			break;
+		case QUIT:
+//			quit();
+			break;
 		default:
 			cerr << "ERROR: Unexpected message type." << endl;
 	}
 }
 
+void GameCenter::process(std::shared_ptr<MsgGameCreate> msg)
+{
+	if (!startGame(msg->game_type)) {
+		cerr << "ERROR: Couldn't create game." << endl;
+	}
+}
+
 void GameCenter::process(std::shared_ptr<MsgGameCreatePlayer> msg)
 {
-	_hub_channel.send(msg);
+	_hub_channel.send(static_pointer_cast<Message>(msg));
 }
 
 void GameCenter::process(std::shared_ptr<MsgGameCreateGem> msg)
 {
-	_hub_channel.send(msg);
+	_hub_channel.send(static_pointer_cast<Message>(msg));
 }
 
 void GameCenter::process(std::shared_ptr<MsgGameCreateMarker> msg)
 {
-	_hub_channel.send(msg);
+	_hub_channel.send(static_pointer_cast<Message>(msg));
 }
 
 void GameCenter::process(std::shared_ptr<MsgGameQuit> msg)
 {
 	if (_game_channel) {
-		_game_channel->send(msg);
+		_game_channel->send(static_pointer_cast<Message>(msg));
 	}
 }
 
@@ -99,18 +115,18 @@ void GameCenter::process(std::shared_ptr<MsgGameFinished> msg)
 void GameCenter::process(std::shared_ptr<MsgGameReturnInput> msg)
 {
 	if (_game_channel) {
-		_game_channel->send(msg);
+		_game_channel->send(static_pointer_cast<Message>(msg));
 	}
 }
 
 void GameCenter::process(std::shared_ptr<MsgGameRequestInput> msg)
 {
-	_hub_channel.send(msg);
+	_hub_channel.send(static_pointer_cast<Message>(static_pointer_cast<Message>(msg)));
 }
 
 void GameCenter::process(std::shared_ptr<MsgGameSendWinner> msg)
 {
-	_hub_channel.send(msg);
+	_hub_channel.send(static_pointer_cast<Message>(msg));
 }
 
 bool GameCenter::startGame(GameType game_type)
@@ -147,3 +163,11 @@ TwoWayChannel& GameCenter::getHubChannel()
 {
 	return _hub_channel;
 }
+
+//void GameCenter::quit()
+//{
+//	if (_game_channel) {
+//		std::shared_ptr<Message> msg(new MsgQuit());
+//		_game_channel->send(msg);
+//	}
+//}

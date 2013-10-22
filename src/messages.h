@@ -9,10 +9,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 enum MessageType { ENGINE_CREATE, ENGINE_DELETE, ENGINE_CREATE_FEEDBACK,
-	ENGINE_QUIT, ENGINE_USER_INPUT, GAME_CREATE_GEM, GAME_CREATE_MARKER, GAME_CREATE_PLAYER,
-	GAME_QUIT, GAME_FINISHED, GAME_RETURN_INPUT, GAME_REQUEST_INPUT, GAME_SEND_WINNER,
-	PLAYER_REQUEST_INPUT, PLAYER_RETURN_INPUT, PLAYER_CREATE, PLAYER_QUIT,
-	PLAYER_FINISHED };
+	ENGINE_QUIT, ENGINE_USER_INPUT, GAME_CREATE, GAME_CREATE_GEM,
+	GAME_CREATE_MARKER, GAME_CREATE_PLAYER, GAME_QUIT, GAME_FINISHED,
+	GAME_RETURN_INPUT, GAME_REQUEST_INPUT, GAME_SEND_WINNER, PLAYER_REQUEST_INPUT,
+	PLAYER_RETURN_INPUT, PLAYER_CREATE, PLAYER_QUIT, PLAYER_FINISHED, QUIT};
 
 struct Message
 {
@@ -65,6 +65,14 @@ struct MsgEngineUserInput : Message
 
 };
 
+struct MsgGameCreate : Message
+{
+	GameType game_type;
+
+	MsgGameCreate(GameType game_type)
+		: Message(GAME_CREATE), game_type(game_type) {}
+};
+
 struct MsgGameCreateGem : Message
 {
 	PlayerID player_id;
@@ -87,10 +95,12 @@ struct MsgGameCreatePlayer : Message
 {
 	PlayerID player_id;
 	PlayerType player_type;
+	std::string player_name;
 
-	MsgGameCreatePlayer(PlayerID player_id, PlayerType player_type)
+	MsgGameCreatePlayer(PlayerID player_id, PlayerType player_type,
+			std::string const& player_name)
 		: Message(GAME_CREATE_PLAYER), player_id(player_id),
-		player_type(player_type) {}
+		player_type(player_type), player_name(player_name) {}
 };
 
 struct MsgGameQuit : Message
@@ -110,7 +120,7 @@ struct MsgGameReturnInput : Message
 	NodeID node_id;
 
 	MsgGameReturnInput(NodeID node_id)
-		: Message(PLAYER_RETURN_INPUT), node_id(node_id) {}
+		: Message(GAME_RETURN_INPUT), node_id(node_id) {}
 };
 
 struct MsgGameRequestInput : Message
@@ -146,15 +156,6 @@ struct MsgPlayerReturnInput : Message
 		: Message(PLAYER_RETURN_INPUT), player_id(player_id), node_id(node_id) {}
 };
 
-struct MsgPlayerCreate : Message
-{
-	PlayerType player_type;
-	std::string name;
-
-	MsgPlayerCreate(PlayerType player_type, std::string name)
-		: Message(PLAYER_CREATE), player_type(player_type), name(name) {}
-};
-
 struct MsgPlayerQuit : Message
 {
 	PlayerID player_id;
@@ -169,6 +170,12 @@ struct MsgPlayerFinished : Message
 
 	MsgPlayerFinished(PlayerID player_id)
 		: Message(PLAYER_FINISHED), player_id(player_id) {}
+};
+
+struct MsgQuit : Message
+{
+	MsgQuit()
+		: Message(QUIT) {}
 };
 
 #endif

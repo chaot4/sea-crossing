@@ -34,8 +34,8 @@ void PlayerCenter::processMessage(TwoWayChannel& channel)
 		case GAME_RETURN_INPUT:
 			process(static_pointer_cast<MsgGameReturnInput>(msg));
 			break;
-		case PLAYER_CREATE:
-			process(static_pointer_cast<MsgPlayerCreate>(msg));
+		case GAME_CREATE_PLAYER:
+			process(static_pointer_cast<MsgGameCreatePlayer>(msg));
 			break;
 		case PLAYER_REQUEST_INPUT:
 			process(static_pointer_cast<MsgPlayerRequestInput>(msg));
@@ -49,6 +49,9 @@ void PlayerCenter::processMessage(TwoWayChannel& channel)
 		case PLAYER_FINISHED:
 			process(static_pointer_cast<MsgPlayerFinished>(msg));
 			break;
+		case QUIT:
+//			quit();
+			break;
                 default:
                         cerr << "ERROR: Unexpected message type." << endl;
         }
@@ -56,32 +59,32 @@ void PlayerCenter::processMessage(TwoWayChannel& channel)
 
 void PlayerCenter::process(std::shared_ptr<MsgGameRequestInput> msg)
 {
-	_player_channels[msg->player_id]->send(msg);
+	_player_channels[msg->player_id]->send(static_pointer_cast<Message>(msg));
 }
 
 void PlayerCenter::process(std::shared_ptr<MsgGameReturnInput> msg)
 {
-	_hub_channel.send(msg);
+	_hub_channel.send(static_pointer_cast<Message>(msg));
 }
 
 void PlayerCenter::process(std::shared_ptr<MsgPlayerRequestInput> msg)
 {
-	_hub_channel.send(msg);
+	_hub_channel.send(static_pointer_cast<Message>(msg));
 }
 
 void PlayerCenter::process(std::shared_ptr<MsgPlayerReturnInput> msg)
 {
-	_player_channels[msg->player_id]->send(msg);
+	_player_channels[msg->player_id]->send(static_pointer_cast<Message>(msg));
 }
 
-void PlayerCenter::process(std::shared_ptr<MsgPlayerCreate> msg)
+void PlayerCenter::process(std::shared_ptr<MsgGameCreatePlayer> msg)
 {
-	createPlayer(msg->player_type, msg->name);
+	createPlayer(msg->player_id, msg->player_type, msg->player_name);
 }
 
 void PlayerCenter::process(std::shared_ptr<MsgPlayerQuit> msg)
 {
-	_player_channels[msg->player_id]->send(msg);
+	_player_channels[msg->player_id]->send(static_pointer_cast<Message>(msg));
 }
 
 void PlayerCenter::process(std::shared_ptr<MsgPlayerFinished> msg)
@@ -97,24 +100,25 @@ void PlayerCenter::process(std::shared_ptr<MsgPlayerFinished> msg)
 	_player_channels[player_id] = 0;
 }
 
-void PlayerCenter::createPlayer(PlayerType player_type, string const& name)
+void PlayerCenter::createPlayer(PlayerID player_id, PlayerType player_type, string const& name)
 {
 	/* Player Factory */
 	switch (player_type) {
 		case CONSOLE_PLAYER:
-			_players.push_back(new ConsolePlayer(name));
+			_players.push_back(new ConsolePlayer(player_id, name, board));
 			break;
 		case GUI_PLAYER:
 			// TODO
 			break;
 		case DEBUG_PLAYER:
-			_players.push_back(new DebugPlayer(name));
+			_players.push_back(new DebugPlayer(player_id, name, board));
 			break;
 		case RANDOM_AI:
-			_players.push_back(new RandomAIPlayer(name, board));
+			_players.push_back(new RandomAIPlayer(player_id, name, board));
 			break;
 		case SHORTEST_PATH_AI:
-			_players.push_back(new ShortestPathAIPlayer<Cost, Rating>(name, board));
+			_players.push_back(new ShortestPathAIPlayer<Cost, Rating>(
+						player_id, name, board));
 			break;
 		default:
 			cerr << "Unexpected player type passed to the Player Center." << endl;
@@ -131,3 +135,11 @@ TwoWayChannel& PlayerCenter::getHubChannel()
 {
 	return _hub_channel;
 }
+
+//void PlayerCenter::quit()
+//{
+//	for (unsigned int i(0); i<_player_channels.size(); i++) {
+//		std::shared_ptr<Message> msg(new MsgQuit());
+//		_player_channels[i]->send(msg);
+//	}
+//}

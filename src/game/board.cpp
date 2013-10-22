@@ -350,3 +350,13 @@ bool Board::isEndFace(FaceID id, PlayerID player_id) const
 
 	return false;
 }
+
+NodeID Board::getNodeID(NodeLabel const& node_label) const
+{
+	return node_map.at(node_label);
+}
+
+FaceID Board::getFaceID(FaceLabel const& face_label) const
+{
+	return face_map.at(face_label);
+}
