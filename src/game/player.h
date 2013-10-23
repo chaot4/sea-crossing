@@ -9,9 +9,11 @@
 #include <string>
 
 #include <iostream>
-#ifdef WIN_32
-#include <windows.h>
-#define sleep(x) Sleep(x)
+#ifdef _WIN32
+	/*Fix call to windows macros instead of std::max*/
+	#define NOMINMAX
+	#include <windows.h>
+	#define sleep(x) Sleep(x)
 #elif __linux__
 #include <unistd.h>
 #define sleep(x) usleep(x)
