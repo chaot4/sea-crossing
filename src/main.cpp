@@ -41,7 +41,7 @@ int main(){
 	std::thread render_thread(&RenderHub::init, &r_hub);
 	std::thread c_hub_thread(&CommunicationHub::start, &c_hub);
 
-	std::shared_ptr<Message> msg(new MsgGameCreate(GUI_GAME));
+	std::shared_ptr<Message> msg(new MsgGameCreate(conf.getGameConf().game_type));
 	menu_channel.send(msg);
 
 //	/*	Test Game and Player channels channel */
