@@ -34,8 +34,9 @@ struct MsgEngineCreate : Message
 	MsgEngineCreate(unsigned int in_msg_id,glm::vec3 in_position,
 		glm::quat in_orientation,glm::vec3 in_scaling,
 		std::string in_geometry_path,std::string in_material_path)
-		: Message(ENGINE_CREATE), msg_id(in_msg_id), position(in_position), orientation(in_orientation),
-		scaling(in_scaling), geometry_path(in_geometry_path), material_path(in_material_path) {}
+		: Message(ENGINE_CREATE), msg_id(in_msg_id), position(in_position),
+		orientation(in_orientation), scaling(in_scaling), geometry_path(in_geometry_path),
+		material_path(in_material_path) {}
 };
 
 struct MsgEngineDelete : Message

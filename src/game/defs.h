@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 enum GameType { DEBUG_GAME, CONSOLE_GAME, GUI_GAME };
 enum PlayerType { CONSOLE_PLAYER, GUI_PLAYER, DEBUG_PLAYER, RANDOM_AI, SHORTEST_PATH_AI };
@@ -25,6 +27,9 @@ struct Node{
 
 	int owner;
 
+	glm::vec3 position;
+	glm::quat orientation;
+
 	Node(NodeID id, NodeLabel const& label, std::vector<FaceID> adj_faces, int owner = 0)
 		:id(id), label(label), adj_faces(adj_faces), owner(owner){}
 };
@@ -38,6 +43,9 @@ struct Face{
 
 	int owner;
 	std::vector<unsigned int> num_adj_nodes_player;
+
+	glm::vec3 position;
+	glm::quat orientation;
 
 	Face(FaceID id, FaceLabel const& label, std::vector<NodeID> adj_nodes,
 		std::vector<FaceID> adj_faces, int owner = 0, int num_adj_nodes_player1 = 0,

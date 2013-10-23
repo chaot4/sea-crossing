@@ -2,8 +2,9 @@
 
 using namespace std;
 
-CommunicationHub::CommunicationHub()
-	: run(true) {}
+CommunicationHub::CommunicationHub(GraphicsConf const& graphics_conf, Board const& board)
+	: run(true), graphics_conf(graphics_conf), board(board),
+	engine_msg_id(numeric_limits<int>::min()) {}
 
 void CommunicationHub::start()
 {
@@ -84,11 +85,22 @@ void CommunicationHub::process(std::shared_ptr<MsgGameCreate> msg)
 
 void CommunicationHub::process(std::shared_ptr<MsgGameCreateGem> msg)
 {
-	std::shared_ptr<Message> new_engine_msg(
-	new MsgEngineCreate(42, glm::vec3(0.0, 0.0, 0.0), glm::quat(), glm::vec3(1.0),
-	"../resources/meshes/board.fbx","../resources/materials/debugging.slmtl"));
-	_engine_channel.send(new_engine_msg);
-	// TODO place the right gem
+	Node const& node(board.getNode(msg->node_id));
+	std::string const* gem_material;
+
+	if (msg->player_id) {
+		gem_material = &graphics_conf.gem_material_p2;
+	}
+	else {
+		gem_material = &graphics_conf.gem_material_p1;
+	}
+
+	std::shared_ptr<Message> new_msg(
+		new MsgEngineCreate(nextEngineMsgID(), node.position, node.orientation,
+			glm::vec3(1.0), graphics_conf.gem_geometry, *gem_material));
+	// TODO put id into map.
+
+	_engine_channel.send(new_msg);
 }
 
 void CommunicationHub::process(std::shared_ptr<MsgGameFinished> msg)
@@ -98,7 +110,22 @@ void CommunicationHub::process(std::shared_ptr<MsgGameFinished> msg)
 
 void CommunicationHub::process(std::shared_ptr<MsgGameCreateMarker> msg)
 {
+	Face const& face(board.getFace(msg->face_id));
+	std::string const* marker_material;
 
+	if (msg->player_id) {
+		marker_material = &graphics_conf.marker_material_p2;
+	}
+	else {
+		marker_material = &graphics_conf.marker_material_p1;
+	}
+
+	std::shared_ptr<Message> new_msg(
+		new MsgEngineCreate(nextEngineMsgID(), face.position, face.orientation,
+			glm::vec3(1.0), graphics_conf.marker_geometry, *marker_material));
+	// TODO put id into map.
+
+	_engine_channel.send(new_msg);
 }
 
 void CommunicationHub::process(std::shared_ptr<MsgGameCreatePlayer> msg)
@@ -140,4 +167,13 @@ void CommunicationHub::sendQuit(TwoWayChannel& channel)
 {
 	std::shared_ptr<Message> msg(new MsgQuit());
 	channel.send(msg);
+}
+
+int CommunicationHub::nextEngineMsgID()
+{
+	if (engine_msg_id == 0) {
+		engine_msg_id = numeric_limits<int>::min();
+	}
+
+	return (engine_msg_id++);
 }

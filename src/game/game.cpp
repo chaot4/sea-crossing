@@ -386,6 +386,6 @@ void SimpleGUIGame::placeGem(PlayerID player_id, NodeID node_id)
 	msgCreateGem(player_id, node_id);
 
 	for(unsigned int i=0; i<new_markers.size(); i++){
-		msgCreateGem(player_id, new_markers[i]);
+		msgCreateMarker(player_id, new_markers[i]);
 	}
 }

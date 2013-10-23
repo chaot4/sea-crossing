@@ -19,14 +19,29 @@ struct GameConf{
 	bool use_switch_rule;
 
 	GameConf()
-		:p1_type(CONSOLE_PLAYER), p2_type(CONSOLE_PLAYER), use_switch_rule(true) {}
+		: p1_type(CONSOLE_PLAYER), p2_type(CONSOLE_PLAYER), p1_name("Spongebob"),
+		p2_name("Patrick"), game_type(GUI_GAME), use_switch_rule(true) {}
 };
 
 struct GraphicsConf{
-	std::string board_filename;
+	std::string board_geometry;
+	std::string gem_geometry;
+	std::string marker_geometry;
+	std::string board_material;
+	std::string gem_material_p1;
+	std::string gem_material_p2;
+	std::string marker_material_p1;
+	std::string marker_material_p2;
 
 	GraphicsConf()
-		:board_filename("Invor_please_insert_std_value"){}
+		: board_geometry("../resources/meshes/board.fbx"),
+		gem_geometry("../resources/meshes/gem.fbx"),
+		marker_geometry("../resources/meshes/marker.fbx"),
+		board_material("../resources/materials/debugging.slmtl"),
+		gem_material_p1("../resources/materials/templates/silver.slmtl"),
+		gem_material_p2("../resources/materials/templates/gold.slmtl"),
+		marker_material_p1("../resources/materials/templates/silver.slmtl"),
+		marker_material_p2("../resources/materials/templates/gold.slmtl") {}
 };
 
 class Conf{

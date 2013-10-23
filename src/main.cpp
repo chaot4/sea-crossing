@@ -26,7 +26,7 @@ int main(){
 	Conf conf("config");
 	conf.readFromFile();
 
-	CommunicationHub c_hub;
+	CommunicationHub c_hub(conf.getGraphicsConf(), board);
 	RenderHub r_hub;
 	GameCenter game_center(conf.getGameConf(), board);
 	PlayerCenter player_center(board);

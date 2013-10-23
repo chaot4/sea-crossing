@@ -3,6 +3,10 @@
 
 #include "messageChannel.h"
 #include "messages.h"
+#include "conf.h"
+#include "game/board.h"
+
+#include <limits>
 
 #include <iostream>
 #ifdef _WIN32
@@ -26,6 +30,10 @@ class CommunicationHub
 		TwoWayChannel _player_channel;
 
 		bool run;
+		GraphicsConf graphics_conf;
+		Board const& board;
+
+		int engine_msg_id;
 
 		void processMessage(TwoWayChannel& channel);
 		void process(std::shared_ptr<MsgEngineCreateFeedback> msg);
@@ -39,9 +47,11 @@ class CommunicationHub
 		void process(std::shared_ptr<MsgGameReturnInput> msg);
 
 		void sendQuit(TwoWayChannel& channel);
+
+		int nextEngineMsgID();
 	
 	public:
-		CommunicationHub();
+		CommunicationHub(GraphicsConf const& graphics_conf, Board const& board);
 
 		void start();
 		void stop();
