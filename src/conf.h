@@ -19,7 +19,7 @@ struct GameConf{
 	bool use_switch_rule;
 
 	GameConf()
-		: p1_type(CONSOLE_PLAYER), p2_type(CONSOLE_PLAYER), p1_name("Spongebob"),
+		: p1_type(CONSOLE_PLAYER), p2_type(SHORTEST_PATH_AI), p1_name("Spongebob"),
 		p2_name("Patrick"), game_type(GUI_GAME), use_switch_rule(true) {}
 };
 

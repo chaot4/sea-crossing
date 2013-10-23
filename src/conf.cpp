@@ -119,6 +119,60 @@ bool Conf::parseLine(stringstream& ss)
 			return false;
 		}
 	}
+	else if(keyword == "p1_type"){
+		if(parameters.size() == 1){
+			if (parameters[0] == "console") {
+				game_conf.p1_type = CONSOLE_PLAYER;
+			}
+			else if (parameters[0] == "gui") {
+				game_conf.p1_type = GUI_PLAYER;
+			}
+			else if (parameters[0] == "debug") {
+				game_conf.p1_type = DEBUG_PLAYER;
+			}
+			else if (parameters[0] == "random_ai") {
+				game_conf.p1_type = RANDOM_AI;
+			}
+			else if (parameters[0] == "shortest_path_ai") {
+				game_conf.p1_type = SHORTEST_PATH_AI;
+			}
+			else {
+				errorInvalidParameter(keyword, parameters[0]);
+				return false;
+			}
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
+	else if(keyword == "p2_type"){
+		if(parameters.size() == 1){
+			if (parameters[0] == "console") {
+				game_conf.p2_type = CONSOLE_PLAYER;
+			}
+			else if (parameters[0] == "gui") {
+				game_conf.p2_type = GUI_PLAYER;
+			}
+			else if (parameters[0] == "debug") {
+				game_conf.p2_type = DEBUG_PLAYER;
+			}
+			else if (parameters[0] == "random_ai") {
+				game_conf.p2_type = RANDOM_AI;
+			}
+			else if (parameters[0] == "shortest_path_ai") {
+				game_conf.p2_type = SHORTEST_PATH_AI;
+			}
+			else {
+				errorInvalidParameter(keyword, parameters[0]);
+				return false;
+			}
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
 	else if(keyword == "p1_name"){
 		if(parameters.size() == 1){
 			game_conf.p1_name = parameters[0];
@@ -131,6 +185,27 @@ bool Conf::parseLine(stringstream& ss)
 	else if(keyword == "p2_name"){
 		if(parameters.size() == 1){
 			game_conf.p2_name = parameters[0];
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
+	else if(keyword == "game_type"){
+		if(parameters.size() == 1){
+			if (parameters[0] == "console") {
+				game_conf.game_type = CONSOLE_GAME;
+			}
+			else if (parameters[0] == "gui") {
+				game_conf.game_type = GUI_GAME;
+			}
+			else if (parameters[0] == "debug") {
+				game_conf.game_type = DEBUG_GAME;
+			}
+			else {
+				errorInvalidParameter(keyword, parameters[0]);
+				return false;
+			}
 		}
 		else{
 			errorWrongNumberOfParameters(keyword);
