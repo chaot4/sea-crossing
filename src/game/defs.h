@@ -30,8 +30,11 @@ struct Node{
 	glm::vec3 position;
 	glm::quat orientation;
 
-	Node(NodeID id, NodeLabel const& label, std::vector<FaceID> adj_faces, int owner = 0)
-		:id(id), label(label), adj_faces(adj_faces), owner(owner){}
+	Node(NodeID id, NodeLabel const& label, std::vector<FaceID> adj_faces,
+			glm::vec3 const& position, glm::quat const& orientation = glm::quat(),
+			int owner = 0)
+		:id(id), label(label), adj_faces(adj_faces), owner(owner),
+		position(position), orientation(orientation) {}
 };
 
 struct Face{
@@ -48,10 +51,12 @@ struct Face{
 	glm::quat orientation;
 
 	Face(FaceID id, FaceLabel const& label, std::vector<NodeID> adj_nodes,
-		std::vector<FaceID> adj_faces, int owner = 0, int num_adj_nodes_player1 = 0,
+		std::vector<FaceID> adj_faces, glm::vec3 const& position,
+		glm::quat const& orientation, int owner = 0, int num_adj_nodes_player1 = 0,
 		int num_adj_nodes_player2 = 0)
 		:id(id), label(label), adj_nodes(adj_nodes), adj_faces(adj_faces),
-		owner(owner), num_adj_nodes_player(2, 0){}
+		owner(owner), num_adj_nodes_player(2, 0), position(position),
+		orientation(orientation) {}
 };
 
 struct PQFace{
