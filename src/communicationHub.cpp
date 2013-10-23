@@ -80,6 +80,10 @@ void CommunicationHub::process(std::shared_ptr<MsgEngineUserInput> msg)
 
 void CommunicationHub::process(std::shared_ptr<MsgGameCreate> msg)
 {
+	std::shared_ptr<Message> new_engine_msg(
+		new MsgEngineCreate(nextEngineMsgID(), glm::vec3(0.0, 0.0, 0.0), glm::quat(), glm::vec3(1.0),
+		graphics_conf.board_geometry, graphics_conf.board_material) );
+	_engine_channel.send(new_engine_msg);
 	_game_channel.send(static_pointer_cast<Message>(msg));
 }
 
