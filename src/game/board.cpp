@@ -102,7 +102,7 @@ Board::Board() : start_faces(2), end_faces(2)
 		Face(23, "DW-1", {16, 17, 23, 24, 30, 31}, {11, 12, 22, 24, 38, 39}, glm::vec3(-8.75, 0.125, 2.5), glm::rotate(glm::quat(), 90, glm::vec3(0, 1, 0))),
 		Face(24, "DW1", {30, 31, 40, 41, 49, 50}, {5, 12, 13, 23, 39, 40}, glm::vec3(-8.75, 0.125, -2.5), glm::rotate(glm::quat(), 90, glm::vec3(0, 1, 0))),
 		Face(25, "ENW", {58, 60, 67}, {13, 26, 40}, glm::vec3(-10.0, 0.125, -10.0), glm::rotate(glm::quat(), 45, glm::vec3(0, 1, 0))),
-		Face(26, "EN-1", {60, 61, 62}, {13, 14, 25, 27}, glm::vec3(-5.0, 0.125, -11.25), glm::rotate(glm::quat(), 45, glm::vec3(0, 1, 0))),
+		Face(26, "EN-1", {60, 61, 62}, {13, 14, 25, 27}, glm::vec3(-5.0, 0.125, -11.25), glm::rotate(glm::quat(), 0, glm::vec3(0, 1, 0))),
 		Face(27, "EN", {62, 63, 64}, {14, 15, 26, 28}, glm::vec3(0.0, 0.125, -11.25), glm::rotate(glm::quat(), 0, glm::vec3(0, 1, 0))),
 		Face(28, "EN1", {64, 65, 66}, {15, 16, 27, 29}, glm::vec3(5.0, 0.125, -11.25), glm::rotate(glm::quat(), 0, glm::vec3(0, 1, 0))),
 		Face(29, "ENE", {59, 66, 68}, {16, 28, 30}, glm::vec3(10.0, 0.125, -10.0), glm::rotate(glm::quat(), -45, glm::vec3(0, 1, 0))),
