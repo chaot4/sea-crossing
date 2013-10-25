@@ -1,5 +1,6 @@
 * game: Implement the first-move-switching rule.
 * game: Implement an optional handycap of n (random or non-random) stones.
+* game: Be consistent with the player ids
 * game and engine: Use the config files values.
 * engine: Implement picking for user input.
 * engine: Implement full render pipeline
@@ -9,7 +10,5 @@
 
 
 message system and game-engine-interface:
-* Import messageGeneric class of stbuehler
-* Create something that handles a two way channel
 * Implement the game-engine-interface
 * Adapt the game as well as the engine

@@ -242,6 +242,9 @@ void Game::start()
 		sleep(sleep_time);
 	}
 
+	msgPlayerQuit(0);
+	msgPlayerQuit(1);
+
 	cout << "==- END GAME -==" << endl;
 	msgSendFinished();
 }
@@ -321,6 +324,13 @@ void Game::msgCreateMarker(PlayerID player_id, FaceID face_id)
 void Game::msgSendWinner(PlayerID player_id)
 {
 	std::shared_ptr<Message> msg(new MsgGameWinner(player_id));
+	_game_center_channel.send(msg);
+}
+
+void Game::msgPlayerQuit(PlayerID player_id)
+{
+	std::shared_ptr<Message> msg(
+			new MsgPlayerQuit(player_id));
 	_game_center_channel.send(msg);
 }
 

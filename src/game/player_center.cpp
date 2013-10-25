@@ -14,8 +14,10 @@ void PlayerCenter::start()
                 sleep(sleep_time);
 
 		for (unsigned int i(0); i<_player_channels.size(); i++) {
-			processMessage(*_player_channels[i]);
-			sleep(sleep_time);
+			if (_player_channels[i]) {
+				processMessage(*_player_channels[i]);
+				sleep(sleep_time);
+			}
 		}
         }
 }
@@ -59,7 +61,12 @@ void PlayerCenter::processMessage(TwoWayChannel& channel)
 
 void PlayerCenter::process(std::shared_ptr<MsgGameRequestInput> msg)
 {
-	_player_channels[msg->player_id]->send(static_pointer_cast<Message>(msg));
+	if (_player_channels.size() > msg->player_id) {
+		_player_channels[msg->player_id]->send(static_pointer_cast<Message>(msg));
+	}
+	else {
+		cerr << "ERROR: Message to non-existing player id." << endl;
+	}
 }
 
 void PlayerCenter::process(std::shared_ptr<MsgGameReturnInput> msg)
@@ -74,7 +81,12 @@ void PlayerCenter::process(std::shared_ptr<MsgPlayerRequestInput> msg)
 
 void PlayerCenter::process(std::shared_ptr<MsgPlayerReturnInput> msg)
 {
-	_player_channels[msg->player_id]->send(static_pointer_cast<Message>(msg));
+	if (_player_channels.size() > msg->player_id) {
+		_player_channels[msg->player_id]->send(static_pointer_cast<Message>(msg));
+	}
+	else {
+		cerr << "ERROR: Message to non-existing player id." << endl;
+	}
 }
 
 void PlayerCenter::process(std::shared_ptr<MsgGameCreatePlayer> msg)
@@ -84,7 +96,12 @@ void PlayerCenter::process(std::shared_ptr<MsgGameCreatePlayer> msg)
 
 void PlayerCenter::process(std::shared_ptr<MsgPlayerQuit> msg)
 {
-	_player_channels[msg->player_id]->send(static_pointer_cast<Message>(msg));
+	if (_player_channels.size() > msg->player_id) {
+		_player_channels[msg->player_id]->send(static_pointer_cast<Message>(msg));
+	}
+	else {
+		cerr << "ERROR: Message to non-existing player id." << endl;
+	}
 }
 
 void PlayerCenter::process(std::shared_ptr<MsgPlayerFinished> msg)

@@ -41,6 +41,7 @@ class CommunicationHub
 		void process(std::shared_ptr<MsgGameCreate> msg);
 		void process(std::shared_ptr<MsgGameCreateGem> msg);
 		void process(std::shared_ptr<MsgGameWinner> msg);
+		void process(std::shared_ptr<MsgPlayerQuit> msg);
 		void process(std::shared_ptr<MsgGameFinished> msg);
 		void process(std::shared_ptr<MsgGameCreateMarker> msg);
 		void process(std::shared_ptr<MsgGameCreatePlayer> msg);
