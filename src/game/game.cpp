@@ -320,7 +320,7 @@ void Game::msgCreateMarker(PlayerID player_id, FaceID face_id)
 
 void Game::msgSendWinner(PlayerID player_id)
 {
-	std::shared_ptr<Message> msg(new MsgGameSendWinner(player_id));
+	std::shared_ptr<Message> msg(new MsgGameWinner(player_id));
 	_game_center_channel.send(msg);
 }
 

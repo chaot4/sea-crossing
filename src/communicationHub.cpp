@@ -54,6 +54,9 @@ void CommunicationHub::processMessage(TwoWayChannel& channel)
 		case GAME_CREATE_PLAYER:
 			process(static_pointer_cast<MsgGameCreatePlayer>(msg));
 			break;
+		case GAME_WINNER:
+			process(static_pointer_cast<MsgGameWinner>(msg));
+			break;
 		case GAME_FINISHED:
 			process(static_pointer_cast<MsgGameFinished>(msg));
 			break;
@@ -105,6 +108,11 @@ void CommunicationHub::process(std::shared_ptr<MsgGameCreateGem> msg)
 	// TODO put id into map.
 
 	_engine_channel.send(new_msg);
+}
+
+void CommunicationHub::process(std::shared_ptr<MsgGameWinner> msg)
+{
+
 }
 
 void CommunicationHub::process(std::shared_ptr<MsgGameFinished> msg)

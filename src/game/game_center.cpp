@@ -61,8 +61,8 @@ void GameCenter::processMessage(TwoWayChannel& channel)
 		case GAME_REQUEST_INPUT:
 			process(static_pointer_cast<MsgGameRequestInput>(msg));
 			break;
-		case GAME_SEND_WINNER:
-			process(static_pointer_cast<MsgGameSendWinner>(msg));
+		case GAME_WINNER:
+			process(static_pointer_cast<MsgGameWinner>(msg));
 			break;
 		case QUIT:
 //			quit();
@@ -124,7 +124,7 @@ void GameCenter::process(std::shared_ptr<MsgGameRequestInput> msg)
 	_hub_channel.send(static_pointer_cast<Message>(static_pointer_cast<Message>(msg)));
 }
 
-void GameCenter::process(std::shared_ptr<MsgGameSendWinner> msg)
+void GameCenter::process(std::shared_ptr<MsgGameWinner> msg)
 {
 	_hub_channel.send(static_pointer_cast<Message>(msg));
 }

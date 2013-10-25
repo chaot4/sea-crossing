@@ -46,7 +46,7 @@ class GameCenter
 		void process(std::shared_ptr<MsgGameFinished> msg);
 		void process(std::shared_ptr<MsgGameReturnInput> msg);
 		void process(std::shared_ptr<MsgGameRequestInput> msg);
-		void process(std::shared_ptr<MsgGameSendWinner> msg);
+		void process(std::shared_ptr<MsgGameWinner> msg);
 
 //		void quit();
 

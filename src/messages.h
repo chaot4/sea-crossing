@@ -11,7 +11,7 @@
 enum MessageType { ENGINE_CREATE, ENGINE_DELETE, ENGINE_CREATE_FEEDBACK,
 	ENGINE_QUIT, ENGINE_USER_INPUT, GAME_CREATE, GAME_CREATE_GEM,
 	GAME_CREATE_MARKER, GAME_CREATE_PLAYER, GAME_QUIT, GAME_FINISHED,
-	GAME_RETURN_INPUT, GAME_REQUEST_INPUT, GAME_SEND_WINNER, PLAYER_REQUEST_INPUT,
+	GAME_RETURN_INPUT, GAME_REQUEST_INPUT, GAME_WINNER, PLAYER_REQUEST_INPUT,
 	PLAYER_RETURN_INPUT, PLAYER_CREATE, PLAYER_QUIT, PLAYER_FINISHED, QUIT};
 
 struct Message
@@ -132,12 +132,12 @@ struct MsgGameRequestInput : Message
 		: Message(GAME_REQUEST_INPUT), player_id(player_id) {}
 };
 
-struct MsgGameSendWinner : Message 
+struct MsgGameWinner : Message 
 {
 	PlayerID winner;
 
-	MsgGameSendWinner(PlayerID winner)
-		: Message(GAME_SEND_WINNER), winner(winner) {}
+	MsgGameWinner(PlayerID winner)
+		: Message(GAME_WINNER), winner(winner) {}
 };
 
 struct MsgPlayerRequestInput : Message
