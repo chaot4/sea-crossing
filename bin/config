@@ -1,3 +1,7 @@
+##############
+# GAME OPTIONS
+##############
+
 # Activates the rule that the first move can be taken by the second player.
 # Possible values: true, false
 use_switch_rule true
@@ -15,3 +19,18 @@ p2_name Patrick
 # Sets the game type.
 # Possible values: console, gui
 game_type gui
+
+##################
+# GRAPHICS OPTIONS
+##################
+
+# Here the geometries and materials of the board, gems and markers can be set.
+# Possible values: Valid paths to material or geometry files.
+board_geometry ../resources/meshes/board.fbx
+gem_geometry ../resources/meshes/gem.fbx
+marker_geometry ../resources/meshes/marker.fbx
+board_material ../resources/materials/debugging.slmtl
+gem_material_p1 ../resources/materials/templates/silver.slmtl
+gem_material_p2 ../resources/materials/templates/gold.slmtl
+marker_material_p1 ../resources/materials/templates/silver.slmtl
+marker_material_p2 ../resources/materials/templates/gold.slmtl

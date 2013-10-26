@@ -212,6 +212,78 @@ bool Conf::parseLine(stringstream& ss)
 			return false;
 		}
 	}
+	else if (keyword == "board_geometry") {
+		if(parameters.size() == 1){
+			graphics_conf.board_geometry = parameters[0];
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
+	else if (keyword == "gem_geometry") {
+		if(parameters.size() == 1){
+			graphics_conf.gem_geometry = parameters[0];
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
+	else if (keyword == "marker_geometry") {
+		if(parameters.size() == 1){
+			graphics_conf.marker_geometry = parameters[0];
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
+	else if (keyword == "board_material") {
+		if(parameters.size() == 1){
+			graphics_conf.board_material = parameters[0];
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
+	else if (keyword == "gem_material_p1") {
+		if(parameters.size() == 1){
+			graphics_conf.gem_material_p1 = parameters[0];
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
+	else if (keyword == "gem_material_p2") {
+		if(parameters.size() == 1){
+			graphics_conf.gem_material_p2 = parameters[0];
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
+	else if (keyword == "marker_material_p1") {
+		if(parameters.size() == 1){
+			graphics_conf.marker_material_p1 = parameters[0];
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
+	else if (keyword == "marker_material_p2") {
+		if(parameters.size() == 1){
+			graphics_conf.marker_material_p2 = parameters[0];
+		}
+		else{
+			errorWrongNumberOfParameters(keyword);
+			return false;
+		}
+	}
 	else{
 		errorUnknownKeyword(keyword);
 		return false;
