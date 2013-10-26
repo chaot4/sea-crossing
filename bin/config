@@ -1,8 +1,17 @@
-# This activates the rule that the first move can be taken by the second player.
-# Possible values are: true, false
-p1_type random_ai
-p2_type random_ai
+# Activates the rule that the first move can be taken by the second player.
+# Possible values: true, false
+use_switch_rule true
+
+# Sets the player type.
+# Possible values: console, gui, debug, random_ai, shortest_path_ai
+p1_type shortest_path_ai
+p2_type console
+
+# Sets the players names.
+# Possible values: All strings _without_ spaces in them.
 p1_name Spongebob
 p2_name Patrick
+
+# Sets the game type.
+# Possible values: console, gui
 game_type gui
-use_switch_rule true
