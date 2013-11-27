@@ -15,7 +15,7 @@ in vec3 v_position;
 in vec3 v_normal;
 in vec3 v_tangent;
 in vec3 v_bitangent;
-in vec4 v_colour;
+//in vec4 v_colour;
 in vec2 v_uv_coord;
 
 out vec3 position;

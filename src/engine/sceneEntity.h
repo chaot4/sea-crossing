@@ -1,14 +1,15 @@
 /**
 * \class SceneEntity
 *
-* \brief Base class for scene entity
+* \brief Base class for scene entities
 *
 * This class contains the id and spatial information of a scene entity
 * and offers basic functionality to manipulate those values, e.g. translate, rotate etc.
+* The class is abstract due to the protected constructor.
 *
 * \author Michael Becher
 *
-* \date 11th September 2013
+* \date 26th November 2013
 */
 
 #ifndef sceneEntity_h
@@ -23,55 +24,81 @@
 class SceneEntity
 {
 protected:
-	const int id;
+	const int m_id;
 
-	glm::vec3 position;
-	glm::quat orientation;
-	glm::vec3 scaling;
+	glm::vec3 m_position;
+	glm::quat m_orientation;
+	glm::vec3 m_scaling;
+
+	/**
+	* \brief 'Complete' contructor. Declared protected, as only classes derived from this class are supposed to be instantiated.
+	*/
+	SceneEntity(const int id, const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scaling)
+		: m_id(id), m_position(position), m_orientation(orientation), m_scaling(scaling) {}
 public:
-	SceneEntity() : id(0), position(glm::vec3(0.0f)) {}
 	~SceneEntity() {}
-
-	SceneEntity(const int inId, const glm::vec3& inPosition, const glm::quat& inOrientation, const glm::vec3& inScaling)
-		: id(inId), position(inPosition), orientation(inOrientation), scaling(inScaling) {}
 
 	/**
 	* \brief Change entity position via translation
 	* \param tvec Translation vector
 	*/
-	void translate(const glm::vec3& tvec) { position = position + tvec; }
+	void translate(const glm::vec3& tvec) { m_position = m_position + tvec; }
 
 	/**
 	* \brief Rotate entity by a given angle around a given vector
-	* \param angle Rotation angle given in degree
+	* \param angle Rotation angle given in degrees
 	* \param axis Local rotation vector, e.g. vec3(1.0,0.0,0.0) is always the right hand vector, not the global x-axis
 	*/
-	void rotate(const float angle,const glm::vec3& axis) {orientation = glm::normalize(glm::rotate(orientation,angle,axis));}
+	void rotate(const float angle,const glm::vec3& axis) {m_orientation = glm::normalize(glm::rotate(m_orientation,angle,axis));}
 
 	/**
 	* \brief Get entity id
 	* \return Returns entity id as an integer
 	*/
-	const int getId() {return id;}
+	const int getId() {return m_id;}
 
 	/**
 	* \brief Set entity position
-	* \param inPosition New position
+	* \param position New position
 	*/
-	void setPosition(const glm::vec3& inPosition) {position = inPosition;}
+	void setPosition(const glm::vec3& position) { m_position = position; }
 
 	/**
 	* \brief Get entity position
 	* \return Returns position
 	*/
-	glm::vec3 getPosition() {return position;}
+	glm::vec3 getPosition() { return m_position; }
 
-	void setOrientation(const glm::quat& inOrientation) {orientation = inOrientation;}
-	void setOrientation(const float angle, const glm::vec3& axis) {orientation = glm::rotate(glm::quat(),angle,axis);}
-	const glm::quat& getOrientation() {return orientation;}
+	/**
+	* \brief Set entity orientation
+	* \param orientation New orientation
+	*/
+	void setOrientation(const glm::quat& orientation) {m_orientation = orientation;}
 
-	void setScaling(const glm::vec3& inScaling) {scaling = inScaling;}
-	glm::vec3 getScaling() {return scaling;}
+	/**
+	* \brief Set entity orientation to specified angle and rotation vector based on initial orientation of glm::quat
+	* \param angle Rotation angle given in degrees
+	* \param axis Global rotation vector, e.g. for vec3(0.0,1.0,0.0) the entity will be rotated around the global y-axis 
+	*/
+	void setOrientation(const float angle, const glm::vec3& axis) {m_orientation = glm::rotate(glm::quat(),angle,axis);}
+
+	/**
+	* \brief Get entity orientation
+	* \return Returns orientation
+	*/
+	const glm::quat& getOrientation() {return m_orientation;}
+
+	/**
+	* \brief Set entity scaling
+	* \param scaling New scaling
+	*/
+	void setScaling(const glm::vec3& scaling) {m_scaling = scaling;}
+
+	/**
+	* \brief Get entity scaling
+	* \return Returns scaling
+	*/
+	glm::vec3 getScaling() {return m_scaling;}
 };
 
 #endif

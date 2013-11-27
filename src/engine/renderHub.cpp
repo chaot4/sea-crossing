@@ -306,10 +306,7 @@ void RenderHub::processMessage(std::shared_ptr<Message> msg)
 			break;
 		}
 
-		unsigned int entity_id = activeScene->requestNewEntityId();
-
-		if (!(activeScene->createStaticSceneObject(entity_id, (c_msg->position), (c_msg->orientation), (c_msg->scaling), geomPtr, materialPtr)))
-			std::cout<<"Failed to create scene object."<<std::endl;
+		int entity_id = (activeScene->createStaticSceneObject((c_msg->position), (c_msg->orientation), (c_msg->scaling), geomPtr, materialPtr));
 
 		std::shared_ptr<Message> new_msg(new MsgEngineCreateFeedback(c_msg->msg_id, entity_id));
 		messageRcvr.send(new_msg);
@@ -319,6 +316,25 @@ void RenderHub::processMessage(std::shared_ptr<Message> msg)
 		break;
 	}
 	case ENGINE_DELETE:
+		break;
+	case ENGINE_UPDATE_ENTITY:
+	{
+		std::shared_ptr<MsgEngineUpdateEntity> c_msg = std::static_pointer_cast<MsgEngineUpdateEntity>(msg);
+
+		std::shared_ptr<Mesh> geomPtr;
+		std::shared_ptr<Material> materialPtr;
+
+		if (c_msg->update_geometry_path)
+		{
+			 std::shared_ptr<Mesh> geomPtr;
+			 if (!(resourceMngr.createMesh((c_msg->geometry_path).c_str(), geomPtr)))
+			 {
+				 std::cout << "Failed to create mesh." << std::endl;
+				 break;
+			 }
+		}
+
+	}
 		break;
 	case ENGINE_QUIT:
 		running = false;

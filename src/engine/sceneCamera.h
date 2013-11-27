@@ -14,7 +14,6 @@ private:
 	glm::vec3 look_at;
 
 public:
-	SceneCamera() {}
 	~SceneCamera() {}
 
 	SceneCamera(int inId, const glm::vec3& inPosition, const glm::quat& inOrientation, float inAspect, float inFov)
@@ -50,7 +49,7 @@ public:
 	glm::vec3 computeUpVector();
 	glm::vec3 computeRightHandVector();
 
-	glm::mat4 computeViewMatrix(){ return glm::lookAt(position,position+computeFrontVector(),computeUpVector()); }
+	glm::mat4 computeViewMatrix(){ return glm::lookAt(m_position,m_position+computeFrontVector(),computeUpVector()); }
 	glm::mat4 computeProjectionMatrix(float nearClippingPlane, float farClippingPlane) { return glm::perspective(field_of_view, aspect_ratio, nearClippingPlane, farClippingPlane); }
 };
 
