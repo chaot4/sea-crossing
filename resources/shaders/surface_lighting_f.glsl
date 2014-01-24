@@ -52,6 +52,8 @@ vec3 cookTorranceShading(in vec3 surface_albedo, in vec3 surface_specular_color,
 	float n_dot_h = dot(surface_normal,halfway);
 	float n_dot_l = dot(surface_normal,light_direction);
 	float n_dot_v = dot(surface_normal,viewer_direction);
+	/* prevent black artefacts */
+	n_dot_v = (n_dot_v < 0.0) ? 0.0 : n_dot_v;
 	float l_dot_h = dot(light_direction,halfway);
 	float roughness_squared = pow(surface_roughness,2.0);
 	
