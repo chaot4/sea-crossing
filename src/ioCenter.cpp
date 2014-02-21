@@ -26,9 +26,17 @@ void IoCenter::processMessage(TwoWayChannel& channel)
 		{
 			m_engine_channel.send(msg);
 		}
+		case ENGINE_CREATE_FEEDBACK:
+		{
+			break;
+		}
 		case ENGINE_QUIT:
 		{
 			m_engine_channel.send(msg);
+		}
+		case ENGINE_USER_INPUT:
+		{
+			break;
 		}
 		case QUIT:
 //			quit();
