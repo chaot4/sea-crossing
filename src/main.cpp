@@ -3,6 +3,7 @@
 #include "engine/renderHub.h"
 #include "game/game_center.h"
 #include "game/player_center.h"
+#include "ioCenter.h"
 
 #include <thread>
 
@@ -27,18 +28,18 @@ int main(){
 	conf.readFromFile();
 
 	CommunicationHub c_hub(conf.getGraphicsConf(), board);
-	RenderHub r_hub;
+	IoCenter io_center;
 	GameCenter game_center(conf.getGameConf(), board);
 	PlayerCenter player_center(board);
 	TwoWayChannel menu_channel;
 
 	TwoWayChannel::connect(game_center.getHubChannel(), c_hub.getGameChannel());
 	TwoWayChannel::connect(player_center.getHubChannel(), c_hub.getPlayerChannel());
-	TwoWayChannel::connect(r_hub.getChannelAccesPoint(), c_hub.getEngineChannel());
+	TwoWayChannel::connect(io_center.getHubChannel(), c_hub.getEngineChannel());
 	TwoWayChannel::connect(menu_channel, c_hub.getMenuChannel());
 	std::thread game_center_thread(&GameCenter::start, &game_center);
 	std::thread player_center_thread(&PlayerCenter::start, &player_center);
-	std::thread render_thread(&RenderHub::init, &r_hub);
+	std::thread io_thread(&IoCenter::start, &io_center);
 	std::thread c_hub_thread(&CommunicationHub::start, &c_hub);
 
 	std::shared_ptr<Message> msg(new MsgGameCreate(conf.getGameConf().game_type));
@@ -66,7 +67,7 @@ int main(){
 
 	game_center_thread.join();
 	player_center_thread.join();
-	render_thread.join();
+	io_thread.join();
 	c_hub_thread.join();
 
 	return 0;

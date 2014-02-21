@@ -173,6 +173,7 @@
     <ClCompile Include="..\src\game\human_players.cpp" />
     <ClCompile Include="..\src\game\player.cpp" />
     <ClCompile Include="..\src\game\player_center.cpp" />
+    <ClCompile Include="..\src\ioCenter.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\messageChannel.cpp" />
   </ItemGroup>
@@ -221,6 +222,7 @@
     <ClInclude Include="..\src\game\human_players.h" />
     <ClInclude Include="..\src\game\player.h" />
     <ClInclude Include="..\src\game\player_center.h" />
+    <ClInclude Include="..\src\ioCenter.h" />
     <ClInclude Include="..\src\macros.h" />
     <ClInclude Include="..\src\messageChannel.h" />
     <ClInclude Include="..\src\messages.h" />

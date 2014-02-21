@@ -42,7 +42,7 @@ void RenderGraph::remove(int id)
 
 bool RenderGraph::getNextShaderProgam(std::shared_ptr<GLSLProgram>& program)
 {
-	if (shader_itr != m_toplevel.end())
+	if (shader_itr != m_toplevel.end() && (m_toplevel.size()>0))
 	{
 		program = shader_itr->first;
 		material_itr = shader_itr->second.begin();

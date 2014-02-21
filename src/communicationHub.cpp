@@ -4,7 +4,7 @@ using namespace std;
 
 CommunicationHub::CommunicationHub(GraphicsConf const& graphics_conf, Board const& board)
 	: run(true), graphics_conf(graphics_conf), board(board),
-	engine_msg_id(numeric_limits<int>::min()) {}
+	engine_msg_id(0) {}
 
 void CommunicationHub::start()
 {
@@ -192,9 +192,5 @@ void CommunicationHub::sendQuit(TwoWayChannel& channel)
 
 int CommunicationHub::nextEngineMsgID()
 {
-	if (engine_msg_id == 0) {
-		engine_msg_id = numeric_limits<int>::min();
-	}
-
-	return (engine_msg_id++);
+	return engine_msg_id++;
 }

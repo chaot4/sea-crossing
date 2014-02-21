@@ -13,6 +13,8 @@ namespace Controls {
 		{
 			latest_scroll_input += 0.5f * (float) y_offset;
 		}
+
+		TwoWayChannel io_channel;
 	}
 
 	void updateCamera(GLFWwindow *window, SceneCamera *camera)
@@ -72,5 +74,10 @@ namespace Controls {
 	void setControlCallbacks(GLFWwindow *active_window)
 	{
 		glfwSetScrollCallback(active_window, mouseScrollFeedback);
+	}
+
+	TwoWayChannel& getCommunicationChannel()
+	{
+		return io_channel;
 	}
 }
