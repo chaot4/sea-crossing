@@ -1,6 +1,6 @@
 CC = g++
 CPPFLAGS = -Wall -g -std=c++11 -DUSE_ZLIB
-LFLAGS = -lGLEW -lGL -lglfw -lz
+LFLAGS = -Wl,--no-as-needed -lGLEW -lGL -lglfw -lz
 BIN = ../bin/main
 OBJ = conf.o messageChannel.o communicationHub.o \
 	game/game.o game/board.o game/player.o game/human_players.o game/game_center.o game/player_center.o \
