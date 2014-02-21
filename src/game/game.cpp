@@ -284,7 +284,7 @@ void Game::process(std::shared_ptr<MsgGameReturnInput> msg)
 
 		if (board.checkVictoryCondition(current_player)) {
 			PlayerID winner(current_player);
-			cout << "Player " << winner << " wins!" << endl;
+			cout << "Player " << winner+1 << " wins!" << endl;
 			msgSendWinner(winner);
 			return;
 		}
