@@ -9,22 +9,23 @@
 class StaticSceneObject : public SceneEntity
 {
 private:
-	bool isRendered;
+	bool m_is_rendered;
 
-	std::shared_ptr<Mesh> geometry;
-	std::shared_ptr<Material> material;
+	std::shared_ptr<Mesh> m_geometry;
+	std::shared_ptr<Material> m_material;
 public:
-	StaticSceneObject() {}
+	StaticSceneObject(const int id, const glm::vec3& inPosition, const glm::quat& inOrientation, const glm::vec3 inScaling,
+						std::shared_ptr<Mesh> inGeom, std::shared_ptr<Material> inMtl) : 
+						SceneEntity(id, inPosition, inOrientation, inScaling), m_geometry(inGeom), m_material(inMtl) {}
 	~StaticSceneObject() {}
 
-	StaticSceneObject(const int inId, const glm::vec3& inPosition, const glm::quat& inOrientation, const glm::vec3 inScaling,
-						std::shared_ptr<Mesh> inGeom, std::shared_ptr<Material> inMtl) : 
-							SceneEntity(inId, inPosition, inOrientation, inScaling), geometry(inGeom), material(inMtl) {}
+	const std::shared_ptr<Mesh> getGeometry();
+	const std::shared_ptr<Material> getMaterial();
 
-	const std::shared_ptr<Mesh> getGeometry() {return geometry;}
-	const std::shared_ptr<Material> getMaterial() {return material;}
+	void changeGeometry(std::shared_ptr<Mesh> new_geometry);
+	void changeMaterial(std::shared_ptr<Material> new_material);
 
-	glm::mat4 computeModelMatrix() {return (glm::translate(glm::mat4(1.0),position))*(glm::mat4_cast(orientation))*(glm::scale(glm::mat4(1.0),scaling));}
+	glm::mat4 computeModelMatrix();
 };
 
 #endif

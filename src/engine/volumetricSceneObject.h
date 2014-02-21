@@ -19,7 +19,6 @@ private:
 	*/
 	std::shared_ptr<Mesh> boundingBoxGeom;
 public:
-	VolumetricSceneObject() {}
 	~VolumetricSceneObject() {}
 
 	VolumetricSceneObject(const int inId, const glm::vec3& inPosition, const glm::quat& inOrientation, const glm::vec3& inScaling,
@@ -30,7 +29,7 @@ public:
 	std::shared_ptr<Texture3D> getVolumeTexture() {return volume;}
 	std::shared_ptr<Mesh> getGeometry() {return boundingBoxGeom;}
 
-	glm::mat4 computeModelMatrix() {return ( glm::translate(glm::mat4(1.0),position) * glm::scale(glm::mat4(1.0),scaling) * glm::mat4_cast(orientation) );}
+	glm::mat4 computeModelMatrix() {return ( glm::translate(glm::mat4(1.0),m_position) * glm::scale(glm::mat4(1.0),m_scaling) * glm::mat4_cast(m_orientation) );}
 };
 
 #endif

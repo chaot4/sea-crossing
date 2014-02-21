@@ -1,10 +1,5 @@
 #include "sceneLightSource.h"
 
-
-SceneLightSource::SceneLightSource()
-{
-}
-
 SceneLightSource::~SceneLightSource()
 {
 }

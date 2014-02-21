@@ -4,8 +4,9 @@
 #define _CRT_SECURE_NO_DEPRECATE
 
 #include "texture.h"
+
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
-#include <glm/core/type_vec3.hpp>
 
 class Texture3D : public Texture
 {

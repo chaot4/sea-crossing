@@ -13,6 +13,8 @@ namespace Controls {
 		{
 			latest_scroll_input += 0.5f * (float) y_offset;
 		}
+
+		TwoWayChannel io_channel;
 	}
 
 	void updateCamera(GLFWwindow *window, SceneCamera *camera)
@@ -21,14 +23,14 @@ namespace Controls {
 		double pos_x, pos_y;
 		glfwGetCursorPos(window, &pos_x, &pos_y);
 		glm::vec2 currentCursorPosition(pos_x, pos_y);
+		/*	And use it to compute cursor movement - caution arbitray scaling values in use! */
+		glm::vec2 cursor_movement = (latest_cursor_position - currentCursorPosition)*0.01f;
 
 		/*	Get pointer to active camera */
 		glm::vec3 look_at_point = camera->getLookAt();
 
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS)
 		{
-			glm::vec2 cursor_movement = (latest_cursor_position - currentCursorPosition)*0.1f;
-
 			/*	Update camera position */
 			glm::vec4 cam_position = glm::vec4(camera->getPosition(), 1.0);
 			/*	To that end, translate look-at-point to origin */
@@ -51,7 +53,6 @@ namespace Controls {
 		}
 		else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS)
 		{
-			glm::vec2 cursor_movement = (latest_cursor_position - currentCursorPosition)*0.1f;
 			glm::vec3 right_hand_vec = camera->computeRightHandVector();
 			glm::vec3 up_vec = camera->computeUpVector();
 
@@ -73,5 +74,10 @@ namespace Controls {
 	void setControlCallbacks(GLFWwindow *active_window)
 	{
 		glfwSetScrollCallback(active_window, mouseScrollFeedback);
+	}
+
+	TwoWayChannel& getCommunicationChannel()
+	{
+		return io_channel;
 	}
 }

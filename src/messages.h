@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-enum MessageType { ENGINE_CREATE, ENGINE_DELETE, ENGINE_CREATE_FEEDBACK,
+enum MessageType { ENGINE_CREATE, ENGINE_DELETE, ENGINE_UPDATE_ENTITY, ENGINE_CREATE_FEEDBACK,
 	ENGINE_QUIT, ENGINE_USER_INPUT, GAME_CREATE, GAME_CREATE_GEM,
 	GAME_CREATE_MARKER, GAME_CREATE_PLAYER, GAME_QUIT, GAME_FINISHED,
 	GAME_RETURN_INPUT, GAME_REQUEST_INPUT, GAME_WINNER, PLAYER_REQUEST_INPUT,
@@ -45,6 +45,44 @@ struct MsgEngineDelete : Message
 
 	MsgEngineDelete(unsigned int in_msg_id, unsigned int in_entity_id)
 		: Message(ENGINE_DELETE), entity_id(in_entity_id) {}
+};
+
+/*
+/	Keep on a lookout for a nicer solution.
+/	Always having all attributes in the message (even those that aren't updated, and
+/	which therefore will have to be filled with junk values) seems like a waste.
+*/
+struct MsgEngineUpdateEntity : Message
+{
+	unsigned int entity_id;
+	bool update_position;
+	bool update_orientation;
+	bool update_scaling;
+	bool update_geometry_path;
+	bool update_material_path;
+
+	glm::vec3 position;
+	glm::quat orientation;
+	glm::vec3 scaling;
+	std::string geometry_path;
+	std::string material_path;
+
+	MsgEngineUpdateEntity(unsigned int in_entity_id,
+							bool in_update_position,
+							bool in_update_orientation,
+							bool in_update_scaling,
+							bool in_update_geometry_path,
+							bool in_update_material_path,
+							glm::vec3 in_position, glm::quat in_orientation, glm::vec3 in_scaling,
+							std::string in_geometry_path, std::string in_material_path)
+		: Message(ENGINE_UPDATE_ENTITY), entity_id(in_entity_id),
+		update_position(in_update_position),
+		update_orientation(in_update_orientation),
+		update_scaling(in_update_scaling),
+		update_geometry_path(in_update_geometry_path),
+		update_material_path(in_update_material_path),
+		position(in_position), orientation(in_orientation), scaling(in_scaling),
+		geometry_path(in_geometry_path), material_path(in_material_path) {}
 };
 
 struct MsgEngineCreateFeedback : Message

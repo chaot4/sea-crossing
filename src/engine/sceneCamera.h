@@ -14,7 +14,6 @@ private:
 	glm::vec3 look_at;
 
 public:
-	SceneCamera() {}
 	~SceneCamera() {}
 
 	SceneCamera(int inId, const glm::vec3& inPosition, const glm::quat& inOrientation, float inAspect, float inFov)
@@ -29,8 +28,8 @@ public:
 		float rot_angle_0 = acos(glm::dot(projected_vec, difference_vec));
 		float rot_angle_1 = acos(glm::dot(projected_vec, glm::vec3(0.0f, 0.0f, -1.0f)));
 		
-		glm::quat orientation_0 = glm::rotate(glm::quat(), -(rot_angle_0 / 3.1415926535f)*180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		glm::quat orientation_1 = glm::rotate(glm::quat(), (rot_angle_1 / 3.1415926535f)*180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::quat orientation_0 = glm::rotate(glm::quat(), -rot_angle_0, glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::quat orientation_1 = glm::rotate(glm::quat(), rot_angle_1, glm::vec3(0.0f, 1.0f, 0.0f));
 		setOrientation(orientation_1*orientation_0);
 		
 	}
@@ -50,7 +49,7 @@ public:
 	glm::vec3 computeUpVector();
 	glm::vec3 computeRightHandVector();
 
-	glm::mat4 computeViewMatrix(){ return glm::lookAt(position,position+computeFrontVector(),computeUpVector()); }
+	glm::mat4 computeViewMatrix(){ return glm::lookAt(m_position,m_position+computeFrontVector(),computeUpVector()); }
 	glm::mat4 computeProjectionMatrix(float nearClippingPlane, float farClippingPlane) { return glm::perspective(field_of_view, aspect_ratio, nearClippingPlane, farClippingPlane); }
 };
 

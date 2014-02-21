@@ -6,8 +6,6 @@
 #include "conf.h"
 #include "game/board.h"
 
-#include <limits>
-
 #include <iostream>
 #ifdef _WIN32
 	/*Fix call to windows macros instead of std::max*/
@@ -33,7 +31,7 @@ class CommunicationHub
 		GraphicsConf graphics_conf;
 		Board const& board;
 
-		int engine_msg_id;
+		unsigned int engine_msg_id;
 
 		void processMessage(TwoWayChannel& channel);
 		void process(std::shared_ptr<MsgEngineCreateFeedback> msg);

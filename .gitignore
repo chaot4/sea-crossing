@@ -92,6 +92,12 @@ UpgradeLog*.XML
 
 vs2012/include
 vs2012/lib
+
+#################
+## resources & docs
+#################
+docs/html
+docs/latex
 resources/meshes/workfiles
 resources/meshes/torii
 resources/meshes/performance_test

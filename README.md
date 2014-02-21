@@ -2,9 +2,9 @@ A Conhex-like game.
 
 Dependencies:
  * A C++11 compiler.
- * glfw
+ * glfw 3
  * GLEW
- * GL
+ * glm (we currently use v0.9.5.2)
  * OpenGL 3.3
 
 This game is aimed to run on Linux and Windows machines.
