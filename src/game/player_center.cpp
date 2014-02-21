@@ -134,8 +134,8 @@ void PlayerCenter::createPlayer(PlayerID player_id, PlayerType player_type, stri
 			_players.push_back(new RandomAIPlayer(player_id, name, board));
 			break;
 		case SHORTEST_PATH_AI:
-			_players.push_back(new ShortestPathAIPlayer<Cost, Rating>(
-						player_id, name, board));
+			_players.push_back(new ShortestPathAIPlayer
+					<NaiveCost, EqualityRating>(player_id, name, board));
 			break;
 		default:
 			cerr << "Unexpected player type passed to the Player Center." << endl;

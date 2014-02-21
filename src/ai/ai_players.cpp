@@ -24,3 +24,67 @@ void RandomAIPlayer::initGemMove()
 
 	msgSendGemMove(*it);
 }
+
+/* COST */
+
+
+Cost::Cost(Board const& board, PlayerID player_id)
+	:board(board), player_id(player_id) {}
+
+NaiveCost::NaiveCost(Board const& board, PlayerID player_id)
+	: Cost(board, player_id) {}
+
+int NaiveCost::get(Face const& face)
+{
+	if(face.owner == player_id+1){
+		return 0;
+	}
+	else if(face.owner){
+		return 1000;
+	}
+	else{
+		int diff(face.num_adj_nodes_player[!player_id] + 1
+				- face.num_adj_nodes_player[player_id]);
+		return std::max(diff, 0);
+	}
+}
+
+
+/* RATING */
+
+
+Rating::Rating(Board const& board, PlayerID player_id)
+	:board(board), player_id(player_id) {}
+
+ZeroRating::ZeroRating(Board const& board, PlayerID player_id)
+	: Rating(board, player_id) {}
+
+double ZeroRating::get(NodeID node_id)
+{
+	return 0;
+}
+
+EqualityRating::EqualityRating(Board const& board, PlayerID player_id)
+	: Rating(board, player_id) {}
+
+double EqualityRating::get(NodeID node_id)
+{
+	double rating(0);
+	Node const& node(board.getNode(node_id));
+
+	for (unsigned int i(0); i<node.adj_faces.size(); i++) {
+		Face const& face(board.getFace(node.adj_faces[i]));
+		if (!face.owner) {
+			int adj_nodes_1(face.num_adj_nodes_player[player_id]);
+			int adj_nodes_2(face.num_adj_nodes_player[!player_id]);
+			unsigned int abs_diff(abs(adj_nodes_1-adj_nodes_2));
+			unsigned int invert_abs_diff(
+				abs(abs_diff - ceil(face.adj_nodes.size()/2.0)));
+			assert(abs_diff + 1 <= ceil(face.adj_nodes.size()/2.0));
+
+			rating += invert_abs_diff;
+		}
+	}
+
+	return rating;
+}

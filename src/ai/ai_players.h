@@ -11,6 +11,11 @@
 #include <iterator>
 #include <limits>
 #include <cassert>
+#include <cmath>
+
+
+/* RANDOM AI PLAYER */
+
 
 class RandomAIPlayer : public Player
 {
@@ -34,42 +39,60 @@ class ShortestPathAIPlayer : public Player
 		void initGemMove();
 };
 
-class Cost{
-	private:
+
+/* COST */
+
+
+class Cost
+{
+	protected:
 		Board const& board;
 		PlayerID player_id;
 
 	public:
-		Cost(Board const& board, PlayerID player_id)
-			:board(board), player_id(player_id) {}
+		Cost(Board const& board, PlayerID player_id);
 
-		int get(Face const& face){
-			if(face.owner == player_id+1){
-				return 0;
-			}
-			else if(face.owner){
-				return 1000;
-			}
-			else{
-				int diff(face.num_adj_nodes_player[!player_id] + 1
-						- face.num_adj_nodes_player[player_id]);
-				return std::max(diff, 0);
-			}
-		}
+		virtual int get(Face const& face) = 0;
 };
 
-class Rating{
-	private:
+class NaiveCost : public Cost
+{
+	public:
+		NaiveCost(Board const& board, PlayerID player_id);
+
+		int get(Face const& face);
+};
+
+
+/* RATING */
+
+
+class Rating
+{
+	protected:
 		Board const& board;
 		PlayerID player_id;
 
 	public:
-		Rating(Board const& board, PlayerID player_id)
-			:board(board), player_id(player_id) {}
+		Rating(Board const& board, PlayerID player_id);
 
-		double get(NodeID node_id){
-			return 0;
-		}
+		virtual double get(NodeID node_id) = 0;
+};
+
+class ZeroRating : public Rating
+{
+	public:
+		ZeroRating(Board const& board, PlayerID player_id);
+
+		double get(NodeID node_id);
+};
+
+class EqualityRating : public Rating
+{
+	public:
+		EqualityRating(Board const& board, PlayerID player_id);
+
+		double get(NodeID node_id);
 };
 
 
