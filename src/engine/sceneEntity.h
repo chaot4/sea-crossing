@@ -16,8 +16,8 @@
 #define sceneEntity_h
 
 /*	OpenGL Math Lib */
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
-#include <glm/core/type_vec3.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -47,6 +47,7 @@ public:
 	/**
 	* \brief Rotate entity by a given angle around a given vector
 	* \param angle Rotation angle given in degrees
+	* \param angle Rotation angle given in radian
 	* \param axis Local rotation vector, e.g. vec3(1.0,0.0,0.0) is always the right hand vector, not the global x-axis
 	*/
 	void rotate(const float angle,const glm::vec3& axis) {m_orientation = glm::normalize(glm::rotate(m_orientation,angle,axis));}

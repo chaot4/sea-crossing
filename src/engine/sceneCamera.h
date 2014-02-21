@@ -28,8 +28,8 @@ public:
 		float rot_angle_0 = acos(glm::dot(projected_vec, difference_vec));
 		float rot_angle_1 = acos(glm::dot(projected_vec, glm::vec3(0.0f, 0.0f, -1.0f)));
 		
-		glm::quat orientation_0 = glm::rotate(glm::quat(), -(rot_angle_0 / 3.1415926535f)*180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		glm::quat orientation_1 = glm::rotate(glm::quat(), (rot_angle_1 / 3.1415926535f)*180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::quat orientation_0 = glm::rotate(glm::quat(), -rot_angle_0, glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::quat orientation_1 = glm::rotate(glm::quat(), rot_angle_1, glm::vec3(0.0f, 1.0f, 0.0f));
 		setOrientation(orientation_1*orientation_0);
 		
 	}

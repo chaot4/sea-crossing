@@ -3,9 +3,9 @@
 
 #include <GL/glew.h>
 //	OpenGL Math Library
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
-#include <glm/core/type_vec3.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+//#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <string>
