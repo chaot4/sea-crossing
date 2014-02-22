@@ -44,7 +44,7 @@ void IoCenter::processMessage(TwoWayChannel& channel)
 //			quit();
 			break;
 		default:
-			std::cerr << "ERROR: Unexpected message type." << std::endl;
+			std::cerr << "ERROR: Unexpected message type: " << toString(msg->type) << std::endl;
 	}
 }
 

@@ -49,7 +49,7 @@ void Player::processMessage(TwoWayChannel& channel)
 			process(static_pointer_cast<MsgPlayerQuit>(msg));
 			break;
 		default:
-			cerr << "ERROR: Unexpected message type." << endl;
+			cerr << "ERROR: Unexpected message type: " << toString(msg->type) << endl;
 	}
 }
 

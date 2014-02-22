@@ -269,7 +269,7 @@ void Game::processMessage(TwoWayChannel& channel)
 			process(static_pointer_cast<MsgGameReturnInput>(msg));
 			break;
 		default:
-			cerr << "ERROR: Unexpected message type." << endl;
+			cerr << "ERROR: Unexpected message type: " << toString(msg->type) << endl;
 	}
 }
 
