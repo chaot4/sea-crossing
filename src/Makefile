@@ -1,25 +1,29 @@
 CC = g++
 CPPFLAGS = -Wall -g -std=c++11 -DUSE_ZLIB
 LFLAGS = -Wl,--no-as-needed -lGLEW -lGL -lglfw -lz
+
+# get all .cpp files
+ALL_CPP = $(wildcard **/*.cpp) $(wildcard *.cpp) 
+# get source files containing "int main" 
+MAIN_CPP = $(filter-out Makefile,$(shell grep "int main" * -rl))
+# only non-main files are useful sources, so filter main files
+SRCS_CPP = $(filter-out $(MAIN_CPP),$(ALL_CPP))
+SRCS_HPP = $(wildcard **/*.h) $(wildcard *.h)
+SRCS= $(SRCS_CPP) $(SRCS_HPP)
+
+# each non-main .cpp produces an object file
+OBJ = $(patsubst %.cpp,%.o,$(SRCS_CPP))
+MAIN_OBJ = $(patsubst %.cpp,%.o,$(MAIN_CPP))
+
 BIN = ../bin/main
-OBJ = conf.o messageChannel.o communicationHub.o ioCenter.o\
-	game/game.o game/board.o game/player.o game/human_players.o game/game_center.o game/player_center.o \
-	ai/ai_players.o \
-	engine/renderHub.o engine/framebufferObject.o engine/messageReceiver.o \
-	engine/sceneCamera.o engine/texture2D.o engine/GLSLProgram.o engine/postProcessor.o \
-	engine/scene.o engine/texture3D.o engine/material.o engine/mesh.o \
-	engine/resourceManager.o engine/sceneLightSource.o engine/controls.o \
-	engine/renderGraph.o engine/staticSceneObject.o  \
-	fbx/fbx_reader.o fbx/fbx_unzip.o fbx/fbx_node_name.o fbx/fbx_parser.o \
-	fbx/fbx_property.o fbx/fbx_value.o fbx/fbx_print.o fbx/fbx_geometry.o \
-	fbx/fbx_opengl_geometry.o
-SRCS = $(wildcard **/*.cpp) $(wildcard **/*.h) $(wildcard *.cpp) $(wildcard *.h)
+#ALL_BIN = $(patsubst %.o,../bin/%,$(notdir $(MAIN_OBJ)))
+
 DEPENDFILE = .depend
 
 all: $(BIN)
-
-$(BIN): $(OBJ) main.o
-	$(CC) $(CPPFLAGS) $(LFLAGS) $(OBJ) main.cpp -o $(BIN)
+	
+$(BIN): $(OBJ) $(MAIN_OBJ)
+	$(CC) $(CPPFLAGS) $(LFLAGS) $(OBJ) main.o -o $@ 
 
 dep: $(DEPENDFILE)
 
@@ -30,4 +34,4 @@ $(DEPENDFILE): $(SRCS)
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJ) $(BIN) main.o
+	rm -rf $(OBJ) $(MAIN_OBJ) $(BIN)
