@@ -30,6 +30,7 @@ void IoCenter::processMessage(TwoWayChannel& channel)
 		case ENGINE_UPDATE_ENTITY:
 		{
 			m_engine_channel.send(msg);
+			break;
 		}
 		case ENGINE_CREATE_FEEDBACK:
 		{
@@ -38,6 +39,7 @@ void IoCenter::processMessage(TwoWayChannel& channel)
 		case ENGINE_QUIT:
 		{
 			m_engine_channel.send(msg);
+			break;
 		}
 		case ENGINE_USER_INPUT:
 		{
@@ -47,7 +49,7 @@ void IoCenter::processMessage(TwoWayChannel& channel)
 //			quit();
 			break;
 		default:
-			std::cerr << "ERROR: Unexpected message type." << std::endl;
+			std::cerr << "ERROR: Unexpected message type: " << toString(msg->type) << std::endl;
 	}
 }
 

@@ -55,7 +55,7 @@ void PlayerCenter::processMessage(TwoWayChannel& channel)
 //			quit();
 			break;
                 default:
-                        cerr << "ERROR: Unexpected message type." << endl;
+                        cerr << "ERROR: Unexpected message type: " << toString(msg->type) << endl;
         }
 }
 

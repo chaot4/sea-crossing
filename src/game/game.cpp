@@ -269,7 +269,7 @@ void Game::processMessage(TwoWayChannel& channel)
 			process(static_pointer_cast<MsgGameReturnInput>(msg));
 			break;
 		default:
-			cerr << "ERROR: Unexpected message type." << endl;
+			cerr << "ERROR: Unexpected message type: " << toString(msg->type) << endl;
 	}
 }
 
@@ -284,7 +284,7 @@ void Game::process(std::shared_ptr<MsgGameReturnInput> msg)
 
 		if (board.checkVictoryCondition(current_player)) {
 			PlayerID winner(current_player);
-			cout << "Player " << winner << " wins!" << endl;
+			cout << "Player " << winner+1 << " wins!" << endl;
 			msgSendWinner(winner);
 			return;
 		}
