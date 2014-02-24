@@ -4,6 +4,7 @@
 #include "sceneCamera.h"
 #include <GLFW/glfw3.h>
 #include "../messageChannel.h"
+#include "../messages.h"
 
 namespace Controls
 {

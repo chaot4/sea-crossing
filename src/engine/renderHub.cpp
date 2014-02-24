@@ -128,12 +128,13 @@ void RenderHub::run()
 	/	and framebuffer objects.
 	/	Framebuffers are created and stored locally in the context of this method.
 	*/
-	//std::shared_ptr<GLSLProgram> picking_prgm;
-	//resourceMngr.createShaderProgram(PICKING, picking_prgm);
-	//
+	std::shared_ptr<GLSLProgram> picking_prgm;
+	resourceMngr.createShaderProgram(PICKING, picking_prgm);
+	
 	//FramebufferObject picking_fbo(800,450,true,false);
-	//picking_fbo.createColorAttachment(GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_INT);
-	//
+	picking_fbo = std::shared_ptr<FramebufferObject>(new FramebufferObject(800,450,true,false));
+	picking_fbo->createColorAttachment(GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_INT);
+	
 	//PostProcessor post_proc(800,450);
 	//post_proc.init(&resourceMngr);
 
@@ -179,7 +180,7 @@ void RenderHub::run()
 	glEnable( GL_MULTISAMPLE );
 
 	/*  Test picking pass */
-	//GLuint *data = new GLuint[1];
+	GLuint *data = new GLuint[1];
 
 	while(running && !glfwWindowShouldClose(activeWindow))
 	{
@@ -193,11 +194,11 @@ void RenderHub::run()
 		Controls::updateCamera(activeWindow,activeScene->getActiveCamera());
 
 		/*  Test picking pass */
-		//picking_fbo.bind();
-		//glClearColor(0, 0, 0, 0);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//glViewport(0, 0, picking_fbo.getWidth(), picking_fbo.getHeight());
-		//activeScene->drawPicking(picking_prgm);
+		picking_fbo->bind();
+		glClearColor(0, 0, 0, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glViewport(0, 0, picking_fbo->getWidth(), picking_fbo->getHeight());
+		activeScene->drawPicking(picking_prgm);
 		//glReadBuffer(GL_COLOR_ATTACHMENT0);
 		//glReadPixels(400, 225, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, data);
 		//std::cout << data[0] << std::endl;
@@ -289,6 +290,17 @@ void RenderHub::processMessage(std::shared_ptr<Message> msg)
 {
 	MessageType msgType = (msg->type);
 	switch (msgType){
+	case CTRL_ENG_REQUEST_OBJECT_ID:
+	{
+		std::shared_ptr<MsgCtrlEng_RequestObjId> c_msg = std::static_pointer_cast<MsgCtrlEng_RequestObjId>(msg);
+
+		picking_fbo->bind();
+		GLuint *data = new GLuint[1];
+		glReadBuffer(GL_COLOR_ATTACHMENT0);
+		glReadPixels(c_msg->x, (picking_fbo->getHeight() - c_msg->y), 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, data);
+		std::cout<<"Did you click at object "<<data[0]<<" ?"<<std::endl;
+		break;
+	}
 	case ENGINE_CREATE:
 	{
 		std::shared_ptr<MsgEngineCreate> c_msg = std::static_pointer_cast<MsgEngineCreate>(msg);

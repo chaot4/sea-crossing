@@ -4,6 +4,8 @@ namespace Controls {
 
 	namespace
 	{
+		TwoWayChannel io_channel;
+
 		float latest_scroll_input = 0.0;
 		glm::vec2 latest_cursor_position = glm::vec2(0.0,0.0);
 		glm::vec3 x_axis = glm::vec3(1.0, 0.0, 0.0);
@@ -14,7 +16,20 @@ namespace Controls {
 			latest_scroll_input += 0.5f * (float) y_offset;
 		}
 
-		TwoWayChannel io_channel;
+		void mouseMouseClickFeedback(GLFWwindow *window, int button, int action, int mods)
+		{
+			if(button == GLFW_MOUSE_BUTTON_1)
+			{
+				if(action == GLFW_PRESS)
+				{
+					double pos_x, pos_y;
+					glfwGetCursorPos(window, &pos_x, &pos_y);
+
+					std::shared_ptr<Message> new_msg(new MsgCtrlEng_RequestObjId(int(pos_x),int(pos_y)));
+					io_channel.send(new_msg);
+				}
+			}
+		}
 	}
 
 	void updateCamera(GLFWwindow *window, SceneCamera *camera)
@@ -74,6 +89,7 @@ namespace Controls {
 	void setControlCallbacks(GLFWwindow *active_window)
 	{
 		glfwSetScrollCallback(active_window, mouseScrollFeedback);
+		glfwSetMouseButtonCallback(active_window, mouseMouseClickFeedback);
 	}
 
 	TwoWayChannel& getCommunicationChannel()

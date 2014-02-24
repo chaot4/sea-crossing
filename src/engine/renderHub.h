@@ -48,6 +48,7 @@ public:
 
 private:
 	ResourceManager resourceMngr;
+	std::shared_ptr<FramebufferObject> picking_fbo;
 	TwoWayChannel messageRcvr;
 
 	std::list<Scene> sceneList;

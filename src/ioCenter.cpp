@@ -12,6 +12,11 @@ void IoCenter::processMessage(TwoWayChannel& channel)
         }
 
 	switch (msg->type) {
+		case CTRL_ENG_REQUEST_OBJECT_ID:
+		{
+			m_engine_channel.send(msg);
+			break;
+		}
 		case ENGINE_CREATE:
 		{
 			m_engine_channel.send(msg);

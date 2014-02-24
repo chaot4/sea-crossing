@@ -309,6 +309,52 @@ void Scene::drawFroward()
 
 void Scene::drawPicking(std::shared_ptr<GLSLProgram> prgm)
 {
+	prgm->use();
+
+	glm::mat4 modelMx;
+	glm::mat4 viewMx = activeCamera->computeViewMatrix();
+	glm::mat4 modelViewMx;
+	glm::mat4 projectionMx = activeCamera->computeProjectionMatrix(1.0f,500000.0f);
+
+	prgm->setUniform("projection_matrix", projectionMx);
+
+	std::shared_ptr<GLSLProgram> shader_ptr;
+	std::shared_ptr<Material> material_ptr;
+	std::shared_ptr<Mesh> mesh_ptr;
+	std::shared_ptr<StaticSceneObject> entity_ptr;
+	
+	/*	Iterate through all levels of the rendergraph */
+	while (m_render_graph.getNextShaderProgam(shader_ptr))
+	{
+		while (m_render_graph.getNextMaterial(material_ptr))
+		{
+			while (m_render_graph.getNextMesh(mesh_ptr))
+			{
+				/*	Draw all entities instanced */
+				int instance_counter = 0;
+				std::string uniform_name;
+				
+				while (m_render_graph.getNextEntity(entity_ptr))
+				{
+					/*	Set transformation matrix for each instance */
+					modelMx = entity_ptr->computeModelMatrix();
+					modelViewMx = viewMx*modelMx;
+					uniform_name = "model_view_matrix[" + std::to_string(instance_counter) + "]";
+					prgm->setUniform(uniform_name.c_str(), modelViewMx);
+
+					uniform_name = "entity_id[" + std::to_string(instance_counter) + "]";
+					prgm->setUniform(uniform_name.c_str(), entity_ptr->getId());
+
+					instance_counter++;
+				}
+
+				mesh_ptr->draw(instance_counter);
+			}
+		}
+	}
+
+	m_render_graph.reset();
+
 	//	prgm->use();
 	//	
 	//	glm::mat4 model_mx;

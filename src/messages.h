@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-enum MessageType { ENGINE_CREATE, ENGINE_DELETE, ENGINE_UPDATE_ENTITY, ENGINE_CREATE_FEEDBACK,
+enum MessageType { CTRL_ENG_REQUEST_OBJECT_ID, ENG_COMM_SEND_OBJ_ID, ENGINE_CREATE, ENGINE_DELETE, ENGINE_UPDATE_ENTITY, ENGINE_CREATE_FEEDBACK,
 	ENGINE_QUIT, ENGINE_USER_INPUT, GAME_CREATE, GAME_CREATE_GEM,
 	GAME_CREATE_MARKER, GAME_CREATE_PLAYER, GAME_QUIT, GAME_FINISHED,
 	GAME_RETURN_INPUT, GAME_REQUEST_INPUT, GAME_WINNER, PLAYER_REQUEST_INPUT,
@@ -20,6 +20,24 @@ struct Message
 
 	Message(MessageType type)
 		: type(type) {}
+};
+
+struct MsgCtrlEng_RequestObjId : Message
+{
+	int x;
+	int y;
+
+	MsgCtrlEng_RequestObjId(int in_x, int in_y)
+		: Message(CTRL_ENG_REQUEST_OBJECT_ID), x(in_x), y(in_y) {}
+};
+
+struct MsgEngComm_SendObjId : Message
+{
+	unsigned int scene_id;
+	unsigned int object_id;
+
+	MsgEngComm_SendObjId(unsigned int in_scene_id, unsigned int in_object_id)
+		: Message(ENG_COMM_SEND_OBJ_ID), scene_id(in_scene_id), object_id(in_object_id) {}
 };
 
 struct MsgEngineCreate : Message
