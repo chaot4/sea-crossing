@@ -34,6 +34,7 @@ class CommunicationHub
 		unsigned int engine_msg_id;
 
 		void processMessage(TwoWayChannel& channel);
+		void process(std::shared_ptr<MsgEngComm_SendObjId>(msg));
 		void process(std::shared_ptr<MsgEngineCreateFeedback> msg);
 		void process(std::shared_ptr<MsgEngineUserInput> msg);
 		void process(std::shared_ptr<MsgGameCreate> msg);

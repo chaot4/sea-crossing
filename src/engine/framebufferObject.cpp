@@ -112,6 +112,9 @@ bool FramebufferObject::checkStatus()
 
 void FramebufferObject::resize(int new_width, int new_height)
 {
+	m_width = new_width;
+	m_height = new_height;
+
 	for (std::vector<std::shared_ptr<Texture2D>>::iterator itr = m_colorbuffers.begin(); itr != m_colorbuffers.end(); ++itr)
 	{
 		(*itr)->reload(new_width, new_height, NULL);

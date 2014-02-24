@@ -17,6 +17,11 @@ void IoCenter::processMessage(TwoWayChannel& channel)
 			m_engine_channel.send(msg);
 			break;
 		}
+		case ENG_COMM_SEND_OBJ_ID:
+		{
+			m_hub_channel.send(msg);
+			break;
+		}
 		case ENGINE_CREATE:
 		{
 			m_engine_channel.send(msg);

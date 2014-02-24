@@ -36,6 +36,9 @@ void CommunicationHub::processMessage(TwoWayChannel& channel)
 	}
 
 	switch (msg->type) {
+		case ENG_COMM_SEND_OBJ_ID:
+			process(static_pointer_cast<MsgEngComm_SendObjId>(msg));
+			break;
 		case ENGINE_CREATE_FEEDBACK:
 			process(static_pointer_cast<MsgEngineCreateFeedback>(msg));
 			break;
@@ -72,6 +75,11 @@ void CommunicationHub::processMessage(TwoWayChannel& channel)
 		default:
 			cerr << "ERROR: Unexpected message type: " << toString(msg->type) << endl;
 	}
+}
+
+void CommunicationHub::process(std::shared_ptr<MsgEngComm_SendObjId>(msg))
+{
+	std::cout<<"The engine tells me, that you clicked at the object with the id "<<msg->object_id<<std::endl;
 }
 
 void CommunicationHub::process(std::shared_ptr<MsgEngineCreateFeedback> msg)

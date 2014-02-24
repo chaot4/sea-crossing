@@ -298,7 +298,11 @@ void RenderHub::processMessage(std::shared_ptr<Message> msg)
 		GLuint *data = new GLuint[1];
 		glReadBuffer(GL_COLOR_ATTACHMENT0);
 		glReadPixels(c_msg->x, (picking_fbo->getHeight() - c_msg->y), 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, data);
-		std::cout<<"Did you click at object "<<data[0]<<" ?"<<std::endl;
+		
+		//TODO use correct scene id ! (Unfortunately There now such thing right now...)
+		std::shared_ptr<Message> new_msg(new MsgEngComm_SendObjId(0, data[0]));
+		messageRcvr.send(new_msg);
+
 		break;
 	}
 	case ENGINE_CREATE:
@@ -361,6 +365,11 @@ void RenderHub::windowSizeCallback(GLFWwindow *window, int width, int height)
 	if(activeInstance != NULL)
 	{
 		activeInstance->activeScene->getActiveCamera()->setAspectRation((float)width/(float)height);
+
+		if(activeInstance->picking_fbo != nullptr)
+		{
+			activeInstance->picking_fbo->resize(width,height);
+		}
 	}
 }
 

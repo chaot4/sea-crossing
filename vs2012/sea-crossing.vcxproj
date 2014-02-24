@@ -176,6 +176,7 @@
     <ClCompile Include="..\src\ioCenter.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\messageChannel.cpp" />
+    <ClCompile Include="..\src\messages.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ai\ai_players.h" />
