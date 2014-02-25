@@ -15,7 +15,10 @@ void IoCenter::processMessage(TwoWayChannel& channel)
 		case CTRL_ENG_REQUEST_OBJECT_ID:
 		{
 			if(m_input_requested)
+			{
+				m_input_requested = false;
 				m_engine_channel.send(msg);
+			}
 
 			break;
 		}

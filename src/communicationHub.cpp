@@ -80,13 +80,27 @@ void CommunicationHub::processMessage(TwoWayChannel& channel)
 void CommunicationHub::process(std::shared_ptr<MsgEngComm_SendObjId>(msg))
 {
 	std::cout<<"The engine tells me, that you clicked at the object with the id "<<msg->entity_id<<std::endl;
+
+	auto node_it = entity_to_node.find(msg->entity_id);
+	auto face_it = entity_to_face.find(msg->entity_id);
+	assert((node_it == entity_to_node.end()) || (face_it == entity_to_face.end()));
+
+	if (node_it != entity_to_node.end())
+	{
+		std::cout<<"Furthermore I can tell you, that it corresponds to node "<<node_it->second<<std::endl;
+	}
+	else if (face_it != entity_to_face.end())
+	{
+		std::cout<<"Furthermore I can tell you, that it corresponds to face "<<face_it->second<<std::endl;
+	}
 }
 
 void CommunicationHub::process(std::shared_ptr<MsgEngineCreateFeedback> msg)
 {
 	auto node_it = msg_to_node.find(msg->msg_id);
 	auto face_it = msg_to_face.find(msg->msg_id);
-	assert((node_it == msg_to_node.end()) != (face_it == msg_to_face.end()));
+	//assert((node_it == msg_to_node.end()) != (face_it == msg_to_face.end()));
+	assert((node_it == msg_to_node.end()) || (face_it == msg_to_face.end()));
 
 	MsgID entity_id(msg->entity_id);
 	if (node_it != msg_to_node.end()) {
