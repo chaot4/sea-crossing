@@ -84,7 +84,29 @@ void CommunicationHub::process(std::shared_ptr<MsgEngComm_SendObjId>(msg))
 
 void CommunicationHub::process(std::shared_ptr<MsgEngineCreateFeedback> msg)
 {
+	auto node_it = msg_to_node.find(msg->msg_id);
+	auto face_it = msg_to_face.find(msg->msg_id);
+	assert((node_it == msg_to_node.end()) != (face_it == msg_to_face.end()));
 
+	MsgID entity_id(msg->entity_id);
+	if (node_it != msg_to_node.end()) {
+		NodeID node_id(node_it->second);
+		node_to_entity.insert(
+			std::pair<NodeID, unsigned int>(node_id, entity_id));
+		entity_to_node.insert(
+			std::pair<unsigned int, NodeID>(entity_id, node_id));
+
+		msg_to_node.erase(node_it);
+	}
+	else if (face_it != msg_to_face.end()) {
+		FaceID face_id(face_it->second);
+		face_to_entity.insert(
+			std::pair<FaceID, unsigned int>(face_id, entity_id));
+		entity_to_face.insert(
+			std::pair<unsigned int, FaceID>(entity_id, face_id));
+
+		msg_to_face.erase(face_it);
+	}
 }
 
 void CommunicationHub::process(std::shared_ptr<MsgEngineUserInput> msg)
@@ -113,10 +135,11 @@ void CommunicationHub::process(std::shared_ptr<MsgGameCreateGem> msg)
 		gem_material = &graphics_conf.gem_material_p1;
 	}
 
+	MsgID msg_id(nextEngineMsgID());
 	std::shared_ptr<Message> new_msg(
-		new MsgEngineCreate(nextEngineMsgID(), node.position, node.orientation,
+		new MsgEngineCreate(msg_id, node.position, node.orientation,
 			glm::vec3(1.0), graphics_conf.gem_geometry, *gem_material));
-	// TODO put id into map.
+	msg_to_node.insert(std::pair<MsgID, NodeID>(msg_id, msg->node_id));
 
 	_engine_channel.send(new_msg);
 }
@@ -144,10 +167,11 @@ void CommunicationHub::process(std::shared_ptr<MsgGameCreateMarker> msg)
 		marker_material = &graphics_conf.marker_material_p1;
 	}
 
+	MsgID msg_id(nextEngineMsgID());
 	std::shared_ptr<Message> new_msg(
-		new MsgEngineCreate(nextEngineMsgID(), face.position, face.orientation,
+		new MsgEngineCreate(msg_id, face.position, face.orientation,
 			glm::vec3(1.0), graphics_conf.marker_geometry, *marker_material));
-	// TODO put id into map.
+	msg_to_face.insert(std::pair<MsgID, FaceID>(msg_id, msg->face_id));
 
 	_engine_channel.send(new_msg);
 }

@@ -6,6 +6,8 @@
 #include "conf.h"
 #include "game/board.h"
 
+#include <map>
+
 #include <iostream>
 #ifdef _WIN32
 	/*Fix call to windows macros instead of std::max*/
@@ -31,7 +33,13 @@ class CommunicationHub
 		GraphicsConf graphics_conf;
 		Board const& board;
 
-		unsigned int engine_msg_id;
+		MsgID engine_msg_id;
+		std::map<MsgID, NodeID> msg_to_node;
+		std::map<MsgID, FaceID> msg_to_face;
+		std::map<unsigned int, NodeID> entity_to_node;
+		std::map<unsigned int, FaceID> entity_to_face;
+		std::map<NodeID, unsigned int> node_to_entity;
+		std::map<FaceID, unsigned int> face_to_entity;
 
 		void processMessage(TwoWayChannel& channel);
 		void process(std::shared_ptr<MsgEngComm_SendObjId>(msg));

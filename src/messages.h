@@ -17,6 +17,8 @@ enum MessageType { CTRL_ENG_REQUEST_OBJECT_ID, ENG_COMM_SEND_OBJ_ID, ENGINE_CREA
 
 std::string toString(MessageType type);
 
+typedef unsigned int MsgID;
+
 struct Message
 {
 	MessageType type;
@@ -45,14 +47,14 @@ struct MsgEngComm_SendObjId : Message
 
 struct MsgEngineCreate : Message
 {
-	unsigned int msg_id;
+	MsgID msg_id;
 	glm::vec3 position;
 	glm::quat orientation;
 	glm::vec3 scaling;
 	std::string geometry_path;
 	std::string material_path;
 
-	MsgEngineCreate(unsigned int in_msg_id,glm::vec3 in_position,
+	MsgEngineCreate(MsgID in_msg_id,glm::vec3 in_position,
 		glm::quat in_orientation,glm::vec3 in_scaling,
 		std::string in_geometry_path,std::string in_material_path)
 		: Message(ENGINE_CREATE), msg_id(in_msg_id), position(in_position),
@@ -64,7 +66,7 @@ struct MsgEngineDelete : Message
 {
 	unsigned int entity_id;
 
-	MsgEngineDelete(unsigned int in_msg_id, unsigned int in_entity_id)
+	MsgEngineDelete(MsgID in_msg_id, unsigned int in_entity_id)
 		: Message(ENGINE_DELETE), entity_id(in_entity_id) {}
 };
 
@@ -108,10 +110,10 @@ struct MsgEngineUpdateEntity : Message
 
 struct MsgEngineCreateFeedback : Message
 {
-	unsigned int msg_id;
+	MsgID msg_id;
 	unsigned int entity_id;
 
-	MsgEngineCreateFeedback(unsigned int in_msg_id, unsigned int in_entity_id)
+	MsgEngineCreateFeedback(MsgID in_msg_id, unsigned int in_entity_id)
 		: Message(ENGINE_CREATE_FEEDBACK), msg_id(in_msg_id), entity_id(in_entity_id) {}
 };
 
