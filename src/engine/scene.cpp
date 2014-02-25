@@ -1,6 +1,6 @@
 #include "scene.h"
 
-Scene::Scene() : last_used_entity_id(0)
+Scene::Scene() : last_used_entity_id(1)
 {
 }
 

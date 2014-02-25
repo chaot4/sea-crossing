@@ -23,6 +23,7 @@ class IoCenter
 {
 private:
 	bool m_run;
+	bool m_input_requested;
 	unsigned int m_sleep_time;
 
 	TwoWayChannel m_hub_channel;

@@ -5,6 +5,7 @@
 #include "game/defs.h"
 
 /*	Include external headers */
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
@@ -37,10 +38,10 @@ struct MsgCtrlEng_RequestObjId : Message
 struct MsgEngComm_SendObjId : Message
 {
 	unsigned int scene_id;
-	unsigned int object_id;
+	unsigned int entity_id;
 
-	MsgEngComm_SendObjId(unsigned int in_scene_id, unsigned int in_object_id)
-		: Message(ENG_COMM_SEND_OBJ_ID), scene_id(in_scene_id), object_id(in_object_id) {}
+	MsgEngComm_SendObjId(unsigned int in_scene_id, unsigned int in_entity_id)
+		: Message(ENG_COMM_SEND_OBJ_ID), scene_id(in_scene_id), entity_id(in_entity_id) {}
 };
 
 struct MsgEngineCreate : Message

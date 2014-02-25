@@ -79,7 +79,7 @@ void CommunicationHub::processMessage(TwoWayChannel& channel)
 
 void CommunicationHub::process(std::shared_ptr<MsgEngComm_SendObjId>(msg))
 {
-	std::cout<<"The engine tells me, that you clicked at the object with the id "<<msg->object_id<<std::endl;
+	std::cout<<"The engine tells me, that you clicked at the object with the id "<<msg->entity_id<<std::endl;
 }
 
 void CommunicationHub::process(std::shared_ptr<MsgEngineCreateFeedback> msg)

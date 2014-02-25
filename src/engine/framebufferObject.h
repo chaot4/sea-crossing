@@ -34,6 +34,9 @@ private:
 	GLuint m_depthbuffer;
 	GLuint m_stencilbuffer;
 
+	/**
+	*	Keep track of the framebuffer dimension
+	*/
 	int m_width;
 	int m_height;
 

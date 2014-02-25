@@ -77,9 +77,9 @@ double EqualityRating::get(NodeID node_id)
 		if (!face.owner) {
 			int adj_nodes_1(face.num_adj_nodes_player[player_id]);
 			int adj_nodes_2(face.num_adj_nodes_player[!player_id]);
-			unsigned int abs_diff(abs(adj_nodes_1-adj_nodes_2));
-			unsigned int invert_abs_diff(
-				abs(abs_diff - ceil(face.adj_nodes.size()/2.0)));
+			int abs_diff(abs(adj_nodes_1-adj_nodes_2));
+			int invert_abs_diff(
+				abs(abs_diff - (int)ceil(face.adj_nodes.size()/2.0)));
 			assert(abs_diff + 1 <= ceil(face.adj_nodes.size()/2.0));
 
 			rating += invert_abs_diff;

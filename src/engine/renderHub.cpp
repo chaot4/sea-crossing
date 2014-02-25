@@ -180,7 +180,7 @@ void RenderHub::run()
 	glEnable( GL_MULTISAMPLE );
 
 	/*  Test picking pass */
-	GLuint *data = new GLuint[1];
+	//GLuint *data = new GLuint[1];
 
 	while(running && !glfwWindowShouldClose(activeWindow))
 	{

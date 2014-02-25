@@ -1,6 +1,6 @@
 #include "ioCenter.h"
 
-IoCenter::IoCenter() : m_run(true), m_sleep_time(5)
+IoCenter::IoCenter() : m_run(true), m_input_requested(false), m_sleep_time(5)
 {
 }
 
@@ -14,7 +14,9 @@ void IoCenter::processMessage(TwoWayChannel& channel)
 	switch (msg->type) {
 		case CTRL_ENG_REQUEST_OBJECT_ID:
 		{
-			m_engine_channel.send(msg);
+			if(m_input_requested)
+				m_engine_channel.send(msg);
+
 			break;
 		}
 		case ENG_COMM_SEND_OBJ_ID:
@@ -39,6 +41,7 @@ void IoCenter::processMessage(TwoWayChannel& channel)
 		}
 		case ENGINE_CREATE_FEEDBACK:
 		{
+			m_hub_channel.send(msg);
 			break;
 		}
 		case ENGINE_QUIT:
@@ -48,6 +51,7 @@ void IoCenter::processMessage(TwoWayChannel& channel)
 		}
 		case ENGINE_USER_INPUT:
 		{
+			m_input_requested = true;
 			break;
 		}
 		case QUIT:

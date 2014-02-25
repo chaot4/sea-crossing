@@ -40,6 +40,10 @@ protected:
 
 	SceneCamera* activeCamera;
 
+	/**
+	*	Used to assign unique, consecutive ids to scene entities. Starts with id 1.
+	*	Id 0 represents background or non-entity elements during picking.
+	*/
 	int last_used_entity_id;
 
 public:

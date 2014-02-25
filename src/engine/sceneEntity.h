@@ -21,10 +21,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+typedef unsigned int EntityID;
+
 class SceneEntity
 {
 protected:
-	const int m_id;
+	const EntityID m_id;
 
 	glm::vec3 m_position;
 	glm::quat m_orientation;
