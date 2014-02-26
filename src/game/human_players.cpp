@@ -2,6 +2,17 @@
 
 using namespace std;
 
+void GUIPlayer::msgSendEngineRequestInput(PlayerID id)
+{
+	std::shared_ptr<Message> new_msg(new MsgPlayerRequestInput(id));
+	_player_center_channel.send(new_msg);
+}
+
+void GUIPlayer::initGemMove()
+{
+	msgSendEngineRequestInput(id);
+}
+
 void ConsolePlayer::initGemMove()
 {
 	NodeLabel node_label;

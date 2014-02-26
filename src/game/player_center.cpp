@@ -125,7 +125,7 @@ void PlayerCenter::createPlayer(PlayerID player_id, PlayerType player_type, stri
 			_players.push_back(new ConsolePlayer(player_id, name, board));
 			break;
 		case GUI_PLAYER:
-			// TODO
+			_players.push_back(new GUIPlayer(player_id, name, board));
 			break;
 		case DEBUG_PLAYER:
 			_players.push_back(new DebugPlayer(player_id, name, board));

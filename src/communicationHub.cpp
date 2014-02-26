@@ -63,6 +63,9 @@ void CommunicationHub::processMessage(TwoWayChannel& channel)
 		case PLAYER_QUIT:
 			process(static_pointer_cast<MsgPlayerQuit>(msg));
 			break;
+		case PLAYER_REQUEST_INPUT:
+			process(static_pointer_cast<MsgPlayerRequestInput>(msg));
+			break;
 		case GAME_FINISHED:
 			process(static_pointer_cast<MsgGameFinished>(msg));
 			break;
@@ -198,6 +201,11 @@ void CommunicationHub::process(std::shared_ptr<MsgGameCreatePlayer> msg)
 void CommunicationHub::process(std::shared_ptr<MsgPlayerQuit> msg)
 {
 	_player_channel.send(static_pointer_cast<Message>(msg));
+}
+
+void CommunicationHub::process(std::shared_ptr<MsgPlayerRequestInput> msg)
+{
+	_engine_channel.send(static_pointer_cast<Message>(msg));
 }
 
 void CommunicationHub::process(std::shared_ptr<MsgGameRequestInput> msg)

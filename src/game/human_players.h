@@ -7,6 +7,19 @@
 #include <string>
 #include <iostream>
 
+class GUIPlayer : public Player
+{
+	private:
+		void msgSendEngineRequestInput(PlayerID id);
+
+	public:
+		GUIPlayer(PlayerID id, std::string const& name,
+				Board const& Baord)
+			: Player(id, name, board) {}
+
+		void initGemMove();
+};
+
 class ConsolePlayer : public Player
 {
 	public:
